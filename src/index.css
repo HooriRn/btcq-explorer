@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+/* Theme system using data-theme attribute */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Default to system preference when no data-theme is set */
+html:not([data-theme]) {
+  color-scheme: light dark;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

@@ -1,7 +1,6 @@
-import { MetricsCards } from '../components/dashboard/MetricsCards'
-import { SearchBar } from '../components/common/SearchBar'
+import { MetricsCards, SearchBar, LatestAddressesAtRisk } from '../components'
 import { useDashboard } from '../hooks/useDashboard'
-import { LatestAddressesAtRisk } from '../components/dashboard/LatestAddressesAtRisk'
+
 
 export const Dashboard = () => {
   useDashboard() // Initialize dashboard data
