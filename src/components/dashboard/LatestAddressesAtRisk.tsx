@@ -1,5 +1,5 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
-import { getRiskLevelColor, getStatusDotColor } from '../../utils/riskLevel'
+import { getStatusDotColor } from '../../utils/riskLevel'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 
 export const LatestAddressesAtRisk = () => {
@@ -53,8 +53,6 @@ export const LatestAddressesAtRisk = () => {
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Height</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Transaction</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Risk Level</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Time</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -63,21 +61,29 @@ export const LatestAddressesAtRisk = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className={`w-2 h-2 ${getStatusDotColor(address.riskLevel)} rounded-full mr-3`}></div>
-                      <span className="text-sm font-mono text-gray-900 dark:text-gray-100">{address.address}</span>
+                      <a 
+                        href={`https://mempool.space/testnet/address/${address.address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                      >
+                        {address.address}
+                      </a>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {address.height.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-mono text-blue-600 dark:text-blue-400">{address.transaction}</span>
+                    <a 
+                      href={`https://mempool.space/testnet/tx/${address.transaction}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                    >
+                      {address.transaction}
+                    </a>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(address.riskLevel)}`}>
-                      {address.riskLevel}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{address.time}</td>
                 </tr>
               ))}
             </tbody>

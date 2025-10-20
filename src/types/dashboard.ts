@@ -8,6 +8,17 @@ export interface AddressAtRisk {
   status: 'active' | 'inactive'
 }
 
+export interface SearchResult {
+  address: string
+  block_height: number
+  txid: string
+  source: string
+}
+
+export interface SearchResponse {
+  results: SearchResult[]
+}
+
 export interface DashboardMetrics {
   addressesIndexed: number
   addressesAtRisk: number

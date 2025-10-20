@@ -47,7 +47,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   fetchAddressesAtRisk: async () => {
     set({ isLoading: true })
     try {
-      const addresses = await api.fetchAddressesAtRisk()
+      const addresses = await api.fetchLatestAddressesAtRisk()
       set({ addressesAtRisk: addresses, lastUpdated: new Date().toLocaleTimeString() })
     } catch (error) {
       console.error('Failed to fetch addresses at risk:', error)
@@ -61,7 +61,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     try {
       const [metrics, addresses] = await Promise.all([
         api.fetchMetrics(),
-        api.fetchAddressesAtRisk()
+        api.fetchLatestAddressesAtRisk()
       ])
       set({ 
         metrics, 

@@ -1,4 +1,4 @@
-import type { AddressAtRisk, DashboardMetrics } from '../types/dashboard'
+import type { AddressAtRisk, DashboardMetrics, SearchResponse } from '../types/dashboard'
 
 // Mock API data
 const mockAddressesAtRisk: AddressAtRisk[] = [
@@ -237,5 +237,45 @@ export const api = {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800))
     return [...mockAddressesAtRisk]
+  },
+
+  searchAddress: async (query: string): Promise<SearchResponse> => {
+    try {
+      const response = await fetch(`http://46.62.168.75:8080/search?q=${encodeURIComponent(query)}`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Failed to search address:', error)
+      // Return empty results if API fails
+      return { results: [] }
+    }
+  },
+
+  fetchLatestAddressesAtRisk: async (): Promise<AddressAtRisk[]> => {
+    try {
+      const response = await fetch('http://46.62.168.75:8080/latest')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      
+      // Transform API response to our AddressAtRisk format
+      return data.results.map((result: any, index: number) => ({
+        id: `latest-${index}`,
+        address: result.address,
+        height: result.block_height,
+        transaction: result.txid,
+        riskLevel: 'High' as const, // All latest addresses are considered high risk
+        time: 'Just now', // Since these are latest, we'll show "Just now"
+        status: 'active' as const
+      }))
+    } catch (error) {
+      console.error('Failed to fetch latest addresses at risk:', error)
+      // Fallback to mock data if API fails
+      return [...mockAddressesAtRisk]
+    }
   }
 }
