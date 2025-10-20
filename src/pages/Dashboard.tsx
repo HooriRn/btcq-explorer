@@ -1,4 +1,4 @@
-import { MetricsCards, SearchBar, LatestAddressesAtRisk } from '../components'
+import { MetricsCards, SearchBar, LatestAddressesAtRisk, LatestBlockInfo } from '../components'
 import { useDashboard } from '../hooks/useDashboard'
 
 
@@ -16,6 +16,8 @@ export const Dashboard = () => {
       
       <SearchBar onSearch={handleSearch} />
       
+      <LatestBlockInfo />
+
       <LatestAddressesAtRisk />
     </main>
   )

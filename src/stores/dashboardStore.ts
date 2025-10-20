@@ -12,11 +12,21 @@ interface DashboardState {
   refreshData: () => Promise<void>
 }
 
-export const useDashboardStore = create<DashboardState>((set, get) => ({
+export const useDashboardStore = create<DashboardState>((set) => ({
   metrics: {
     addressesIndexed: 0,
     addressesAtRisk: 0,
-    currentBitcoinHeight: 0
+    currentBitcoinHeight: 0,
+    trackedExposed: 0,
+    trackedRevealed: 0,
+    scannedBlocks: 0,
+    latestBlock: {
+      height: 0,
+      hash: '',
+      scannedAt: '',
+      exposedCount: 0,
+      revealedCount: 0
+    }
   },
   addressesAtRisk: [],
   isLoading: false,

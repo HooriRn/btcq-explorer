@@ -11,3 +11,5 @@ export { LoadingSkeleton, CardSkeleton, TableSkeleton } from './common/LoadingSk
 // Dashboard components
 export { MetricsCards } from './dashboard/MetricsCards'
 export { LatestAddressesAtRisk } from './dashboard/LatestAddressesAtRisk'
+export { LatestBlockInfo } from './dashboard/LatestBlockInfo'
+export { SearchResults } from './dashboard/SearchResults'
