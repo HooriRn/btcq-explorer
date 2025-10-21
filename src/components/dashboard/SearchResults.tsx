@@ -104,7 +104,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Source</label>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Type</label>
                     <p className="text-sm text-gray-900 dark:text-white capitalize">{result.source.replace('_', ' ')}</p>
                   </div>
                 </div>

@@ -270,7 +270,8 @@ export const api = {
         transaction: result.txid,
         riskLevel: 'High' as const, // All latest addresses are considered high risk
         time: 'Just now', // Since these are latest, we'll show "Just now"
-        status: 'active' as const
+        status: 'active' as const,
+        source: result.source
       }))
     } catch (error) {
       console.error('Failed to fetch latest addresses at risk:', error)

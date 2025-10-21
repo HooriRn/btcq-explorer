@@ -1,6 +1,12 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
-import { getStatusDotColor } from '../../utils/riskLevel'
 import { TableSkeleton } from '../common/LoadingSkeleton'
+
+const getSourceDotColor = (source?: string) => {
+  if (source === 'quantum_revealed') {
+    return 'bg-red-500'
+  }
+  return 'bg-orange-200'
+}
 
 export const LatestAddressesAtRisk = () => {
   const { addressesAtRisk, isLoading, lastUpdated, refreshData } = useDashboardStore()
@@ -53,6 +59,7 @@ export const LatestAddressesAtRisk = () => {
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Height</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Transaction</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Source</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -60,7 +67,7 @@ export const LatestAddressesAtRisk = () => {
                 <tr key={address.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className={`w-2 h-2 ${getStatusDotColor(address.riskLevel)} rounded-full mr-3`}></div>
+                      <div className={`w-2 h-2 ${getSourceDotColor(address.source)} rounded-full mr-3`}></div>
                       <a 
                         href={`https://mempool.space/testnet/address/${address.address}`}
                         target="_blank"
@@ -83,6 +90,15 @@ export const LatestAddressesAtRisk = () => {
                     >
                       {address.transaction}
                     </a>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                      address.source === 'quantum_revealed' 
+                        ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' 
+                        : 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+                    }`}>
+                      {address.source?.replace('_', ' ') || 'N/A'}
+                    </span>
                   </td>
                 </tr>
               ))}

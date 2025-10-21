@@ -6,6 +6,7 @@ export interface AddressAtRisk {
   riskLevel: 'High' | 'Medium' | 'Low'
   time: string
   status: 'active' | 'inactive'
+  source?: string
 }
 
 export interface SearchResult {
