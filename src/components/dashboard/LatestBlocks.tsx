@@ -1,21 +1,14 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 
-const getSourceDotColor = (source?: string) => {
-  if (source === 'quantum_revealed') {
-    return 'bg-red-500'
-  }
-  return 'bg-orange-200'
-}
-
-export const LatestAddressesAtRisk = () => {
-  const { addressesAtRisk, isLoading, lastUpdated, refreshData } = useDashboardStore()
+export const LatestBlocks = () => {
+  const { latestBlocks, isLoading, lastUpdated, fetchLatestBlocks } = useDashboardStore()
 
   if (isLoading) {
     return (
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Addresses at-risk</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Blocks</h2>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-500 dark:text-gray-400">Loading...</span>
             <div className="p-2 text-gray-400 dark:text-gray-500 rounded-full">
@@ -31,17 +24,30 @@ export const LatestAddressesAtRisk = () => {
     )
   }
 
+  const formatTimestamp = (timestamp: number) => {
+    try {
+      return new Date(timestamp / 1_000_000).toLocaleString()
+    } catch {
+      return 'N/A'
+    }
+  }
+
+  const formatHash = (hash: string) => {
+    if (!hash) return 'N/A'
+    return `${hash.slice(0, 16)}...${hash.slice(-8)}`
+  }
+
   return (
     <div className="mt-12">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Addresses at-risk</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Blocks</h2>
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Last updated: {lastUpdated || 'Never'}
           </span>
           <button 
             className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-full transition-colors duration-200"
-            onClick={refreshData}
+            onClick={fetchLatestBlocks}
             title="Refresh list"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,49 +62,40 @@ export const LatestAddressesAtRisk = () => {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Height</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Transaction</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Source</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hash</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Timestamp</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Scanned At</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {addressesAtRisk.map((address) => (
-                <tr key={address.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className={`w-2 h-2 ${getSourceDotColor(address.source)} rounded-full mr-3`}></div>
-                      <a 
-                        href={`https://mempool.space/testnet/address/${address.address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                      >
-                        {address.address}
-                      </a>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                    {address.height.toLocaleString()}
+              {latestBlocks.map((block, index) => (
+                <tr key={`${block.block_height}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">
+                    <a 
+                      href={`https://mempool.space/block/${block.block_hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                    >
+                      {block.block_height.toLocaleString()}
+                    </a>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <a 
-                      href={`https://mempool.space/testnet/tx/${address.transaction}`}
+                      href={`https://mempool.space/block/${block.block_hash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
                     >
-                      {address.transaction}
+                      {formatHash(block.block_hash)}
                     </a>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                      address.source === 'quantum_revealed' 
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' 
-                        : 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
-                    }`}>
-                      {address.source?.replace('_', ' ') || 'N/A'}
-                    </span>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                    {formatTimestamp(block.block_timestamp)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                    {new Date(block.scanned_at).toLocaleString()}
                   </td>
                 </tr>
               ))}
@@ -109,3 +106,4 @@ export const LatestAddressesAtRisk = () => {
     </div>
   )
 }
+

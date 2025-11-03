@@ -2,13 +2,14 @@ import { useEffect } from 'react'
 import { useDashboardStore } from '../stores/dashboardStore'
 
 export const useDashboard = () => {
-  const { fetchMetrics, fetchAddressesAtRisk, refreshData } = useDashboardStore()
+  const { fetchMetrics, fetchLatestUtxos, fetchLatestBlocks, refreshData } = useDashboardStore()
 
   // Load initial data
   useEffect(() => {
     fetchMetrics()
-    fetchAddressesAtRisk()
-  }, [fetchMetrics, fetchAddressesAtRisk])
+    fetchLatestUtxos()
+    fetchLatestBlocks()
+  }, [fetchMetrics, fetchLatestUtxos, fetchLatestBlocks])
 
   return {
     refreshData

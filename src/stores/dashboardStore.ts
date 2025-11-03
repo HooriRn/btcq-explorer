@@ -1,14 +1,16 @@
 import { create } from 'zustand'
-import type { AddressAtRisk, DashboardMetrics } from '../types/dashboard'
+import type { DashboardMetrics, UTXO, Block } from '../types/dashboard'
 import { api } from '../services/api'
 
 interface DashboardState {
   metrics: DashboardMetrics
-  addressesAtRisk: AddressAtRisk[]
+  latestUtxos: UTXO[]
+  latestBlocks: Block[]
   isLoading: boolean
   lastUpdated: string
   fetchMetrics: () => Promise<void>
-  fetchAddressesAtRisk: () => Promise<void>
+  fetchLatestUtxos: () => Promise<void>
+  fetchLatestBlocks: () => Promise<void>
   refreshData: () => Promise<void>
 }
 
@@ -28,7 +30,8 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       revealedCount: 0
     }
   },
-  addressesAtRisk: [],
+  latestUtxos: [],
+  latestBlocks: [],
   isLoading: false,
   lastUpdated: '',
 
@@ -44,13 +47,25 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     }
   },
 
-  fetchAddressesAtRisk: async () => {
+  fetchLatestUtxos: async () => {
     set({ isLoading: true })
     try {
-      const addresses = await api.fetchLatestAddressesAtRisk()
-      set({ addressesAtRisk: addresses, lastUpdated: new Date().toLocaleTimeString() })
+      const response = await api.fetchLatestUtxos()
+      set({ latestUtxos: response.results, lastUpdated: new Date().toLocaleTimeString() })
     } catch (error) {
-      console.error('Failed to fetch addresses at risk:', error)
+      console.error('Failed to fetch latest UTXOs:', error)
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  fetchLatestBlocks: async () => {
+    set({ isLoading: true })
+    try {
+      const response = await api.fetchLatestBlocks()
+      set({ latestBlocks: response.results, lastUpdated: new Date().toLocaleTimeString() })
+    } catch (error) {
+      console.error('Failed to fetch latest blocks:', error)
     } finally {
       set({ isLoading: false })
     }
@@ -59,13 +74,15 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   refreshData: async () => {
     set({ isLoading: true })
     try {
-      const [metrics, addresses] = await Promise.all([
+      const [metrics, utxos, blocks] = await Promise.all([
         api.fetchMetrics(),
-        api.fetchLatestAddressesAtRisk()
+        api.fetchLatestUtxos(),
+        api.fetchLatestBlocks()
       ])
       set({ 
-        metrics, 
-        addressesAtRisk: addresses, 
+        metrics,
+        latestUtxos: utxos.results,
+        latestBlocks: blocks.results,
         lastUpdated: new Date().toLocaleTimeString() 
       })
     } catch (error) {
