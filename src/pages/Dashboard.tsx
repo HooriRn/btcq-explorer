@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MetricsCards, SearchBar, LatestUTXOs, LatestBlocks, LatestBlockInfo, SearchResults } from '../components'
+import { MetricsCards, SearchBar, LatestUTXOs, LatestBlocks, SearchResults } from '../components'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
 
@@ -17,7 +17,7 @@ export const Dashboard = () => {
     <main className="max-w-7xl mx-auto px-6 py-8">
       <MetricsCards />
       
-      <LatestBlockInfo />
+      {/* <LatestBlockInfo /> */}
       
       <SearchBar onSearch={handleSearch} />
       

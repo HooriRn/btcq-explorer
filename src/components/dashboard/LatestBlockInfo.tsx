@@ -54,7 +54,7 @@ export const LatestBlockInfo = () => {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Scanned At</label>
-              <p className="text-sm text-gray-900 dark:text-white">{formatTime(metrics.latestBlock?.scannedAt || '')}</p>
+              <p className="text-sm text-gray-900 dark:text-white">{formatTime(metrics.latestBlock?.ScannedAt || '')}</p>
             </div>
             <div className="flex space-x-4">
               <div>

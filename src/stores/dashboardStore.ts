@@ -25,7 +25,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     latestBlock: {
       height: 0,
       hash: '',
-      scannedAt: '',
+      ScannedAt: '',
       exposedCount: 0,
       revealedCount: 0
     }

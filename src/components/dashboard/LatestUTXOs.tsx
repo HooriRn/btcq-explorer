@@ -1,5 +1,6 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
+import { calculateUTXORiskLevel, isAddressReused as checkAddressReuse, getRiskLevelColor } from '../../utils/riskLevel'
 
 export const LatestUTXOs = () => {
   const { latestUtxos, isLoading, lastUpdated, fetchLatestUtxos } = useDashboardStore()
@@ -28,13 +29,12 @@ export const LatestUTXOs = () => {
     return (valueSat / 100_000_000).toFixed(8)
   }
 
-  const formatTimestamp = (timestamp: number) => {
-    try {
-      return new Date(timestamp / 1_000_000).toLocaleString()
-    } catch {
-      return 'N/A'
-    }
-  }
+  // Calculate risk levels for all UTXOs
+  const utxosWithRisk = latestUtxos.map(utxo => {
+    const addressReused = checkAddressReuse(utxo.address, latestUtxos)
+    const riskLevel = calculateUTXORiskLevel(utxo.script_pub_type, addressReused)
+    return { ...utxo, riskLevel, addressReused }
+  })
 
   return (
     <div className="mt-12">
@@ -66,12 +66,13 @@ export const LatestUTXOs = () => {
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Value (BTC)</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Risk</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Block</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {latestUtxos.map((utxo, index) => (
+              {utxosWithRisk.map((utxo, index) => (
                 <tr key={`${utxo.txid}-${utxo.vout}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <a 
@@ -102,6 +103,11 @@ export const LatestUTXOs = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                       {utxo.script_pub_type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(utxo.riskLevel)}`}>
+                      {utxo.riskLevel}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">

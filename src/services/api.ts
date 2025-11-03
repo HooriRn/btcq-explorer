@@ -1,4 +1,5 @@
 import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse } from '../types/dashboard'
+import { getApiBaseUrl } from './config'
 
 const mockMetrics: DashboardMetrics = {
   addressesIndexed: 1_234_567,
@@ -10,7 +11,7 @@ const mockMetrics: DashboardMetrics = {
   latestBlock: {
     height: 0,
     hash: '',
-    scannedAt: '',
+    ScannedAt: '',
     exposedCount: 0,
     revealedCount: 0
   }
@@ -20,7 +21,7 @@ const mockMetrics: DashboardMetrics = {
 export const api = {
   fetchMetrics: async (): Promise<DashboardMetrics> => {
     try {
-      const response = await fetch('http://46.62.168.75:8080/stats/overview')
+      const response = await fetch(`${getApiBaseUrl()}stats/overview`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -33,16 +34,18 @@ export const api = {
         currentBitcoinHeight: data.latest_block.height,
         trackedExposed: 0, // This field may not be available in new API
         trackedRevealed: 0, // This field may not be available in new API
-        scannedBlocks: data.scanned_blocks,
+        scannedBlocks: 0, // Not used anymore
         latestBlock: {
           height: data.latest_block.height,
           hash: '', // Hash may not be in the new API
-          scannedAt: '', // ScannedAt may not be in the new API
+          ScannedAt: data.latest_block.scanned_at, // ScannedAt may not be in the new API
           exposedCount: 0, // This field may not be available in new API
           revealedCount: 0 // This field may not be available in new API
         },
         addressCount: data.address_count,
-        utxoCount: data.utxo_count
+        utxoCount: data.utxo_count,
+        highRiskAddressCount: data.high_risk_address_count,
+        mediumRiskAddressCount: data.medium_risk_address_count
       }
     } catch (error) {
       console.error('Failed to fetch metrics from API:', error)
@@ -53,7 +56,7 @@ export const api = {
 
   searchAddress: async (query: string): Promise<SearchResponse> => {
     try {
-      const response = await fetch(`http://46.62.168.75:8080/search?q=${encodeURIComponent(query)}`)
+      const response = await fetch(`${getApiBaseUrl()}search?q=${encodeURIComponent(query)}`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -68,7 +71,7 @@ export const api = {
 
   fetchLatestUtxos: async (): Promise<UTXOResponse> => {
     try {
-      const response = await fetch('http://46.62.168.75:8080/latest/utxos')
+      const response = await fetch(`${getApiBaseUrl()}latest/utxos`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -82,7 +85,7 @@ export const api = {
 
   fetchLatestBlocks: async (): Promise<BlockResponse> => {
     try {
-      const response = await fetch('http://46.62.168.75:8080/latest/blocks')
+      const response = await fetch(`${getApiBaseUrl()}latest/blocks`)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }

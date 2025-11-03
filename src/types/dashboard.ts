@@ -30,12 +30,14 @@ export interface DashboardMetrics {
   latestBlock: {
     height: number
     hash: string
-    scannedAt: string
+    ScannedAt: string
     exposedCount: number
     revealedCount: number
   }
   addressCount?: number
   utxoCount?: number
+  highRiskAddressCount?: number
+  mediumRiskAddressCount?: number
 }
 
 export interface UTXO {
@@ -61,7 +63,7 @@ export interface UTXOResponse {
 export interface Block {
   block_height: number
   block_hash: string
-  scanned_at: string
+  ScannedAt: string
   block_timestamp: number
 }
 
