@@ -5,7 +5,8 @@ import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel
 export const LatestUTXOs = () => {
   const { latestUtxos, isLoading, lastUpdated, fetchLatestUtxos } = useDashboardStore()
 
-  if (isLoading) {
+  // Only show skeleton on initial load when there's no data
+  if (isLoading && latestUtxos.length === 0) {
     return (
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
@@ -72,7 +73,7 @@ export const LatestUTXOs = () => {
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {utxosWithRisk.map((utxo, index) => (
-                <tr key={`${utxo.txid}-${utxo.vout}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <tr key={`${utxo.txid}-${utxo.vout}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <a 
                       href={`https://mempool.space/tx/${utxo.txid}`}

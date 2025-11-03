@@ -7,6 +7,7 @@ interface DashboardState {
   latestUtxos: UTXO[]
   latestBlocks: Block[]
   isLoading: boolean
+  isLoadingMetrics: boolean
   lastUpdated: string
   fetchMetrics: () => Promise<void>
   fetchLatestUtxos: () => Promise<void>
@@ -33,17 +34,18 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   latestUtxos: [],
   latestBlocks: [],
   isLoading: false,
+  isLoadingMetrics: false,
   lastUpdated: '',
 
   fetchMetrics: async () => {
-    set({ isLoading: true })
+    set({ isLoading: true, isLoadingMetrics: true })
     try {
       const metrics = await api.fetchMetrics()
       set({ metrics, lastUpdated: new Date().toLocaleTimeString() })
     } catch (error) {
       console.error('Failed to fetch metrics:', error)
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false, isLoadingMetrics: false })
     }
   },
 
@@ -72,7 +74,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   },
 
   refreshData: async () => {
-    set({ isLoading: true })
+    set({ isLoading: true, isLoadingMetrics: true })
     try {
       const [metrics, utxos, blocks] = await Promise.all([
         api.fetchMetrics(),
@@ -88,7 +90,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     } catch (error) {
       console.error('Failed to refresh data:', error)
     } finally {
-      set({ isLoading: false })
+      set({ isLoading: false, isLoadingMetrics: false })
     }
   }
 }))

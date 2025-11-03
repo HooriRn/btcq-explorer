@@ -4,7 +4,8 @@ import { TableSkeleton } from '../common/LoadingSkeleton'
 export const LatestBlocks = () => {
   const { latestBlocks, isLoading, lastUpdated, fetchLatestBlocks } = useDashboardStore()
 
-  if (isLoading) {
+  // Only show skeleton on initial load when there's no data
+  if (isLoading && latestBlocks.length === 0) {
     return (
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
@@ -70,7 +71,7 @@ export const LatestBlocks = () => {
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {latestBlocks.map((block, index) => (
-                <tr key={`${block.block_height}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <tr key={`${block.block_height}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">
                     <a 
                       href={`https://mempool.space/block/${block.block_hash}`}

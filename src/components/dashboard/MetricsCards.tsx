@@ -1,10 +1,12 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { CardSkeleton } from '../common/LoadingSkeleton'
+import { AnimatedNumber } from '../common/AnimatedNumber'
 
 export const MetricsCards = () => {
-  const { metrics, isLoading } = useDashboardStore()
+  const { metrics, isLoadingMetrics } = useDashboardStore()
 
-  if (isLoading) {
+  if (isLoadingMetrics && Object.keys(metrics).length === 0) {
+    // Show skeletons only on initial load when there's no data
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <CardSkeleton />
@@ -22,7 +24,9 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Addresses</h3>
-            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{(metrics.addressCount || 0).toLocaleString()}</p>
+            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+              <AnimatedNumber value={metrics.addressCount || 0} />
+            </p>
           </div>
           <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +41,9 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">UTXOs</h3>
-            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{(metrics.utxoCount || 0).toLocaleString()}</p>
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+              <AnimatedNumber value={metrics.utxoCount || 0} />
+            </p>
           </div>
           <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +58,9 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">High Risk</h3>
-            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{(metrics.highRiskAddressCount || 0).toLocaleString()}</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400">
+              <AnimatedNumber value={metrics.highRiskAddressCount || 0} />
+            </p>
           </div>
           <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +75,9 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Medium Risk</h3>
-            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{(metrics.mediumRiskAddressCount || 0).toLocaleString()}</p>
+            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+              <AnimatedNumber value={metrics.mediumRiskAddressCount || 0} />
+            </p>
           </div>
           <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

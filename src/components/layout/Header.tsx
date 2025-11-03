@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { ThemeToggle } from '../common/ThemeToggle'
 import { BitcoinLogo } from '../common/BitcoinLogo'
+import { AnimatedNumber } from '../common/AnimatedNumber'
 
 export const Header = () => {
   const { metrics } = useDashboardStore()
@@ -20,12 +21,22 @@ export const Header = () => {
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-sm text-gray-600 dark:text-gray-300">
-                <span className="text-blue-600 dark:text-blue-400 font-medium">BTC Height:</span> {metrics.currentBitcoinHeight ? metrics.currentBitcoinHeight.toLocaleString() : 'Loading...'}
+                <span className="text-blue-600 dark:text-blue-400 font-medium">BTC Height:</span>{' '}
+                {metrics.currentBitcoinHeight ? (
+                  <AnimatedNumber value={metrics.currentBitcoinHeight} />
+                ) : (
+                  'Loading...'
+                )}
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600 dark:text-gray-300">
-                <span className="text-blue-600 dark:text-blue-400 font-medium">Addresses Indexed:</span> {metrics.addressesIndexed ? metrics.addressesIndexed.toLocaleString() : 'Loading...'}
+                <span className="text-blue-600 dark:text-blue-400 font-medium">Addresses Indexed:</span>{' '}
+                {metrics.addressesIndexed ? (
+                  <AnimatedNumber value={metrics.addressesIndexed} />
+                ) : (
+                  'Loading...'
+                )}
               </span>
             </div>
           </div>
