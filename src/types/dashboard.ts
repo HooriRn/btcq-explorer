@@ -9,12 +9,40 @@ export interface AddressAtRisk {
   source?: string
 }
 
-export interface SearchResult {
+// Address status result (when searching for an address)
+export interface AddressStatusResult {
   address: string
-  block_height: number
-  txid: string
-  source: string
+  first_seen_block: number
+  first_seen_block_timestamp: number
+  last_seen_block: number
+  last_seen_block_timestamp: number
+  balance_sat: number
+  utxo_count: number
+  tx_count: number
+  script_pub_type: string
+  source: 'address_status'
 }
+
+// UTXO result (when searching for a TXID)
+export interface UTXOSearchResult {
+  txid: string
+  vout: number
+  address: string
+  value_sat: number
+  script_pub_key_hex: string
+  script_pub_type: string
+  created_block: number
+  created_block_timestamp: number
+  spent: boolean
+  spent_by_txid: string | null
+  spent_vin: number | null
+  spent_block: number | null
+  spent_block_timestamp: number | null
+  source: 'utxos'
+}
+
+// Union type for search results
+export type SearchResult = AddressStatusResult | UTXOSearchResult
 
 export interface SearchResponse {
   results: SearchResult[]
