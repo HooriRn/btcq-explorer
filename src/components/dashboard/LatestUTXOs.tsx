@@ -1,6 +1,6 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
-import { calculateUTXORiskLevel, isAddressReused as checkAddressReuse, getRiskLevelColor } from '../../utils/riskLevel'
+import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel'
 
 export const LatestUTXOs = () => {
   const { latestUtxos, isLoading, lastUpdated, fetchLatestUtxos } = useDashboardStore()
@@ -31,9 +31,8 @@ export const LatestUTXOs = () => {
 
   // Calculate risk levels for all UTXOs
   const utxosWithRisk = latestUtxos.map(utxo => {
-    const addressReused = checkAddressReuse(utxo.address, latestUtxos)
-    const riskLevel = calculateUTXORiskLevel(utxo.script_pub_type, addressReused)
-    return { ...utxo, riskLevel, addressReused }
+    const riskLevel = calculateUTXORiskLevel(utxo.script_pub_type, false)
+    return { ...utxo, riskLevel }
   })
 
   return (

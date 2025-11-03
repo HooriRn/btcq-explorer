@@ -31,25 +31,23 @@ const HIGH_RISK_TYPES = ['P2PK', 'P2MS', 'P2PR']
 const MEDIUM_RISK_TYPES = ['P2PKH', 'P2SH', 'P2WPKH', 'P2WSH']
 
 /**
- * Determines the risk level of a UTXO based on its script type and address reuse
+ * Determines the risk level of a UTXO based on its script type
  * @param scriptPubType The script pub type (e.g., 'P2PKH', 'P2PK', etc.)
- * @param isAddressReused Whether the address appears multiple times in the UTXO set
+ * @param isAddressReused Whether the address appears multiple times in the UTXO set (currently not used in UI)
  * @returns 'High' | 'Medium' | 'Low'
  */
 export const calculateUTXORiskLevel = (
   scriptPubType: string,
-  isAddressReused: boolean
+  isAddressReused: boolean = false
 ): 'High' | 'Medium' | 'Low' => {
-
-  console.log(scriptPubType, isAddressReused)
-  
   // High risk script types are always high risk
   if (HIGH_RISK_TYPES.includes(scriptPubType)) {
     return 'High'
   }
 
   // Medium risk script types are medium risk only if address is reused
-  if (MEDIUM_RISK_TYPES.includes(scriptPubType) && isAddressReused) {
+  // Note: Address reuse check is disabled in UI for now
+  if (MEDIUM_RISK_TYPES.includes(scriptPubType)) {
     return 'Medium'
   }
 

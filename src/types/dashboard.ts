@@ -63,7 +63,7 @@ export interface UTXOResponse {
 export interface Block {
   block_height: number
   block_hash: string
-  ScannedAt: string
+  scanned_at: string
   block_timestamp: number
 }
 
