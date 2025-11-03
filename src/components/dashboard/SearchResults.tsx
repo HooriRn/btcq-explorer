@@ -1,5 +1,6 @@
 import type { SearchResult, AddressStatusResult, UTXOSearchResult } from '../../types/dashboard'
 import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel'
+import { CopyButton } from '../common/CopyButton'
 
 interface SearchResultsProps {
   results: SearchResult[]
@@ -101,14 +102,17 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           {riskLevel} Risk
                         </span>
                       </div>
-                      <a 
-                        href={`https://mempool.space/address/${result.address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                      >
-                        {result.address}
-                      </a>
+                      <div className="flex items-center space-x-2">
+                        <a 
+                          href={`https://mempool.space/address/${result.address}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                        >
+                          {result.address}
+                        </a>
+                        <CopyButton text={result.address} />
+                      </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
@@ -153,30 +157,34 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         </span>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <a 
-                          href={`https://mempool.space/tx/${result.txid}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                        >
-                          TXID: {result.txid.slice(0, 16)}...
-                        </a>
+                        <div className="flex items-center space-x-2">
+                          <a 
+                            href={`https://mempool.space/tx/${result.txid}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                          >
+                            TXID: {result.txid.slice(0, 16)}...
+                          </a>
+                          <CopyButton text={result.txid} />
+                        </div>
                         <span className="text-sm text-gray-500 dark:text-gray-400">VOUT: {result.vout}</span>
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
-                        <p className="text-sm font-mono break-all">
+                        <div className="flex items-center space-x-2">
                           <a 
                             href={`https://mempool.space/address/${result.address}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                            className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors break-all"
                           >
                             {result.address}
                           </a>
-                        </p>
+                          <CopyButton text={result.address} />
+                        </div>
                       </div>
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Value</label>
