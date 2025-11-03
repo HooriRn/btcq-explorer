@@ -1,6 +1,6 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { CardSkeleton } from '../common/LoadingSkeleton'
-import { AnimatedNumber } from '../common/AnimatedNumber'
+import { MetricCardValue } from '../common/MetricCardValue'
 
 export const MetricsCards = () => {
   const { metrics, isLoadingMetrics } = useDashboardStore()
@@ -24,9 +24,13 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Addresses</h3>
-            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-              <AnimatedNumber value={metrics.addressCount || 0} />
-            </p>
+            <MetricCardValue 
+              value={metrics.addressCount || 0}
+              colorClasses={{
+                default: 'text-purple-600 dark:text-purple-400',
+                highlight: 'text-purple-700 dark:text-purple-300'
+              }}
+            />
           </div>
           <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,9 +45,13 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">UTXOs</h3>
-            <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-              <AnimatedNumber value={metrics.utxoCount || 0} />
-            </p>
+            <MetricCardValue 
+              value={metrics.utxoCount || 0}
+              colorClasses={{
+                default: 'text-green-600 dark:text-green-400',
+                highlight: 'text-green-700 dark:text-green-300'
+              }}
+            />
           </div>
           <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,9 +66,13 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">High Risk</h3>
-            <p className="text-3xl font-bold text-red-600 dark:text-red-400">
-              <AnimatedNumber value={metrics.highRiskAddressCount || 0} />
-            </p>
+            <MetricCardValue 
+              value={metrics.highRiskAddressCount || 0}
+              colorClasses={{
+                default: 'text-red-600 dark:text-red-400',
+                highlight: 'text-red-700 dark:text-red-300'
+              }}
+            />
           </div>
           <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,9 +87,13 @@ export const MetricsCards = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Medium Risk</h3>
-            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
-              <AnimatedNumber value={metrics.mediumRiskAddressCount || 0} />
-            </p>
+            <MetricCardValue 
+              value={metrics.mediumRiskAddressCount || 0}
+              colorClasses={{
+                default: 'text-orange-600 dark:text-orange-400',
+                highlight: 'text-orange-700 dark:text-orange-300'
+              }}
+            />
           </div>
           <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full">
             <svg className="w-8 h-8 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
