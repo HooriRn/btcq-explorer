@@ -1,5 +1,6 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
+import { CopyButton } from '../common/CopyButton'
 
 export const LatestBlocks = () => {
   const { latestBlocks, isLoading, lastUpdated, fetchLatestBlocks } = useDashboardStore()
@@ -83,14 +84,17 @@ export const LatestBlocks = () => {
                     </a>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <a 
-                      href={`https://mempool.space/block/${block.block_hash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                    >
-                      {formatHash(block.block_hash)}
-                    </a>
+                    <div className="flex items-center space-x-2">
+                      <a 
+                        href={`https://mempool.space/block/${block.block_hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                      >
+                        {formatHash(block.block_hash)}
+                      </a>
+                      <CopyButton text={block.block_hash} />
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {formatTimestamp(block.block_timestamp)}

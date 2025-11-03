@@ -1,6 +1,7 @@
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel'
+import { CopyButton } from '../common/CopyButton'
 
 export const LatestUTXOs = () => {
   const { latestUtxos, isLoading, lastUpdated, fetchLatestUtxos } = useDashboardStore()
@@ -68,34 +69,39 @@ export const LatestUTXOs = () => {
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Risk</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Block</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {utxosWithRisk.map((utxo, index) => (
                 <tr key={`${utxo.txid}-${utxo.vout}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <a 
-                      href={`https://mempool.space/tx/${utxo.txid}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                    >
-                      {utxo.txid.slice(0, 16)}...
-                    </a>
+                    <div className="flex items-center space-x-2">
+                      <a 
+                        href={`https://mempool.space/tx/${utxo.txid}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                      >
+                        {utxo.txid.slice(0, 16)}...
+                      </a>
+                      <CopyButton text={utxo.txid} />
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {utxo.vout}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <a 
-                      href={`https://mempool.space/address/${utxo.address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                    >
-                      {utxo.address}
-                    </a>
+                    <div className="flex items-center space-x-2">
+                      <a 
+                        href={`https://mempool.space/address/${utxo.address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                      >
+                        {utxo.address}
+                      </a>
+                      <CopyButton text={utxo.address} />
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {formatValue(utxo.value_sat)}
@@ -112,17 +118,6 @@ export const LatestUTXOs = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {utxo.created_block.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {utxo.spent ? (
-                      <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                        Spent
-                      </span>
-                    ) : (
-                      <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                        Unspent
-                      </span>
-                    )}
                   </td>
                 </tr>
               ))}
