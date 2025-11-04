@@ -1,4 +1,4 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse } from '../types/dashboard'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse } from '../types/dashboard'
 import { getApiBaseUrl } from './config'
 
 const mockMetrics: DashboardMetrics = {
@@ -93,6 +93,20 @@ export const api = {
       return data
     } catch (error) {
       console.error('Failed to fetch latest blocks:', error)
+      return { results: [] }
+    }
+  },
+
+  fetchLatestAddresses: async (): Promise<AddressResponse> => {
+    try {
+      const response = await fetch(`${getApiBaseUrl()}latest/addresses`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Failed to fetch latest addresses:', error)
       return { results: [] }
     }
   }

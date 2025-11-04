@@ -4,14 +4,15 @@ import { useDashboardStore } from '../stores/dashboardStore'
 const REFRESH_INTERVAL_MS = 30000 // 30 seconds
 
 export const useDashboard = () => {
-  const { fetchMetrics, fetchLatestUtxos, fetchLatestBlocks, refreshData } = useDashboardStore()
+  const { fetchMetrics, fetchLatestUtxos, fetchLatestBlocks, fetchLatestAddresses, refreshData } = useDashboardStore()
 
   // Load initial data
   useEffect(() => {
     fetchMetrics()
     fetchLatestUtxos()
     fetchLatestBlocks()
-  }, [fetchMetrics, fetchLatestUtxos, fetchLatestBlocks])
+    fetchLatestAddresses()
+  }, [fetchMetrics, fetchLatestUtxos, fetchLatestBlocks, fetchLatestAddresses])
 
   // Periodically refresh all data
   useEffect(() => {

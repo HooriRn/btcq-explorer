@@ -12,5 +12,6 @@ export { LoadingSkeleton, CardSkeleton, TableSkeleton } from './common/LoadingSk
 export { MetricsCards } from './dashboard/MetricsCards'
 export { LatestUTXOs } from './dashboard/LatestUTXOs'
 export { LatestBlocks } from './dashboard/LatestBlocks'
+export { LatestAddresses } from './dashboard/LatestAddresses'
 export { LatestBlockInfo } from './dashboard/LatestBlockInfo'
 export { SearchResults } from './dashboard/SearchResults'

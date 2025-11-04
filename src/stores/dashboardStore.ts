@@ -1,17 +1,19 @@
 import { create } from 'zustand'
-import type { DashboardMetrics, UTXO, Block } from '../types/dashboard'
+import type { DashboardMetrics, UTXO, Block, Address } from '../types/dashboard'
 import { api } from '../services/api'
 
 interface DashboardState {
   metrics: DashboardMetrics
   latestUtxos: UTXO[]
   latestBlocks: Block[]
+  latestAddresses: Address[]
   isLoading: boolean
   isLoadingMetrics: boolean
   lastUpdated: string
   fetchMetrics: () => Promise<void>
   fetchLatestUtxos: () => Promise<void>
   fetchLatestBlocks: () => Promise<void>
+  fetchLatestAddresses: () => Promise<void>
   refreshData: () => Promise<void>
 }
 
@@ -33,6 +35,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   },
   latestUtxos: [],
   latestBlocks: [],
+  latestAddresses: [],
   isLoading: false,
   isLoadingMetrics: false,
   lastUpdated: '',
@@ -73,18 +76,32 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     }
   },
 
+  fetchLatestAddresses: async () => {
+    set({ isLoading: true })
+    try {
+      const response = await api.fetchLatestAddresses()
+      set({ latestAddresses: response.results, lastUpdated: new Date().toLocaleTimeString() })
+    } catch (error) {
+      console.error('Failed to fetch latest addresses:', error)
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
   refreshData: async () => {
     set({ isLoading: true, isLoadingMetrics: true })
     try {
-      const [metrics, utxos, blocks] = await Promise.all([
+      const [metrics, utxos, blocks, addresses] = await Promise.all([
         api.fetchMetrics(),
         api.fetchLatestUtxos(),
-        api.fetchLatestBlocks()
+        api.fetchLatestBlocks(),
+        api.fetchLatestAddresses()
       ])
       set({ 
         metrics,
         latestUtxos: utxos.results,
         latestBlocks: blocks.results,
+        latestAddresses: addresses.results,
         lastUpdated: new Date().toLocaleTimeString() 
       })
     } catch (error) {

@@ -98,3 +98,19 @@ export interface Block {
 export interface BlockResponse {
   results: Block[]
 }
+
+export interface Address {
+  address: string
+  first_seen_block: number
+  first_seen_block_timestamp: number
+  last_seen_block: number
+  last_seen_block_timestamp: number
+  balance_sat: number
+  utxo_count: number
+  tx_count: number
+  script_pub_type: string
+}
+
+export interface AddressResponse {
+  results: Address[]
+}

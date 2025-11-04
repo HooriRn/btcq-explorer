@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MetricsCards, SearchBar, LatestUTXOs, LatestBlocks, SearchResults } from '../components'
+import { MetricsCards, SearchBar, LatestUTXOs, LatestBlocks, LatestAddresses, SearchResults } from '../components'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
 
@@ -29,6 +29,7 @@ export const Dashboard = () => {
         />
       )}
 
+      <LatestAddresses />
       <LatestUTXOs />
       <LatestBlocks />
     </main>
