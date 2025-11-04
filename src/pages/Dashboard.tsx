@@ -1,5 +1,8 @@
 import { useState } from 'react'
-import { MetricsCards, SearchBar, LatestUTXOs, LatestBlocks, LatestAddresses, SearchResults } from '../components'
+import { MetricsCards, SearchBar, SearchResults } from '../components'
+import { LatestAddressesPreview } from '../components/dashboard/LatestAddressesPreview'
+import { LatestUTXOsPreview } from '../components/dashboard/LatestUTXOsPreview'
+import { LatestBlocksPreview } from '../components/dashboard/LatestBlocksPreview'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
 
@@ -29,9 +32,12 @@ export const Dashboard = () => {
         />
       )}
 
-      <LatestAddresses />
-      <LatestUTXOs />
-      <LatestBlocks />
+      <LatestAddressesPreview />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <LatestUTXOsPreview />
+        <LatestBlocksPreview />
+      </div>
     </main>
   )
 }
