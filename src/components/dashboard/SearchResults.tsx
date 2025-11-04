@@ -1,6 +1,8 @@
 import type { SearchResult, AddressStatusResult, UTXOSearchResult } from '../../types/dashboard'
-import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel'
+import { calculateUTXORiskLevel, getRiskLevelColor, HIGH_RISK_TYPES } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
+import { Tooltip } from '../common/Tooltip'
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
 
 interface SearchResultsProps {
   results: SearchResult[]
@@ -92,15 +94,64 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
             {results.map((result, index) => {
               // Render Address Status Result
               if (isAddressStatus(result)) {
-                const riskLevel = calculateUTXORiskLevel(result.script_pub_type, false)
+                const isAddressReused = result.utxo_count > 0 && result.tx_count > 0
+                const riskLevel = calculateUTXORiskLevel(result.script_pub_type, isAddressReused)
+                const isCompromised = riskLevel === 'High'
+                
+                // Determine compromise reason
+                const getCompromiseReason = () => {
+                  if (HIGH_RISK_TYPES.includes(result.script_pub_type)) {
+                    return `Address uses ${result.script_pub_type} script type, which exposes public keys directly. Vulnerable to quantum computers.`
+                  }
+                  if (isAddressReused) {
+                    return 'Address has been reused (UTXO count > 0 and TX count > 0). Reused addresses expose public keys through transactions, making them vulnerable to quantum attacks.'
+                  }
+                  return 'Address is at high risk due to quantum vulnerability.'
+                }
+                
                 return (
                   <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Address Status</h4>
-                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(riskLevel)}`}>
-                          {riskLevel} Risk
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(riskLevel)}`}>
+                            {riskLevel} Risk
+                          </span>
+                          {isAddressReused && (
+                            <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                              Reused
+                            </span>
+                          )}
+                          <Tooltip
+                            content={
+                              <div className="space-y-2">
+                                <div>
+                                  <p className="font-semibold mb-1">
+                                    {isCompromised ? 'Compromised' : 'Not Compromised'}
+                                  </p>
+                                  <p className="text-xs">
+                                    {isCompromised 
+                                      ? getCompromiseReason()
+                                      : 'Address is not currently compromised. However, it may still be at risk depending on script type and usage patterns.'
+                                    }
+                                  </p>
+                                </div>
+                                {isCompromised && (
+                                  <div>
+                                    <p className="font-semibold mb-1">Risk Level:</p>
+                                    <p className="text-xs">{riskLevel} Risk</p>
+                                  </div>
+                                )}
+                              </div>
+                            }
+                            position="top"
+                          >
+                            <button className="text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                              <AiOutlineQuestionCircle className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        </div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <a 

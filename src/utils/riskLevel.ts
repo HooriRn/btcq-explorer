@@ -25,10 +25,10 @@ export const getStatusDotColor = (riskLevel: string) => {
 }
 
 // High risk script types
-const HIGH_RISK_TYPES = ['P2PK', 'P2MS', 'P2PR']
+export const HIGH_RISK_TYPES = ['P2PK', 'P2MS', 'P2PR']
 
 // Medium risk script types (when address is reused)
-const MEDIUM_RISK_TYPES = ['P2PKH', 'P2SH', 'P2WPKH', 'P2WSH']
+export const MEDIUM_RISK_TYPES = ['P2PKH', 'P2SH', 'P2WPKH', 'P2WSH']
 
 /**
  * Determines the risk level of a UTXO based on its script type
@@ -40,6 +40,10 @@ export const calculateUTXORiskLevel = (
   scriptPubType: string,
   isAddressReused: boolean = false
 ): 'High' | 'Medium' | 'Low' => {
+  if (isAddressReused) {
+    return 'High'
+  }
+
   // High risk script types are always high risk
   if (HIGH_RISK_TYPES.includes(scriptPubType)) {
     return 'High'
