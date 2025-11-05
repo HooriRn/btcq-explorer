@@ -1,6 +1,7 @@
+import { Button, Spinner, Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
-import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel'
+import { calculateUTXORiskLevel } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 
 export const LatestAddresses = () => {
@@ -14,11 +15,7 @@ export const LatestAddresses = () => {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Addresses</h2>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-500 dark:text-gray-400">Loading...</span>
-            <div className="p-2 text-gray-400 dark:text-gray-500 rounded-full">
-              <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </div>
+            <Spinner size="sm" />
           </div>
         </div>
         
@@ -53,89 +50,104 @@ export const LatestAddresses = () => {
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Last updated: {lastUpdated || 'Never'}
           </span>
-          <button 
-            className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-full transition-colors duration-200"
-            onClick={fetchLatestAddresses}
+          <Button
+            isIconOnly
+            variant="light"
+            size="sm"
+            onPress={fetchLatestAddresses}
             title="Refresh list"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
       
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Balance (BTC)</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">UTXO Count</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">TX Count</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Risk</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">First Seen</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Last Seen</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {addressesWithRisk.map((address, index) => (
-                <tr key={`${address.address}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center space-x-2">
-                      <a 
-                        href={`https://mempool.space/address/${address.address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                      >
-                        {address.address}
-                      </a>
-                      <CopyButton text={address.address} />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+        <Table 
+          aria-label="Latest addresses table" 
+          removeWrapper
+          classNames={{
+            tr: "border-b border-gray-200 dark:border-gray-700",
+            thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
+          }}
+        >
+          <TableHeader>
+            <TableColumn>Address</TableColumn>
+            <TableColumn>Balance (BTC)</TableColumn>
+            <TableColumn>UTXO Count</TableColumn>
+            <TableColumn>TX Count</TableColumn>
+            <TableColumn>Type</TableColumn>
+            <TableColumn>Risk</TableColumn>
+            <TableColumn>First Seen</TableColumn>
+            <TableColumn>Last Seen</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {addressesWithRisk.map((address, index) => (
+              <TableRow key={`${address.address}-${index}`}>
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    <a 
+                      href={`https://mempool.space/address/${address.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                    >
+                      {address.address}
+                    </a>
+                    <CopyButton text={address.address} />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">
                     {formatValue(address.balance_sat)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">
                     {address.utxo_count.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">
                     {address.tx_count.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                      {address.script_pub_type}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <Chip color="primary" variant="flat" size="sm">
+                    {address.script_pub_type}
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color={address.riskLevel === 'High' ? 'danger' : address.riskLevel === 'Medium' ? 'warning' : 'success'}
+                    variant="flat"
+                    size="sm"
+                  >
+                    {address.riskLevel}
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-900 dark:text-gray-100">{address.first_seen_block.toLocaleString()}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {formatTimestamp(address.first_seen_block_timestamp)}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(address.riskLevel)}`}>
-                      {address.riskLevel}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-900 dark:text-gray-100">{address.last_seen_block.toLocaleString()}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {formatTimestamp(address.last_seen_block_timestamp)}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                    <div className="flex flex-col">
-                      <span>{address.first_seen_block.toLocaleString()}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {formatTimestamp(address.first_seen_block_timestamp)}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                    <div className="flex flex-col">
-                      <span>{address.last_seen_block.toLocaleString()}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {formatTimestamp(address.last_seen_block_timestamp)}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   )

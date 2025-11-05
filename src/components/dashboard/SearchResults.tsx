@@ -1,5 +1,6 @@
 import type { SearchResult, AddressStatusResult, UTXOSearchResult } from '../../types/dashboard'
-import { calculateUTXORiskLevel, getRiskLevelColor, HIGH_RISK_TYPES } from '../../utils/riskLevel'
+import { Chip, Button } from '@heroui/react'
+import { calculateUTXORiskLevel, HIGH_RISK_TYPES } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 import { Tooltip } from '../common/Tooltip'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
@@ -115,13 +116,21 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Address Status</h4>
                         <div className="flex items-center gap-2">
-                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(riskLevel)}`}>
+                          <Chip
+                            color={riskLevel === 'High' ? 'danger' : riskLevel === 'Medium' ? 'warning' : 'success'}
+                            variant="flat"
+                            size="sm"
+                          >
                             {riskLevel} Risk
-                          </span>
+                          </Chip>
                           {isAddressReused && (
-                            <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                            <Chip
+                              color="warning"
+                              variant="flat"
+                              size="sm"
+                            >
                               Reused
-                            </span>
+                            </Chip>
                           )}
                           <Tooltip
                             content={
@@ -147,9 +156,14 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             }
                             position="top"
                           >
-                            <button className="text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                            <Button
+                              isIconOnly
+                              variant="light"
+                              size="sm"
+                              className="text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400"
+                            >
                               <AiOutlineQuestionCircle className="w-4 h-4" />
-                            </button>
+                            </Button>
                           </Tooltip>
                         </div>
                       </div>
@@ -203,9 +217,13 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">UTXO Details</h4>
-                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(riskLevel)}`}>
+                        <Chip
+                          color={riskLevel === 'High' ? 'danger' : riskLevel === 'Medium' ? 'warning' : 'success'}
+                          variant="flat"
+                          size="sm"
+                        >
                           {riskLevel} Risk
-                        </span>
+                        </Chip>
                       </div>
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2">
@@ -245,13 +263,13 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</label>
                         <p className="text-sm">
                           {result.spent ? (
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                            <Chip color="danger" variant="flat" size="sm">
                               Spent
-                            </span>
+                            </Chip>
                           ) : (
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            <Chip color="success" variant="flat" size="sm">
                               Unspent
-                            </span>
+                            </Chip>
                           )}
                         </p>
                       </div>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 import { CopyButton } from '../common/CopyButton'
@@ -53,57 +54,54 @@ export const LatestBlocksPreview = () => {
       </div>
       
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Height</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hash</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {blocks.length === 0 ? (
-                <tr>
-                  <td colSpan={3} className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                    No blocks found
-                  </td>
-                </tr>
-              ) : (
-                blocks.map((block, index) => (
-                  <tr key={`${block.block_height}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">
-                      <a 
-                        href={`https://mempool.space/block/${block.block_hash}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                      >
-                        {block.block_height.toLocaleString()}
-                      </a>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <a 
-                          href={`https://mempool.space/block/${block.block_hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                        >
-                          {formatHash(block.block_hash)}
-                        </a>
-                        <CopyButton text={block.block_hash} />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                      {formatTimestamp(block.block_timestamp)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table 
+          aria-label="Latest blocks preview table" 
+          removeWrapper
+          classNames={{
+            tr: "border-b border-gray-200 dark:border-gray-700",
+            thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
+          }}
+        >
+          <TableHeader>
+            <TableColumn>Height</TableColumn>
+            <TableColumn>Hash</TableColumn>
+            <TableColumn>Timestamp</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="No blocks found">
+            {blocks.map((block, index) => (
+              <TableRow key={`${block.block_height}-${index}`}>
+                <TableCell>
+                  <a 
+                    href={`https://mempool.space/block/${block.block_hash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                  >
+                    {block.block_height.toLocaleString()}
+                  </a>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    <a 
+                      href={`https://mempool.space/block/${block.block_hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                    >
+                      {formatHash(block.block_hash)}
+                    </a>
+                    <CopyButton text={block.block_hash} />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">
+                    {formatTimestamp(block.block_timestamp)}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   )

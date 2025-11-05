@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip } from '@heroui/react'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
-import { calculateUTXORiskLevel, getRiskLevelColor } from '../../utils/riskLevel'
+import { calculateUTXORiskLevel } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 
 export const LatestUTXOsPreview = () => {
@@ -50,70 +51,73 @@ export const LatestUTXOsPreview = () => {
       </div>
       
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">TXID</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Value (BTC)</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Risk</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Block</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {utxosWithRisk.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                    No UTXOs found
-                  </td>
-                </tr>
-              ) : (
-                utxosWithRisk.map((utxo, index) => (
-                  <tr key={`${utxo.txid}-${utxo.vout}-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <a 
-                          href={`https://mempool.space/tx/${utxo.txid}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                        >
-                          {utxo.txid.slice(0, 16)}...
-                        </a>
-                        <CopyButton text={utxo.txid} />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <a 
-                          href={`https://mempool.space/address/${utxo.address}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                        >
-                          {utxo.address.slice(0, 16)}...
-                        </a>
-                        <CopyButton text={utxo.address} />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                      {formatValue(utxo.value_sat)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRiskLevelColor(utxo.riskLevel)}`}>
-                        {utxo.riskLevel}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                      {utxo.created_block.toLocaleString()}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table 
+          aria-label="Latest UTXOs preview table" 
+          removeWrapper
+          classNames={{
+            tr: "border-b border-gray-200 dark:border-gray-700",
+            thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
+          }}
+        >
+          <TableHeader>
+            <TableColumn>TXID</TableColumn>
+            <TableColumn>Address</TableColumn>
+            <TableColumn>Value (BTC)</TableColumn>
+            <TableColumn>Risk</TableColumn>
+            <TableColumn>Block</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="No UTXOs found">
+            {utxosWithRisk.map((utxo, index) => (
+              <TableRow key={`${utxo.txid}-${utxo.vout}-${index}`}>
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    <a 
+                      href={`https://mempool.space/tx/${utxo.txid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                    >
+                      {utxo.txid.slice(0, 16)}...
+                    </a>
+                    <CopyButton text={utxo.txid} />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    <a 
+                      href={`https://mempool.space/address/${utxo.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                    >
+                      {utxo.address.slice(0, 16)}...
+                    </a>
+                    <CopyButton text={utxo.address} />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">
+                    {formatValue(utxo.value_sat)}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color={utxo.riskLevel === 'High' ? 'danger' : utxo.riskLevel === 'Medium' ? 'warning' : 'success'}
+                    variant="flat"
+                    size="sm"
+                  >
+                    {utxo.riskLevel}
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm text-gray-900 dark:text-gray-100">
+                    {utxo.created_block.toLocaleString()}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   )

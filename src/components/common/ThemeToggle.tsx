@@ -1,3 +1,4 @@
+import { Button } from '@heroui/react'
 import { useThemeStore } from '../../stores/themeStore'
 
 export const ThemeToggle = () => {
@@ -6,9 +7,10 @@ export const ThemeToggle = () => {
   
   return (
     <div className="flex items-center space-x-2">
-      <button
-        onClick={toggleTheme}
-        className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+      <Button
+        isIconOnly
+        variant="light"
+        onPress={toggleTheme}
         title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       >
         {effectiveTheme === 'dark' ? (
@@ -20,7 +22,7 @@ export const ThemeToggle = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
           </svg>
         )}
-      </button>
+      </Button>
     </div>
   )
 }

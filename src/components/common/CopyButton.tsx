@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from '@heroui/react'
 
 interface CopyButtonProps {
   text: string
@@ -9,10 +10,7 @@ interface CopyButtonProps {
 export const CopyButton = ({ text, className = '', size = 'sm' }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false)
 
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
+  const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text)
       setCopied(true)
@@ -25,9 +23,12 @@ export const CopyButton = ({ text, className = '', size = 'sm' }: CopyButtonProp
   const iconSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5'
 
   return (
-    <button
-      onClick={handleCopy}
-      className={`inline-flex items-center justify-center p-1 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer ${className}`}
+    <Button
+      isIconOnly
+      variant="light"
+      size={size}
+      onPress={handleCopy}
+      className={className}
       title={copied ? 'Copied!' : 'Copy to clipboard'}
     >
       {copied ? (
@@ -39,7 +40,7 @@ export const CopyButton = ({ text, className = '', size = 'sm' }: CopyButtonProp
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
         </svg>
       )}
-    </button>
+    </Button>
   )
 }
 
