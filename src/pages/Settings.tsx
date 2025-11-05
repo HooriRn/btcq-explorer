@@ -103,12 +103,12 @@ export const Settings = () => {
               disabled={saveStatus === 'saving' || localApiUrl === apiBaseUrl}
               className={`px-6 py-2 rounded-md transition-colors ${
                 saveStatus === 'saving'
-                  ? 'bg-gray-400 text-white cursor-not-allowed'
+                  ? 'bg-gray-400 dark:bg-gray-500 text-white cursor-not-allowed'
                   : saveStatus === 'saved'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-green-600 dark:bg-green-500 text-white'
                   : localApiUrl === apiBaseUrl
-                  ? 'bg-gray-400 text-white cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
+                  ? 'bg-gray-400 dark:bg-gray-500 text-white cursor-not-allowed'
+                  : 'bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600'
               }`}
             >
               {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved!' : 'Save Settings'}

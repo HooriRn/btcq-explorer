@@ -57,7 +57,7 @@ export const LatestAddresses = () => {
             onPress={fetchLatestAddresses}
             title="Refresh list"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </Button>
@@ -69,7 +69,10 @@ export const LatestAddresses = () => {
           aria-label="Latest addresses table" 
           removeWrapper
           classNames={{
-            tr: "border-b border-gray-200 dark:border-gray-700",
+            wrapper: "bg-white dark:bg-gray-800",
+            th: "bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300",
+            tr: "border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50",
+            td: "bg-white dark:bg-gray-800",
             thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
           }}
         >

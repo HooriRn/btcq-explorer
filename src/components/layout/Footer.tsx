@@ -32,20 +32,20 @@ const Footer: React.FC = () => {
       case 'checking':
         return {
           text: 'Checking...',
-          color: 'text-yellow-500',
-          dotColor: 'bg-yellow-500'
+          color: 'text-yellow-500 dark:text-yellow-400',
+          dotColor: 'bg-yellow-500 dark:bg-yellow-400'
         }
       case 'healthy':
         return {
           text: 'RPC Healthy',
-          color: 'text-green-500',
-          dotColor: 'bg-green-500'
+          color: 'text-green-500 dark:text-green-400',
+          dotColor: 'bg-green-500 dark:bg-green-400'
         }
       case 'unhealthy':
         return {
           text: 'RPC Unhealthy',
-          color: 'text-red-500',
-          dotColor: 'bg-red-500'
+          color: 'text-red-500 dark:text-red-400',
+          dotColor: 'bg-red-500 dark:bg-red-400'
         }
     }
   }

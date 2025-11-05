@@ -55,7 +55,10 @@ export const LatestAddressesPreview = () => {
           aria-label="Latest addresses preview table" 
           removeWrapper
           classNames={{
-            tr: "border-b border-gray-200 dark:border-gray-700",
+            wrapper: "bg-white dark:bg-gray-800",
+            th: "bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300",
+            tr: "border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50",
+            td: "bg-white dark:bg-gray-800",
             thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
           }}
         >

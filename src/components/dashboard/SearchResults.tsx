@@ -39,7 +39,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
       <div className="mt-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
             <span className="ml-3 text-gray-600 dark:text-gray-400">Searching...</span>
           </div>
         </div>

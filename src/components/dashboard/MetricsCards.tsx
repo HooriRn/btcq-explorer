@@ -24,7 +24,13 @@ export const MetricsCards = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {/* Address Count Card */}
-      <Card className="border-2 border-purple-200 dark:border-purple-700 hover:shadow-lg transition-shadow p-2">
+      <Card 
+        className="border-2 border-purple-200 dark:border-purple-700 hover:shadow-lg transition-shadow"
+        classNames={{
+          base: "bg-white dark:bg-gray-800",
+          body: "p-6"
+        }}
+      >
         <CardBody>
           <div className="flex items-center justify-between">
             <div>
@@ -48,7 +54,13 @@ export const MetricsCards = () => {
       </Card>
 
       {/* UTXO Count Card */}
-      <Card className="border-2 border-green-200 dark:border-green-700 hover:shadow-lg transition-shadow p-2">
+      <Card 
+        className="border-2 border-green-200 dark:border-green-700 hover:shadow-lg transition-shadow"
+        classNames={{
+          base: "bg-white dark:bg-gray-800",
+          body: "p-6"
+        }}
+      >
         <CardBody>
           <div className="flex items-center justify-between">
             <div>
@@ -71,7 +83,13 @@ export const MetricsCards = () => {
       </Card>
 
       {/* High Risk Addresses Card */}
-      <Card className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow p-2">
+      <Card 
+        className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
+        classNames={{
+          base: "bg-white dark:bg-gray-800",
+          body: "p-6"
+        }}
+      >
         <CardBody>
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -122,7 +140,13 @@ export const MetricsCards = () => {
       </Card>
 
       {/* Medium Risk Addresses Card */}
-      <Card className="border-2 border-orange-200 dark:border-orange-700 hover:shadow-lg transition-shadow p-2">
+      <Card 
+        className="border-2 border-orange-200 dark:border-orange-700 hover:shadow-lg transition-shadow"
+        classNames={{
+          base: "bg-white dark:bg-gray-800",
+          body: "p-6"
+        }}
+      >
         <CardBody>
           <div className="flex items-center justify-between">
             <div className="flex-1">
