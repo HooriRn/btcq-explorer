@@ -11,7 +11,7 @@ export const BitcoinLogo = ({ className = '', size = 'md' }: BitcoinLogoProps) =
   }
 
   return (
-    <svg className={`${sizeClasses[size]} ${className}`} width="557" height="559" viewBox="0 0 557 559" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg className={`${sizeClasses[size]} ${className}`} width="557" height="559" viewBox="0 0 557 559" xmlns="http://www.w3.org/2000/svg">
         <radialGradient id="radialGradient1" cx="277.964162" cy="277.999184" r="265" fx="277.964162" fy="277.999184" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.999999 0.001327 -0.001327 0.999999 0.369241 -0.368705)">
             <stop offset="0.906801" stop-color="#ad8a29" stop-opacity="1"/>
             <stop offset="1" stop-color="#725203" stop-opacity="1"/>
