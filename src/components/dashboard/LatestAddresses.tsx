@@ -30,6 +30,9 @@ export const LatestAddresses = () => {
 
   const formatTimestamp = (timestamp: number) => {
     try {
+      if (!timestamp || timestamp === 0) {
+        return 'N/A'
+      }
       return new Date(timestamp / 1_000_000).toLocaleString()
     } catch {
       return 'N/A'
@@ -114,7 +117,7 @@ export const LatestAddresses = () => {
                 </TableCell>
                 <TableCell>
                   <span className="text-sm text-gray-900 dark:text-gray-100">
-                    {address.tx_count.toLocaleString()}
+                    {(address.tx_count ?? address.appearances ?? 0).toLocaleString()}
                   </span>
                 </TableCell>
                 <TableCell>

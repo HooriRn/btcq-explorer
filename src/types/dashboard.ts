@@ -108,7 +108,8 @@ export interface Address {
   last_seen_block_timestamp: number
   balance_sat: number
   utxo_count: number
-  tx_count: number
+  tx_count?: number
+  appearances?: number
   script_pub_type: string
 }
 
