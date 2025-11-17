@@ -23,6 +23,9 @@ const isUTXOResult = (result: SearchResult): result is UTXOSearchResult => {
 
 const formatTimestamp = (timestamp: number) => {
   try {
+    if (!timestamp || timestamp === 0) {
+      return 'N/A'
+    }
     return new Date(timestamp / 1_000_000).toLocaleString()
   } catch {
     return 'N/A'
@@ -95,7 +98,8 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
             {results.map((result, index) => {
               // Render Address Status Result
               if (isAddressStatus(result)) {
-                const isAddressReused = result.utxo_count > 0 && result.tx_count > 0
+                const txCount = result.tx_count ?? result.appearances ?? 0
+                const isAddressReused = result.utxo_count > 0 && txCount > 0
                 const riskLevel = calculateUTXORiskLevel(result.script_pub_type, isAddressReused)
                 const isCompromised = riskLevel === 'High'
                 
@@ -190,7 +194,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                       </div>
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Transaction Count</label>
-                        <p className="text-sm text-gray-900 dark:text-white">{result.tx_count.toLocaleString()}</p>
+                        <p className="text-sm text-gray-900 dark:text-white">{(result.tx_count ?? result.appearances ?? 0).toLocaleString()}</p>
                       </div>
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Script Type</label>
