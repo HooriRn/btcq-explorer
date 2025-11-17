@@ -36,6 +36,12 @@ const formatValue = (valueSat: number) => {
   return (valueSat / 100_000_000).toFixed(8)
 }
 
+const formatAddress = (address: string, maxLength: number = 20) => {
+  if (!address) return ''
+  if (address.length <= maxLength) return address
+  return `${address.slice(0, maxLength - 3)}...`
+}
+
 export const SearchResults = ({ results, isLoading, query }: SearchResultsProps) => {
   if (isLoading) {
     return (
@@ -171,14 +177,15 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           </Tooltip>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 min-w-0">
                         <a 
                           href={`https://mempool.space/address/${result.address}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors truncate max-w-[300px]"
+                          title={result.address}
                         >
-                          {result.address}
+                          {formatAddress(result.address, 30)}
                         </a>
                         <CopyButton text={result.address} />
                       </div>
@@ -230,14 +237,15 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         </Chip>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 min-w-0">
                           <a 
                             href={`https://mempool.space/tx/${result.txid}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                            className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors truncate max-w-[250px]"
+                            title={result.txid}
                           >
-                            TXID: {result.txid.slice(0, 16)}...
+                            TXID: {formatAddress(result.txid, 20)}
                           </a>
                           <CopyButton text={result.txid} />
                         </div>
@@ -247,14 +255,15 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 min-w-0">
                           <a 
                             href={`https://mempool.space/address/${result.address}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors break-all"
+                            className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors truncate max-w-[300px]"
+                            title={result.address}
                           >
-                            {result.address}
+                            {formatAddress(result.address, 30)}
                           </a>
                           <CopyButton text={result.address} />
                         </div>

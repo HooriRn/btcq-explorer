@@ -30,6 +30,12 @@ export const LatestAddressesPreview = () => {
     return (valueSat / 100_000_000).toFixed(8)
   }
 
+  const formatAddress = (address: string, maxLength: number = 20) => {
+    if (!address) return ''
+    if (address.length <= maxLength) return address
+    return `${address.slice(0, maxLength - 3)}...`
+  }
+
   // Calculate risk levels and limit to 5 rows
   const addressesWithRisk = latestAddresses
     .slice(0, 5)
@@ -51,17 +57,18 @@ export const LatestAddressesPreview = () => {
       </div>
       
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-        <Table 
-          aria-label="Latest addresses preview table" 
-          removeWrapper
-          classNames={{
-            wrapper: "bg-white dark:bg-gray-800",
-            th: "bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300",
-            tr: "border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50",
-            td: "bg-white dark:bg-gray-800",
-            thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
-          }}
-        >
+        <div className="overflow-x-auto">
+          <Table 
+            aria-label="Latest addresses preview table" 
+            removeWrapper
+            classNames={{
+              wrapper: "bg-white dark:bg-gray-800 min-w-full",
+              th: "bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 whitespace-nowrap",
+              tr: "border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50",
+              td: "bg-white dark:bg-gray-800 whitespace-nowrap",
+              thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
+            }}
+          >
           <TableHeader>
             <TableColumn>Address</TableColumn>
             <TableColumn>Balance (BTC)</TableColumn>
@@ -73,14 +80,15 @@ export const LatestAddressesPreview = () => {
             {addressesWithRisk.map((address, index) => (
               <TableRow key={`${address.address}-${index}`}>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 min-w-0">
                     <a 
                       href={`https://mempool.space/address/${address.address}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                      className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors truncate max-w-[200px]"
+                      title={address.address}
                     >
-                      {address.address}
+                      {formatAddress(address.address, 20)}
                     </a>
                     <CopyButton text={address.address} />
                   </div>
@@ -113,6 +121,7 @@ export const LatestAddressesPreview = () => {
             ))}
           </TableBody>
         </Table>
+        </div>
       </div>
     </div>
   )

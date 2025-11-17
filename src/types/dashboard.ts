@@ -102,6 +102,8 @@ export interface BlockResponse {
 
 export interface Address {
   address: string
+  created_block?: number
+  created_block_timestamp?: number
   first_seen_block: number
   first_seen_block_timestamp: number
   last_seen_block: number
