@@ -1,5 +1,6 @@
 import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse } from '../types/dashboard'
 import { getApiBaseUrl } from './config'
+import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
 const mockMetrics: DashboardMetrics = {
   addressesIndexed: 1_234_567,
@@ -27,6 +28,23 @@ export const api = {
       }
       const data = await response.json()
       
+      // Calculate high and medium risk counts from script_type_counts
+      const scriptTypeCounts = data.script_type_counts || {}
+      let highRiskCount = 0
+      let mediumRiskCount = 0
+      
+      // Sum counts for high risk script types
+      HIGH_RISK_TYPES.forEach(scriptType => {
+        highRiskCount += scriptTypeCounts[scriptType] || 0
+      })
+      // Also include 'unknown' as high risk
+      highRiskCount += scriptTypeCounts['unknown'] || 0
+      
+      // Sum counts for medium risk script types
+      MEDIUM_RISK_TYPES.forEach(scriptType => {
+        mediumRiskCount += scriptTypeCounts[scriptType] || 0
+      })
+      
       // Transform API response to our DashboardMetrics format
       return {
         addressesIndexed: data.address_count || 0, // Use address_count from API
@@ -37,15 +55,15 @@ export const api = {
         scannedBlocks: 0, // Not used anymore
         latestBlock: {
           height: data.latest_block.height,
-          hash: '', // Hash may not be in the new API
+          hash: data.latest_block.hash || '', // Use hash from API if available
           ScannedAt: data.latest_block.scanned_at, // ScannedAt may not be in the new API
           exposedCount: 0, // This field may not be available in new API
           revealedCount: 0 // This field may not be available in new API
         },
         addressCount: data.address_count,
         utxoCount: data.utxo_count,
-        highRiskAddressCount: data.high_risk_address_count,
-        mediumRiskAddressCount: data.medium_risk_address_count
+        highRiskAddressCount: highRiskCount,
+        mediumRiskAddressCount: mediumRiskCount
       }
     } catch (error) {
       console.error('Failed to fetch metrics from API:', error)
