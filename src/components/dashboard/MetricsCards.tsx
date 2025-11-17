@@ -34,7 +34,7 @@ export const MetricsCards = () => {
         <CardBody>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Addresses</h3>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Block Addresses</h3>
               <MetricCardValue 
                 value={metrics.addressCount || 0}
                 colorClasses={{
