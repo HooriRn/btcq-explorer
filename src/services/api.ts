@@ -63,7 +63,8 @@ export const api = {
         addressCount: data.address_count,
         utxoCount: data.utxo_count,
         highRiskAddressCount: highRiskCount,
-        mediumRiskAddressCount: mediumRiskCount
+        mediumRiskAddressCount: mediumRiskCount,
+        scriptTypeCounts: scriptTypeCounts
       }
     } catch (error) {
       console.error('Failed to fetch metrics from API:', error)

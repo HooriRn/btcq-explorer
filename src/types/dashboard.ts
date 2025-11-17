@@ -67,6 +67,7 @@ export interface DashboardMetrics {
   utxoCount?: number
   highRiskAddressCount?: number
   mediumRiskAddressCount?: number
+  scriptTypeCounts?: Record<string, number>
 }
 
 export interface UTXO {

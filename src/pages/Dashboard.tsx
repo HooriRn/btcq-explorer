@@ -3,6 +3,7 @@ import { MetricsCards, SearchBar, SearchResults } from '../components'
 import { LatestAddressesPreview } from '../components/dashboard/LatestAddressesPreview'
 import { LatestUTXOsPreview } from '../components/dashboard/LatestUTXOsPreview'
 import { LatestBlocksPreview } from '../components/dashboard/LatestBlocksPreview'
+import { UTXOTypesTable } from '../components/dashboard/UTXOTypesTable'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
 
@@ -32,12 +33,17 @@ export const Dashboard = () => {
         />
       )}
 
+      <div className="mt-6">
+        <UTXOTypesTable />
+      </div>
+
       <LatestAddressesPreview />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <LatestUTXOsPreview />
         <LatestBlocksPreview />
       </div>
+
     </main>
   )
 }

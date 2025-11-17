@@ -25,10 +25,10 @@ export const getStatusDotColor = (riskLevel: string) => {
 }
 
 // High risk script types
-export const HIGH_RISK_TYPES = ['P2PK', 'P2MS', 'P2PR']
+export const HIGH_RISK_TYPES = ['P2PK', 'P2MS', 'P2PR', 'P2TR']
 
 // Medium risk script types (when address is reused)
-export const MEDIUM_RISK_TYPES = ['P2PKH', 'P2SH', 'P2WPKH', 'P2WSH', 'P2TR']
+export const MEDIUM_RISK_TYPES = ['P2PKH', 'P2SH', 'P2WPKH', 'P2WSH', 'Bech32']
 
 /**
  * Determines the risk level of a UTXO based on its script type
