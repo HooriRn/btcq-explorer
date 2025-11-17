@@ -99,7 +99,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
               // Render Address Status Result
               if (isAddressStatus(result)) {
                 const txCount = result.tx_count ?? result.appearances ?? 0
-                const isAddressReused = result.utxo_count > 0 && txCount > 0
+                const isAddressReused = result.utxo_count > 0 && txCount > 0 && result.utxo_count !== result.appearances
                 const riskLevel = calculateUTXORiskLevel(result.script_pub_type, isAddressReused)
                 const isCompromised = riskLevel === 'High'
                 

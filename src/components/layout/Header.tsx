@@ -36,16 +36,6 @@ export const Header = () => {
                 )}
               </span>
             </div>
-            <div className="flex items-center space-x-2 hidden sm:flex">
-              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                <span className="text-blue-600 dark:text-blue-400 font-medium">Addresses Indexed:</span>{' '}
-                {metrics.addressesIndexed ? (
-                  <AnimatedNumber value={metrics.addressesIndexed} />
-                ) : (
-                  'Loading...'
-                )}
-              </span>
-            </div>
           </div>
           
           <div className="flex items-center space-x-4">
