@@ -8,5 +8,10 @@ export default defineConfig({
   preview: {
     // Vite preview server automatically handles SPA routing
     port: 4173,
+    allowedHosts: [
+      'dashboard.thegreatlich.xyz',
+      'localhost',
+      '.localhost', // Allow all localhost subdomains
+    ],
   },
 })
