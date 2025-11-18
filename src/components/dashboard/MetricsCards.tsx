@@ -64,7 +64,7 @@ export const MetricsCards = () => {
         <CardBody>
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">UTXOs</h3>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">UTXOs Indexed</h3>
               <MetricCardValue 
                 value={metrics.utxoCount || 0}
                 colorClasses={{
@@ -94,7 +94,7 @@ export const MetricsCards = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">High Risk</h3>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">High Risk UTXOs</h3>
                 <Tooltip
                   content={
                     <div className="space-y-2">
@@ -151,7 +151,7 @@ export const MetricsCards = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Medium Risk</h3>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Medium Risk UTXOs</h3>
                 <Tooltip
                   content={
                     <div className="space-y-2">
