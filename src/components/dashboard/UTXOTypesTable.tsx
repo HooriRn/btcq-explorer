@@ -3,14 +3,17 @@ import { useDashboardStore } from '../../stores/dashboardStore'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../../utils/riskLevel'
 
 export const UTXOTypesTable = () => {
-  const { metrics } = useDashboardStore()
+  const { metrics, supplyStats, bitcoinPrice } = useDashboardStore()
   const scriptTypeCounts = metrics.scriptTypeCounts || {}
+  const scriptTypeBalances = supplyStats.script_type_balances || {}
+  const totalSupply = supplyStats.total_supply_sat || 0
 
-  // Get all script types and sort by count (descending)
+  // Get all script types and combine count and balance data
   const scriptTypes = Object.entries(scriptTypeCounts)
     .map(([type, count]) => ({
       type,
-      count: count as number
+      count: count as number,
+      balance: scriptTypeBalances[type] || 0
     }))
     .sort((a, b) => b.count - a.count)
 
@@ -44,9 +47,42 @@ export const UTXOTypesTable = () => {
     return count.toLocaleString()
   }
 
+  const formatBalance = (satoshi: number) => {
+    if (satoshi === 0) return '0'
+    // Convert satoshi to BTC for display
+    const btc = satoshi / 100_000_000
+    if (btc >= 1_000_000) {
+      return `${(btc / 1_000_000).toFixed(2)}M BTC`
+    } else if (btc >= 1_000) {
+      return `${(btc / 1_000).toFixed(2)}K BTC`
+    } else {
+      return `${btc.toFixed(8)} BTC`
+    }
+  }
+
+  const formatUSD = (satoshi: number) => {
+    if (satoshi === 0 || bitcoinPrice === 0) return '$0'
+    const btc = satoshi / 100_000_000
+    const usd = btc * bitcoinPrice
+    if (usd >= 1_000_000_000) {
+      return `$${(usd / 1_000_000_000).toFixed(2)}B`
+    } else if (usd >= 1_000_000) {
+      return `$${(usd / 1_000_000).toFixed(2)}M`
+    } else if (usd >= 1_000) {
+      return `$${(usd / 1_000).toFixed(2)}K`
+    } else {
+      return `$${usd.toFixed(2)}`
+    }
+  }
+
   const calculatePercentage = (count: number, total: number) => {
     if (total === 0) return '0.00'
     return ((count / total) * 100).toFixed(2)
+  }
+
+  const calculateBalancePercentage = (balance: number, totalSupply: number) => {
+    if (totalSupply === 0) return '0.00'
+    return ((balance / totalSupply) * 100).toFixed(2)
   }
 
   const totalUtxos = metrics.utxoCount || 0
@@ -59,6 +95,15 @@ export const UTXOTypesTable = () => {
     <div className="mt-12">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">UTXO Types Distribution</h2>
+        {totalSupply > 0 && (
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            <span className="font-semibold">Total Supply: </span>
+            <span className="font-mono">{formatBalance(totalSupply)}</span>
+            {bitcoinPrice > 0 && (
+              <span className="ml-2">• {formatUSD(totalSupply)}</span>
+            )}
+          </div>
+        )}
       </div>
       
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
@@ -77,11 +122,13 @@ export const UTXOTypesTable = () => {
             <TableHeader>
               <TableColumn>Script Type</TableColumn>
               <TableColumn>Count</TableColumn>
-              <TableColumn>Percentage</TableColumn>
+              <TableColumn>Count %</TableColumn>
+              <TableColumn>Balance</TableColumn>
+              <TableColumn>Balance %</TableColumn>
               <TableColumn>Risk Level</TableColumn>
             </TableHeader>
             <TableBody emptyContent="No UTXO types found">
-              {scriptTypes.map(({ type, count }) => {
+              {scriptTypes.map(({ type, count, balance }) => {
                 const riskLevel = getRiskLevel(type)
                 return (
                   <TableRow key={type}>
@@ -98,6 +145,23 @@ export const UTXOTypesTable = () => {
                     <TableCell>
                       <span className="text-sm text-gray-900 dark:text-gray-100">
                         {calculatePercentage(count, totalUtxos)}%
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                          {formatBalance(balance)}
+                        </span>
+                        {bitcoinPrice > 0 && (
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {formatUSD(balance)}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm text-gray-900 dark:text-gray-100">
+                        {calculateBalancePercentage(balance, totalSupply)}%
                       </span>
                     </TableCell>
                     <TableCell>

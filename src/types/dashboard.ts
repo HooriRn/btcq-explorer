@@ -119,3 +119,13 @@ export interface Address {
 export interface AddressResponse {
   results: Address[]
 }
+
+export interface SupplyStats {
+  total_supply_sat: number
+  script_type_balances: Record<string, number>
+}
+
+export interface SupplyStatsResponse {
+  total_supply_sat: number
+  script_type_balances: Record<string, number>
+}

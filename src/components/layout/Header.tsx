@@ -7,7 +7,7 @@ import { BitcoinLogo } from '../common/BitcoinLogo'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 
 export const Header = () => {
-  const { metrics } = useDashboardStore()
+  const { metrics, bitcoinPrice } = useDashboardStore()
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -36,6 +36,15 @@ export const Header = () => {
                 )}
               </span>
             </div>
+            {bitcoinPrice > 0 && (
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                  <span className="text-orange-600 dark:text-orange-400 font-medium">BTC Price:</span>{' '}
+                  <span className="font-semibold">${bitcoinPrice.toLocaleString()}</span>
+                </span>
+              </div>
+            )}
           </div>
           
           <div className="flex items-center space-x-4">

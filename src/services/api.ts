@@ -1,4 +1,4 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse } from '../types/dashboard'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse } from '../types/dashboard'
 import { getApiBaseUrl } from './config'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
@@ -127,6 +127,35 @@ export const api = {
     } catch (error) {
       console.error('Failed to fetch latest addresses:', error)
       return { results: [] }
+    }
+  },
+
+  fetchSupplyStats: async (): Promise<SupplyStatsResponse> => {
+    try {
+      const response = await fetch(`${getApiBaseUrl()}stats/supply`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Failed to fetch supply stats:', error)
+      return { total_supply_sat: 0, script_type_balances: {} }
+    }
+  },
+
+  fetchBitcoinPrice: async (): Promise<number> => {
+    try {
+      // Using CoinGecko free API (no API key required)
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      return data.bitcoin?.usd || 0
+    } catch (error) {
+      console.error('Failed to fetch Bitcoin price:', error)
+      return 0
     }
   }
 }

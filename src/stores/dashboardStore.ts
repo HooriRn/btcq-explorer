@@ -1,9 +1,11 @@
 import { create } from 'zustand'
-import type { DashboardMetrics, UTXO, Block, Address } from '../types/dashboard'
+import type { DashboardMetrics, UTXO, Block, Address, SupplyStats } from '../types/dashboard'
 import { api } from '../services/api'
 
 interface DashboardState {
   metrics: DashboardMetrics
+  supplyStats: SupplyStats
+  bitcoinPrice: number
   latestUtxos: UTXO[]
   latestBlocks: Block[]
   latestAddresses: Address[]
@@ -11,6 +13,8 @@ interface DashboardState {
   isLoadingMetrics: boolean
   lastUpdated: string
   fetchMetrics: () => Promise<void>
+  fetchSupplyStats: () => Promise<void>
+  fetchBitcoinPrice: () => Promise<void>
   fetchLatestUtxos: () => Promise<void>
   fetchLatestBlocks: () => Promise<void>
   fetchLatestAddresses: () => Promise<void>
@@ -33,6 +37,11 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       revealedCount: 0
     }
   },
+  supplyStats: {
+    total_supply_sat: 0,
+    script_type_balances: {}
+  },
+  bitcoinPrice: 0,
   latestUtxos: [],
   latestBlocks: [],
   latestAddresses: [],
@@ -49,6 +58,27 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       console.error('Failed to fetch metrics:', error)
     } finally {
       set({ isLoading: false, isLoadingMetrics: false })
+    }
+  },
+
+  fetchSupplyStats: async () => {
+    set({ isLoading: true })
+    try {
+      const supplyStats = await api.fetchSupplyStats()
+      set({ supplyStats, lastUpdated: new Date().toLocaleTimeString() })
+    } catch (error) {
+      console.error('Failed to fetch supply stats:', error)
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  fetchBitcoinPrice: async () => {
+    try {
+      const price = await api.fetchBitcoinPrice()
+      set({ bitcoinPrice: price })
+    } catch (error) {
+      console.error('Failed to fetch Bitcoin price:', error)
     }
   },
 
@@ -91,14 +121,18 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   refreshData: async () => {
     set({ isLoading: true, isLoadingMetrics: true })
     try {
-      const [metrics, utxos, blocks, addresses] = await Promise.all([
+      const [metrics, supplyStats, price, utxos, blocks, addresses] = await Promise.all([
         api.fetchMetrics(),
+        api.fetchSupplyStats(),
+        api.fetchBitcoinPrice(),
         api.fetchLatestUtxos(),
         api.fetchLatestBlocks(),
         api.fetchLatestAddresses()
       ])
       set({ 
         metrics,
+        supplyStats,
+        bitcoinPrice: price,
         latestUtxos: utxos.results,
         latestBlocks: blocks.results,
         latestAddresses: addresses.results,
