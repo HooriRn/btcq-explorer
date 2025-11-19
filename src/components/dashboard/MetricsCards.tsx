@@ -54,6 +54,19 @@ export const MetricsCards = () => {
     }
   }
 
+  // Calculate percentage helper
+  const calculatePercentage = (value: number, total: number): number => {
+    if (total === 0) return 0
+    return (value / total) * 100
+  }
+
+  // Calculate percentages
+  const indexedUTXOCount = metrics.utxoCount || 0
+  const highRiskUTXOPercentage = calculatePercentage(metrics.highRiskAddressCount || 0, indexedUTXOCount)
+  const mediumRiskUTXOPercentage = calculatePercentage(metrics.mediumRiskAddressCount || 0, indexedUTXOCount)
+  const highRiskBalancePercentage = calculatePercentage(highRiskBalance, totalSupply)
+  const mediumRiskBalancePercentage = calculatePercentage(mediumRiskBalance, totalSupply)
+
   if (isLoadingMetrics && Object.keys(metrics).length === 0) {
     // Show skeletons only on initial load when there's no data
     return (
@@ -152,6 +165,11 @@ export const MetricsCards = () => {
                   highlight: 'text-red-700 dark:text-red-300'
                 }}
               />
+              {indexedUTXOCount > 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {highRiskUTXOPercentage.toFixed(2)}% of indexed UTXO
+                </p>
+              )}
             </div>
             <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
               <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,6 +227,11 @@ export const MetricsCards = () => {
                   highlight: 'text-orange-700 dark:text-orange-300'
                 }}
               />
+              {indexedUTXOCount > 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {mediumRiskUTXOPercentage.toFixed(2)}% of indexed UTXO
+                </p>
+              )}
             </div>
             <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full ml-4">
               <svg className="w-8 h-8 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -304,6 +327,11 @@ export const MetricsCards = () => {
                     {formatUSD(highRiskBalance)}
                   </p>
                 )}
+                {totalSupply > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {highRiskBalancePercentage.toFixed(2)}% of total supply
+                  </p>
+                )}
               </div>
               <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
                 <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -362,6 +390,11 @@ export const MetricsCards = () => {
                 {bitcoinPrice > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {formatUSD(mediumRiskBalance)}
+                  </p>
+                )}
+                {totalSupply > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {mediumRiskBalancePercentage.toFixed(2)}% of total supply
                   </p>
                 )}
               </div>
