@@ -20,3 +20,8 @@ html:not([data-theme]) {
 }
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Set Montserrat as the main font */
+body {
+  font-family: 'Montserrat', sans-serif;
+}
