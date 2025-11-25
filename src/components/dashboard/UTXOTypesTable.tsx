@@ -92,9 +92,8 @@ export const UTXOTypesTable = () => {
   }
 
   return (
-    <div className="mt-12">
+    <div className="mt-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">UTXO Types Distribution</h2>
         {totalSupply > 0 && (
           <div className="text-sm text-gray-600 dark:text-gray-400">
             <span className="font-semibold">Total Supply: </span>

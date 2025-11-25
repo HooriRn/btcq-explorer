@@ -4,6 +4,7 @@ import { LatestAddressesPreview } from '../components/dashboard/LatestAddressesP
 import { LatestUTXOsPreview } from '../components/dashboard/LatestUTXOsPreview'
 import { LatestBlocksPreview } from '../components/dashboard/LatestBlocksPreview'
 import { UTXOTypesTable } from '../components/dashboard/UTXOTypesTable'
+import { UTXODistributionCharts } from '../components/dashboard/UTXODistributionCharts'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
 
@@ -33,7 +34,9 @@ export const Dashboard = () => {
         />
       )}
 
-      <div className="mt-6">
+
+      <div className="mt-12">
+        <UTXODistributionCharts />
         <UTXOTypesTable />
       </div>
 
