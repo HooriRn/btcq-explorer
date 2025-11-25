@@ -245,7 +245,7 @@ export const UTXODistributionCharts = () => {
                       paddingTop: '40px',
                       color: isDark ? '#e5e7eb' : '#1f2937'
                     }}
-                    formatter={(value, entry: any) => {
+                    formatter={(value: string, entry: any) => {
                       const data = entry.payload as ChartData
                       return `${value} (${data.percentage.toFixed(1)}%)`
                     }}
@@ -313,7 +313,7 @@ export const UTXODistributionCharts = () => {
                       paddingTop: '40px',
                       color: isDark ? '#e5e7eb' : '#1f2937'
                     }}
-                    formatter={(value, entry: any) => {
+                    formatter={(value: string, entry: any) => {
                       const data = entry.payload as ChartData
                       return `${value} (${data.percentage.toFixed(1)}%)`
                     }}
