@@ -44,6 +44,9 @@ export const UTXOTypesTable = () => {
   }
 
   const formatCount = (count: number) => {
+    if (count === 0) {
+      return 'N/A'
+    }
     return count.toLocaleString()
   }
 
@@ -76,7 +79,9 @@ export const UTXOTypesTable = () => {
   }
 
   const calculatePercentage = (count: number, total: number) => {
-    if (total === 0) return '0.00'
+    if (count === 0 || total === 0) {
+      return 'N/A'
+    }
     return ((count / total) * 100).toFixed(2)
   }
 

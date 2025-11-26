@@ -69,6 +69,9 @@ export const UTXODistributionCharts = () => {
     .sort((a, b) => b.value - a.value)
 
   const formatCount = (value: number) => {
+    if (value === 0) {
+      return 'N/A'
+    }
     return value.toLocaleString()
   }
 
