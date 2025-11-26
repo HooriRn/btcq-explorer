@@ -18,14 +18,18 @@ const EXPOSURE_COLORS: Record<ExposureCategory, 'danger' | 'warning' | 'success'
 export const UTXOTypesTable = () => {
   const { metrics, bitcoinPrice } = useDashboardStore()
   const scriptTypeStats = metrics.scriptTypeExposureStats || []
+  const excludedTypes = new Set(['unknown', 'op_return', 'nonstandard', 'bech32'])
+  const filteredStats = scriptTypeStats.filter(
+    stat => !excludedTypes.has((stat.scriptType || '').toLowerCase())
+  )
 
-  if (scriptTypeStats.length === 0) {
+  if (filteredStats.length === 0) {
     return null
   }
 
-  const totalAddresses = scriptTypeStats.reduce((sum, stat) => sum + stat.totalCount, 0)
-  const totalBalance = scriptTypeStats.reduce((sum, stat) => sum + stat.totalSat, 0)
-  const sortedStats = [...scriptTypeStats].sort((a, b) => b.totalCount - a.totalCount)
+  const totalAddresses = filteredStats.reduce((sum, stat) => sum + stat.totalCount, 0)
+  const totalBalance = filteredStats.reduce((sum, stat) => sum + stat.totalSat, 0)
+  const sortedStats = [...filteredStats].sort((a, b) => b.totalCount - a.totalCount)
 
   const formatCount = (count: number) => {
     if (count === 0) {
