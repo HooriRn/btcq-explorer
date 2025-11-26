@@ -3,27 +3,33 @@ import { useDashboardStore } from '../../stores/dashboardStore'
 import { CardSkeleton } from '../common/LoadingSkeleton'
 import { MetricCardValue } from '../common/MetricCardValue'
 import { Tooltip } from '../common/Tooltip'
-import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../../utils/riskLevel'
+import { HIGH_RISK_TYPES } from '../../utils/riskLevel'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 
 export const MetricsCards = () => {
   const { metrics, supplyStats, bitcoinPrice, isLoadingMetrics } = useDashboardStore()
   
-  // Calculate high risk and medium risk balances
   const scriptTypeBalances = supplyStats.script_type_balances || {}
   const totalSupply = supplyStats.total_supply_sat || 0
-  
-  let highRiskBalance = 0
-  HIGH_RISK_TYPES.forEach(scriptType => {
-    highRiskBalance += scriptTypeBalances[scriptType] || 0
-  })
-  // Also include 'unknown' as high risk
-  highRiskBalance += scriptTypeBalances['unknown'] || 0
-  
-  let mediumRiskBalance = 0
-  MEDIUM_RISK_TYPES.forEach(scriptType => {
-    mediumRiskBalance += scriptTypeBalances[scriptType] || 0
-  })
+
+  const fallbackExposedBalance = (() => {
+    const riskyTypes = new Set([
+      ...HIGH_RISK_TYPES.map(type => type.toLowerCase()),
+      'unknown',
+      'nonstandard'
+    ])
+    return Object.entries(scriptTypeBalances).reduce((sum, [type, balance]) => {
+      if (riskyTypes.has(type.toLowerCase())) {
+        return sum + (balance || 0)
+      }
+      return sum
+    }, 0)
+  })()
+
+  const fallbackSafeBalance = Math.max(totalSupply - fallbackExposedBalance, 0)
+
+  const exposedBalance = metrics.exposedBalanceSat ?? fallbackExposedBalance
+  const safeBalance = metrics.safeBalanceSat ?? fallbackSafeBalance
   
   // Format BTC value for display
   const formatBTC = (satoshi: number) => {
@@ -60,12 +66,19 @@ export const MetricsCards = () => {
     return (value / total) * 100
   }
 
-  // Calculate percentages
-  const indexedUTXOCount = metrics.utxoCount || 0
-  const highRiskUTXOPercentage = calculatePercentage(metrics.highRiskAddressCount || 0, indexedUTXOCount)
-  const mediumRiskUTXOPercentage = calculatePercentage(metrics.mediumRiskAddressCount || 0, indexedUTXOCount)
-  const highRiskBalancePercentage = calculatePercentage(highRiskBalance, totalSupply)
-  const mediumRiskBalancePercentage = calculatePercentage(mediumRiskBalance, totalSupply)
+  // Calculate address-level rollups
+  const totalAddressesIndexed = metrics.addressesIndexed || metrics.addressCount || 0
+  const exposedAddresses = metrics.exposedAddressCount ?? 0
+  const computedNotExposed = Math.max(totalAddressesIndexed - exposedAddresses, 0)
+  const notExposedAddresses = metrics.notExposedAddressCount ?? computedNotExposed
+  const reusedAddresses = metrics.reusedAddressCount ?? 0
+  const exposurePercentage = calculatePercentage(exposedAddresses, totalAddressesIndexed)
+  const safePercentage = calculatePercentage(notExposedAddresses, totalAddressesIndexed)
+  const reusePercentage = calculatePercentage(reusedAddresses, totalAddressesIndexed)
+
+  // Calculate supply percentages
+  const exposedBalancePercentage = calculatePercentage(exposedBalance, totalSupply)
+  const safeBalancePercentage = calculatePercentage(safeBalance, totalSupply)
 
   if (isLoadingMetrics && Object.keys(metrics).length === 0) {
     // Show skeletons only on initial load when there's no data
@@ -87,160 +100,128 @@ export const MetricsCards = () => {
 
   return (
     <div className="space-y-6">
-      {/* UTXO Count Cards */}
+      {/* Address Exposure Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* UTXO Count Card */}
-      <Card 
-        className="border-2 border-green-200 dark:border-green-700 hover:shadow-lg transition-shadow"
-        classNames={{
-          base: "bg-white dark:bg-gray-800",
-          body: "p-6"
-        }}
-      >
-        <CardBody>
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Indexed UTXO</h3>
-              <MetricCardValue 
-                value={metrics.utxoCount || 0}
-                colorClasses={{
-                  default: 'text-green-600 dark:text-green-400',
-                  highlight: 'text-green-700 dark:text-green-300'
-                }}
-              />
+        {/* Address Indexed Card */}
+        <Card 
+          className="border-2 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow"
+          classNames={{
+            base: "bg-white dark:bg-gray-800",
+            body: "p-6"
+          }}
+        >
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Addresses Indexed</h3>
+                <MetricCardValue 
+                  value={totalAddressesIndexed}
+                  colorClasses={{
+                    default: 'text-blue-600 dark:text-blue-400',
+                    highlight: 'text-blue-700 dark:text-blue-300'
+                  }}
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Unique addresses we currently track on-chain.
+                </p>
+              </div>
+              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V7a2 2 0 00-2-2h-3V3H9v2H6a2 2 0 00-2 2v6m16 0v6a2 2 0 01-2 2h-3v2H9v-2H6a2 2 0 01-2-2v-6m16 0H4" />
+                </svg>
+              </div>
             </div>
-            <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-              <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
+          </CardBody>
+        </Card>
 
-      {/* High Risk Addresses Card */}
-      <Card 
-        className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
-        classNames={{
-          base: "bg-white dark:bg-gray-800",
-          body: "p-6"
-        }}
-      >
-        <CardBody>
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">High Risk UTXO</h3>
-                <Tooltip
-                  content={
-                    <div className="space-y-2">
-                      <div>
-                        <p className="font-semibold mb-1">Types:</p>
-                        <p className="text-xs">{HIGH_RISK_TYPES.join(', ')}</p>
-                      </div>
-                      <div>
-                        <p className="font-semibold mb-1">Why at risk:</p>
+        {/* Exposed Addresses Card */}
+        <Card 
+          className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
+          classNames={{
+            base: "bg-white dark:bg-gray-800",
+            body: "p-6"
+          }}
+        >
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Exposed Addresses</h3>
+                  <Tooltip
+                    content={
+                      <div className="space-y-2">
                         <p className="text-xs">
-                          Exposes public keys directly. Vulnerable to quantum computers that can derive private keys from public keys.
+                          Sum of addresses using high-risk script types (e.g., {HIGH_RISK_TYPES.join(', ')}) plus reused addresses across other types.
                         </p>
                       </div>
-                    </div>
-                  }
-                  position="top"
-                >
-                  <Button
-                    isIconOnly
-                    variant="light"
-                    size="sm"
-                    className="text-gray-900 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                    }
+                    position="top"
                   >
-                    <AiOutlineQuestionCircle className="w-4 h-4" />
-                  </Button>
-                </Tooltip>
+                    <Button
+                      isIconOnly
+                      variant="light"
+                      size="sm"
+                      className="text-gray-900 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                    >
+                      <AiOutlineQuestionCircle className="w-4 h-4" />
+                    </Button>
+                  </Tooltip>
+                </div>
+                <MetricCardValue 
+                  value={exposedAddresses}
+                  colorClasses={{
+                    default: 'text-red-600 dark:text-red-400',
+                    highlight: 'text-red-700 dark:text-red-300'
+                  }}
+                />
+                {totalAddressesIndexed > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {exposurePercentage.toFixed(2)}% of indexed addresses • {reusedAddresses.toLocaleString()} reused ({reusePercentage.toFixed(2)}%)
+                  </p>
+                )}
               </div>
-              <MetricCardValue 
-                value={metrics.highRiskAddressCount || 0}
-                colorClasses={{
-                  default: 'text-red-600 dark:text-red-400',
-                  highlight: 'text-red-700 dark:text-red-300'
-                }}
-              />
-              {indexedUTXOCount > 0 && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {highRiskUTXOPercentage.toFixed(2)}% of indexed UTXO
-                </p>
-              )}
+              <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
+                <svg className="w-8 h-8 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                </svg>
+              </div>
             </div>
-            <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
-              <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
+          </CardBody>
+        </Card>
 
-      {/* Medium Risk Addresses Card */}
-      <Card 
-        className="border-2 border-orange-200 dark:border-orange-700 hover:shadow-lg transition-shadow"
-        classNames={{
-          base: "bg-white dark:bg-gray-800",
-          body: "p-6"
-        }}
-      >
-        <CardBody>
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Medium Risk UTXO</h3>
-                <Tooltip
-                  content={
-                    <div className="space-y-2">
-                      <div>
-                        <p className="font-semibold mb-1">Types:</p>
-                        <p className="text-xs">{MEDIUM_RISK_TYPES.join(', ')}</p>
-                      </div>
-                      <div>
-                        <p className="font-semibold mb-1">Why at risk:</p>
-                        <p className="text-xs">
-                          Uses hashed public keys. Vulnerable when addresses are reused, exposing public keys through transactions.
-                        </p>
-                      </div>
-                    </div>
-                  }
-                  position="top"
-                >
-                  <Button
-                    isIconOnly
-                    variant="light"
-                    size="sm"
-                    className="text-gray-900 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400"
-                  >
-                    <AiOutlineQuestionCircle className="w-4 h-4" />
-                  </Button>
-                </Tooltip>
+        {/* Not Exposed Card */}
+        <Card 
+          className="border-2 border-emerald-200 dark:border-emerald-700 hover:shadow-lg transition-shadow"
+          classNames={{
+            base: "bg-white dark:bg-gray-800",
+            body: "p-6"
+          }}
+        >
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Not Exposed</h3>
+                <MetricCardValue 
+                  value={notExposedAddresses}
+                  colorClasses={{
+                    default: 'text-emerald-600 dark:text-emerald-400',
+                    highlight: 'text-emerald-700 dark:text-emerald-300'
+                  }}
+                />
+                {totalAddressesIndexed > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {safePercentage.toFixed(2)}% of indexed addresses remain safe.
+                  </p>
+                )}
               </div>
-              <MetricCardValue 
-                value={metrics.mediumRiskAddressCount || 0}
-                colorClasses={{
-                  default: 'text-orange-600 dark:text-orange-400',
-                  highlight: 'text-orange-700 dark:text-orange-300'
-                }}
-              />
-              {indexedUTXOCount > 0 && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {mediumRiskUTXOPercentage.toFixed(2)}% of indexed UTXO
-                </p>
-              )}
+              <div className="bg-emerald-100 dark:bg-emerald-900 p-3 rounded-full">
+                <svg className="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
             </div>
-            <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full ml-4">
-              <svg className="w-8 h-8 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
+          </CardBody>
+        </Card>
       </div>
 
       {/* Balance Cards */}
@@ -277,7 +258,7 @@ export const MetricsCards = () => {
           </CardBody>
         </Card>
 
-        {/* High Risk Balance Card */}
+        {/* Exposed Balance Card */}
         <Card 
           className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
           classNames={{
@@ -289,20 +270,14 @@ export const MetricsCards = () => {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">High Risk Balance</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Exposed Balance</h3>
                   <Tooltip
                     content={
                       <div className="space-y-2">
-                        <div>
-                          <p className="font-semibold mb-1">Types:</p>
-                          <p className="text-xs">{HIGH_RISK_TYPES.join(', ')}, unknown</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold mb-1">Why at risk:</p>
-                          <p className="text-xs">
-                            Exposes public keys directly. Vulnerable to quantum computers that can derive private keys from public keys.
-                          </p>
-                        </div>
+                        <p className="text-xs">
+                          Combined value sitting in either inherently exposed script types ({HIGH_RISK_TYPES.join(', ')}, unknown, nonstandard) or in addresses
+                          that have been reused. Data sourced from `address/stats`.
+                        </p>
                       </div>
                     }
                     position="top"
@@ -319,32 +294,32 @@ export const MetricsCards = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <p className="text-3xl font-bold text-red-600 dark:text-red-400">
-                    {formatBTC(highRiskBalance)} BTC
+                    {formatBTC(exposedBalance)} BTC
                   </p>
                 </div>
                 {bitcoinPrice > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {formatUSD(highRiskBalance)}
+                    {formatUSD(exposedBalance)}
                   </p>
                 )}
                 {totalSupply > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {highRiskBalancePercentage.toFixed(2)}% of total supply
+                    {exposedBalancePercentage.toFixed(2)}% of total supply
                   </p>
                 )}
               </div>
               <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
-                <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <svg className="w-8 h-8 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
                 </svg>
               </div>
             </div>
           </CardBody>
         </Card>
 
-        {/* Medium Risk Balance Card */}
+        {/* Safe Balance Card */}
         <Card 
-          className="border-2 border-orange-200 dark:border-orange-700 hover:shadow-lg transition-shadow"
+          className="border-2 border-emerald-200 dark:border-emerald-700 hover:shadow-lg transition-shadow"
           classNames={{
             base: "bg-white dark:bg-gray-800",
             body: "p-6"
@@ -354,20 +329,14 @@ export const MetricsCards = () => {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Medium Risk Balance</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Not Exposed Balance</h3>
                   <Tooltip
                     content={
                       <div className="space-y-2">
-                        <div>
-                          <p className="font-semibold mb-1">Types:</p>
-                          <p className="text-xs">{MEDIUM_RISK_TYPES.join(', ')}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold mb-1">Why at risk:</p>
-                          <p className="text-xs">
-                            Uses hashed public keys. Vulnerable when addresses are reused, exposing public keys through transactions.
-                          </p>
-                        </div>
+                        <p className="text-xs">
+                          Value currently only in single-use, safer script types (e.g., SegWit addresses that have not been reused). Calculated as the portion
+                          of `address/stats` totals that remain unexposed.
+                        </p>
                       </div>
                     }
                     position="top"
@@ -376,31 +345,31 @@ export const MetricsCards = () => {
                       isIconOnly
                       variant="light"
                       size="sm"
-                      className="text-gray-900 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400"
+                      className="text-gray-900 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
                     >
                       <AiOutlineQuestionCircle className="w-4 h-4" />
                     </Button>
                   </Tooltip>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
-                    {formatBTC(mediumRiskBalance)} BTC
+                  <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                    {formatBTC(safeBalance)} BTC
                   </p>
                 </div>
                 {bitcoinPrice > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {formatUSD(mediumRiskBalance)}
+                    {formatUSD(safeBalance)}
                   </p>
                 )}
                 {totalSupply > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {mediumRiskBalancePercentage.toFixed(2)}% of total supply
+                    {safeBalancePercentage.toFixed(2)}% of total supply
                   </p>
                 )}
               </div>
-              <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full ml-4">
-                <svg className="w-8 h-8 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <div className="bg-emerald-100 dark:bg-emerald-900 p-3 rounded-full ml-4">
+                <svg className="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>

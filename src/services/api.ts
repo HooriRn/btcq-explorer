@@ -1,4 +1,4 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse } from '../types/dashboard'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse } from '../types/dashboard'
 import { getApiBaseUrl } from './config'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
@@ -15,19 +15,37 @@ const mockMetrics: DashboardMetrics = {
     ScannedAt: '',
     exposedCount: 0,
     revealedCount: 0
-  }
+  },
+  exposedAddressCount: 0,
+  notExposedAddressCount: 0,
+  reusedAddressCount: 0,
+  exposedBalanceSat: 0,
+  safeBalanceSat: 0
 }
 
 // API functions
 export const api = {
   fetchMetrics: async (): Promise<DashboardMetrics> => {
     try {
-      const response = await fetch(`${getApiBaseUrl()}stats/overview`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      const overviewResponse = await fetch(`${getApiBaseUrl()}stats/overview`)
+      if (!overviewResponse.ok) {
+        throw new Error(`HTTP error! status: ${overviewResponse.status}`)
       }
-      const data = await response.json()
-      
+      const data = await overviewResponse.json()
+
+      let addressStatsResults: AddressStatsResponse['results'] = []
+      try {
+        const addressStatsResponse = await fetch(`${getApiBaseUrl()}address/stats`)
+        if (addressStatsResponse.ok) {
+          const statsData: AddressStatsResponse = await addressStatsResponse.json()
+          addressStatsResults = statsData.results || []
+        } else {
+          console.warn('address/stats responded with non-OK status:', addressStatsResponse.status)
+        }
+      } catch (statsError) {
+        console.error('Failed to fetch address stats:', statsError)
+      }
+
       // Calculate high and medium risk counts from script_type_counts
       const scriptTypeCounts = data.script_type_counts || {}
       let highRiskCount = 0
@@ -44,10 +62,56 @@ export const api = {
       MEDIUM_RISK_TYPES.forEach(scriptType => {
         mediumRiskCount += scriptTypeCounts[scriptType] || 0
       })
+
+      const badTypeSet = new Set([
+        ...HIGH_RISK_TYPES.map(type => type.toLowerCase()),
+        'unknown',
+        'nonstandard'
+      ])
+
+      let addressesIndexedTotal = 0
+      let exposedAddressCount = 0
+      let reusedAddressCount = 0
+      let exposedBalanceSat = 0
+      let safeBalanceSat = 0
+      let totalSatFromStats = 0
+
+      addressStatsResults.forEach(entry => {
+        const count = entry.count || 0
+        const reusedCount = entry.reused_count || 0
+        const scriptType = (entry.script_pub_type || '').toLowerCase()
+        const totalSat = entry.total_sat || 0
+        const reusedSat = entry.reused_sat || 0
+        totalSatFromStats += totalSat
+
+        addressesIndexedTotal += count
+        reusedAddressCount += reusedCount
+
+        if (badTypeSet.has(scriptType)) {
+          exposedAddressCount += count
+          exposedBalanceSat += totalSat
+        } else {
+          const reuseExposed = Math.min(reusedCount, count)
+          exposedAddressCount += reuseExposed
+          exposedBalanceSat += reusedSat
+          const safePortion = Math.max(totalSat - reusedSat, 0)
+          safeBalanceSat += safePortion
+        }
+      })
+
+      if (addressesIndexedTotal === 0) {
+        addressesIndexedTotal = data.address_count || 0
+      }
+
+      const notExposedAddressCount = Math.max(addressesIndexedTotal - exposedAddressCount, 0)
+      if (safeBalanceSat === 0 && totalSatFromStats === 0) {
+        const overviewSupply = data.total_supply_sat || 0
+        safeBalanceSat = Math.max(overviewSupply - exposedBalanceSat, 0)
+      }
       
       // Transform API response to our DashboardMetrics format
       return {
-        addressesIndexed: data.address_count || 0, // Use address_count from API
+        addressesIndexed: addressesIndexedTotal,
         addressesAtRisk: 0, // This field may not be available in new API
         currentBitcoinHeight: data.latest_block.height,
         trackedExposed: 0, // This field may not be available in new API
@@ -60,11 +124,16 @@ export const api = {
           exposedCount: 0, // This field may not be available in new API
           revealedCount: 0 // This field may not be available in new API
         },
-        addressCount: data.address_count,
+        addressCount: addressesIndexedTotal,
         utxoCount: data.utxo_count,
         highRiskAddressCount: highRiskCount,
         mediumRiskAddressCount: mediumRiskCount,
-        scriptTypeCounts: scriptTypeCounts
+        scriptTypeCounts: scriptTypeCounts,
+        exposedAddressCount,
+        notExposedAddressCount,
+        reusedAddressCount,
+        exposedBalanceSat,
+        safeBalanceSat
       }
     } catch (error) {
       console.error('Failed to fetch metrics from API:', error)

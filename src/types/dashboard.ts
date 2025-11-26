@@ -68,6 +68,11 @@ export interface DashboardMetrics {
   highRiskAddressCount?: number
   mediumRiskAddressCount?: number
   scriptTypeCounts?: Record<string, number>
+  exposedAddressCount?: number
+  notExposedAddressCount?: number
+  reusedAddressCount?: number
+  exposedBalanceSat?: number
+  safeBalanceSat?: number
 }
 
 export interface UTXO {
@@ -118,6 +123,18 @@ export interface Address {
 
 export interface AddressResponse {
   results: Address[]
+}
+
+export interface AddressStatsEntry {
+  script_pub_type: string
+  reused_count: number
+  count: number
+  reused_sat: number
+  total_sat: number
+}
+
+export interface AddressStatsResponse {
+  results: AddressStatsEntry[]
 }
 
 export interface SupplyStats {
