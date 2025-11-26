@@ -1,4 +1,4 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse } from '../types/dashboard'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat } from '../types/dashboard'
 import { getApiBaseUrl } from './config'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
@@ -20,7 +20,8 @@ const mockMetrics: DashboardMetrics = {
   notExposedAddressCount: 0,
   reusedAddressCount: 0,
   exposedBalanceSat: 0,
-  safeBalanceSat: 0
+  safeBalanceSat: 0,
+  scriptTypeExposureStats: []
 }
 
 // API functions
@@ -69,42 +70,70 @@ export const api = {
         'nonstandard'
       ])
 
+      let scriptTypeExposureStats: ScriptTypeExposureStat[] = []
+
+      if (addressStatsResults.length > 0) {
+        scriptTypeExposureStats = addressStatsResults.map(entry => {
+          const scriptType = entry.script_pub_type || 'unknown'
+          const totalCount = entry.count || 0
+          const reusedCount = entry.reused_count || 0
+          const totalSat = entry.total_sat || 0
+          const reusedSat = entry.reused_sat || 0
+          const typeKey = scriptType.toLowerCase()
+          const isBadType = badTypeSet.has(typeKey)
+          const exposedCount = isBadType ? totalCount : Math.min(reusedCount, totalCount)
+          const exposedSat = isBadType ? totalSat : Math.min(reusedSat, totalSat)
+          const safeCount = Math.max(totalCount - exposedCount, 0)
+          const safeSat = Math.max(totalSat - exposedSat, 0)
+          const exposureCategory: ScriptTypeExposureStat['exposureCategory'] = isBadType
+            ? 'bad_type'
+            : (exposedCount > 0 ? 'reuse' : 'none')
+
+          return {
+            scriptType,
+            totalCount,
+            reusedCount,
+            totalSat,
+            reusedSat,
+            exposedCount,
+            safeCount,
+            exposedSat,
+            safeSat,
+            exposureCategory
+          }
+        })
+      }
+
       let addressesIndexedTotal = 0
       let exposedAddressCount = 0
       let reusedAddressCount = 0
       let exposedBalanceSat = 0
       let safeBalanceSat = 0
-      let totalSatFromStats = 0
 
-      addressStatsResults.forEach(entry => {
-        const count = entry.count || 0
-        const reusedCount = entry.reused_count || 0
-        const scriptType = (entry.script_pub_type || '').toLowerCase()
-        const totalSat = entry.total_sat || 0
-        const reusedSat = entry.reused_sat || 0
-        totalSatFromStats += totalSat
+      if (scriptTypeExposureStats.length > 0) {
+        scriptTypeExposureStats.forEach(stat => {
+          addressesIndexedTotal += stat.totalCount
+          exposedAddressCount += stat.exposedCount
+          reusedAddressCount += stat.reusedCount
+          exposedBalanceSat += stat.exposedSat
+          safeBalanceSat += stat.safeSat
+        })
+      }
 
-        addressesIndexedTotal += count
-        reusedAddressCount += reusedCount
-
-        if (badTypeSet.has(scriptType)) {
-          exposedAddressCount += count
-          exposedBalanceSat += totalSat
-        } else {
-          const reuseExposed = Math.min(reusedCount, count)
-          exposedAddressCount += reuseExposed
-          exposedBalanceSat += reusedSat
-          const safePortion = Math.max(totalSat - reusedSat, 0)
-          safeBalanceSat += safePortion
-        }
-      })
+      if (scriptTypeExposureStats.length === 0) {
+        addressesIndexedTotal = data.address_count || 0
+        exposedAddressCount = highRiskCount
+        reusedAddressCount = 0
+        exposedBalanceSat = 0
+        safeBalanceSat = data.total_supply_sat || 0
+      }
 
       if (addressesIndexedTotal === 0) {
         addressesIndexedTotal = data.address_count || 0
       }
 
       const notExposedAddressCount = Math.max(addressesIndexedTotal - exposedAddressCount, 0)
-      if (safeBalanceSat === 0 && totalSatFromStats === 0) {
+      if (safeBalanceSat === 0) {
         const overviewSupply = data.total_supply_sat || 0
         safeBalanceSat = Math.max(overviewSupply - exposedBalanceSat, 0)
       }
@@ -133,7 +162,8 @@ export const api = {
         notExposedAddressCount,
         reusedAddressCount,
         exposedBalanceSat,
-        safeBalanceSat
+        safeBalanceSat,
+        scriptTypeExposureStats
       }
     } catch (error) {
       console.error('Failed to fetch metrics from API:', error)

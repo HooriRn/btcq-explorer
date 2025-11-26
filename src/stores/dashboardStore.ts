@@ -40,7 +40,8 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     notExposedAddressCount: 0,
     reusedAddressCount: 0,
     exposedBalanceSat: 0,
-    safeBalanceSat: 0
+    safeBalanceSat: 0,
+    scriptTypeExposureStats: []
   },
   supplyStats: {
     total_supply_sat: 0,

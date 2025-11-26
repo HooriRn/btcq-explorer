@@ -2,70 +2,69 @@ import { Card, CardBody } from '@heroui/react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { useThemeStore } from '../../stores/themeStore'
-import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../../utils/riskLevel'
+
+type ExposureCategory = 'bad_type' | 'reuse' | 'none'
 
 interface ChartData {
   name: string
   value: number
   percentage: number
-  riskLevel: 'High' | 'Medium' | 'Low' | 'N/A'
-  [key: string]: string | number // Index signature for recharts compatibility
+  exposureCategory: ExposureCategory
+  exposureLabel: string
+  [key: string]: string | number
+}
+
+const EXPOSURE_LABELS: Record<ExposureCategory, string> = {
+  bad_type: 'Bad Script Type',
+  reuse: 'Address Reuse',
+  none: 'Not Exposed'
+}
+
+const getExposureTextColor = (category: ExposureCategory) => {
+  switch (category) {
+    case 'bad_type':
+      return 'text-red-600 dark:text-red-400'
+    case 'reuse':
+      return 'text-orange-600 dark:text-orange-400'
+    case 'none':
+    default:
+      return 'text-emerald-600 dark:text-emerald-400'
+  }
 }
 
 export const UTXODistributionCharts = () => {
-  const { metrics, supplyStats } = useDashboardStore()
+  const { metrics } = useDashboardStore()
   const { getEffectiveTheme } = useThemeStore()
   const isDark = getEffectiveTheme() === 'dark'
-  const scriptTypeCounts = metrics.scriptTypeCounts || {}
-  const scriptTypeBalances = supplyStats.script_type_balances || {}
-  const totalUtxos = metrics.utxoCount || 0
-  const totalSupply = supplyStats.total_supply_sat || 0
+  const scriptTypeStats = metrics.scriptTypeExposureStats || []
 
-  const getRiskLevel = (scriptType: string): 'High' | 'Medium' | 'Low' | 'N/A' => {
-    if (scriptType === 'unknown') {
-      return 'N/A'
-    }
-    if (HIGH_RISK_TYPES.includes(scriptType)) {
-      return 'High'
-    }
-    if (MEDIUM_RISK_TYPES.includes(scriptType)) {
-      return 'Medium'
-    }
-    return 'Low'
+  if (scriptTypeStats.length === 0) {
+    return null
   }
 
+  const totalExposedAddresses = scriptTypeStats.reduce((sum, stat) => sum + stat.exposedCount, 0)
+  const totalExposedBalance = scriptTypeStats.reduce((sum, stat) => sum + stat.exposedSat, 0)
 
-  // Script types to exclude (case-insensitive)
-  const excludedTypes = ['unknown', 'bech32', 'p2ms']
-  
-  // Prepare count data
-  const countData: ChartData[] = Object.entries(scriptTypeCounts)
-    .map(([type, count]) => {
-      const value = count as number
-      const percentage = totalUtxos > 0 ? (value / totalUtxos) * 100 : 0
-      return {
-        name: type,
-        value,
-        percentage,
-        riskLevel: getRiskLevel(type)
-      }
-    })
-    .filter(item => item.value > 0 && !excludedTypes.includes(item.name.toLowerCase()))
+  const countData: ChartData[] = scriptTypeStats
+    .filter(stat => stat.exposedCount > 0)
+    .map(stat => ({
+      name: stat.scriptType,
+      value: stat.exposedCount,
+      percentage: totalExposedAddresses > 0 ? (stat.exposedCount / totalExposedAddresses) * 100 : 0,
+      exposureCategory: stat.exposureCategory,
+      exposureLabel: EXPOSURE_LABELS[stat.exposureCategory]
+    }))
     .sort((a, b) => b.value - a.value)
 
-  // Prepare balance data
-  const balanceData: ChartData[] = Object.entries(scriptTypeBalances)
-    .map(([type, balance]) => {
-      const value = balance as number
-      const percentage = totalSupply > 0 ? (value / totalSupply) * 100 : 0
-      return {
-        name: type,
-        value,
-        percentage,
-        riskLevel: getRiskLevel(type)
-      }
-    })
-    .filter(item => item.value > 0 && !excludedTypes.includes(item.name.toLowerCase()))
+  const balanceData: ChartData[] = scriptTypeStats
+    .filter(stat => stat.exposedSat > 0)
+    .map(stat => ({
+      name: stat.scriptType,
+      value: stat.exposedSat,
+      percentage: totalExposedBalance > 0 ? (stat.exposedSat / totalExposedBalance) * 100 : 0,
+      exposureCategory: stat.exposureCategory,
+      exposureLabel: EXPOSURE_LABELS[stat.exposureCategory]
+    }))
     .sort((a, b) => b.value - a.value)
 
   const formatCount = (value: number) => {
@@ -91,21 +90,15 @@ export const UTXODistributionCharts = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ChartData
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Share of exposed addresses: {data.percentage.toFixed(2)}%</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Exposed addresses: {formatCount(data.value)}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Value: {formatCount(data.value)}
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Percentage: {data.percentage.toFixed(2)}%
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Risk: <span className={`font-semibold ${
-              data.riskLevel === 'High' ? 'text-red-600 dark:text-red-400' :
-              data.riskLevel === 'Medium' ? 'text-orange-600 dark:text-orange-400' :
-              data.riskLevel === 'Low' ? 'text-green-600 dark:text-green-400' :
-              'text-gray-600 dark:text-gray-400'
-            }`}>{data.riskLevel}</span>
+            Cause:{' '}
+            <span className={`font-semibold ${getExposureTextColor(data.exposureCategory)}`}>
+              {data.exposureLabel}
+            </span>
           </p>
         </div>
       )
@@ -117,21 +110,17 @@ export const UTXODistributionCharts = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ChartData
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Share of exposed balance: {data.percentage.toFixed(2)}%</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Balance: {formatBalance(data.value)}
+            Exposed balance: {formatBalance(data.value)}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Percentage: {data.percentage.toFixed(2)}%
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Risk: <span className={`font-semibold ${
-              data.riskLevel === 'High' ? 'text-red-600 dark:text-red-400' :
-              data.riskLevel === 'Medium' ? 'text-orange-600 dark:text-orange-400' :
-              data.riskLevel === 'Low' ? 'text-green-600 dark:text-green-400' :
-              'text-gray-600 dark:text-gray-400'
-            }`}>{data.riskLevel}</span>
+            Cause:{' '}
+            <span className={`font-semibold ${getExposureTextColor(data.exposureCategory)}`}>
+              {data.exposureLabel}
+            </span>
           </p>
         </div>
       )
@@ -173,23 +162,74 @@ export const UTXODistributionCharts = () => {
     return null
   }
 
-  // Vibrant color palette
   const COLORS = [
-    '#3b82f6',     // Blue
-    '#8b5cf6',     // Purple
-    '#ec4899',     // Pink
-    '#14b8a6',     // Teal
-    '#f59e0b',     // Amber
-    '#10b981',     // Emerald
-    '#ef4444',     // Red
-    '#06b6d4',     // Cyan
-    '#f97316',     // Orange
-    '#6366f1',     // Indigo
-  ];
+    '#3b82f6',
+    '#8b5cf6',
+    '#ec4899',
+    '#14b8a6',
+    '#f59e0b',
+    '#10b981',
+    '#ef4444',
+    '#06b6d4',
+    '#f97316',
+    '#6366f1'
+  ]
+
+  const renderPatternDefs = (
+    data: ChartData[],
+    prefix: string
+  ) => (
+    <defs>
+      {data.map((entry, index) => {
+        const baseColor = COLORS[index % COLORS.length]
+        if (entry.exposureCategory === 'bad_type') {
+          return (
+            <pattern
+              key={`${prefix}-dots-${index}`}
+              id={`${prefix}-dots-${index}`}
+              patternUnits="userSpaceOnUse"
+              width={8}
+              height={8}
+            >
+              <rect width="8" height="8" fill={baseColor} />
+              <circle cx="4" cy="4" r="1.5" fill={isDark ? '#ffffff' : '#000000'} opacity={isDark ? 0.3 : 0.4} />
+            </pattern>
+          )
+        }
+        if (entry.exposureCategory === 'reuse') {
+          return (
+            <pattern
+              key={`${prefix}-stripes-${index}`}
+              id={`${prefix}-stripes-${index}`}
+              patternUnits="userSpaceOnUse"
+              width={8}
+              height={8}
+              patternTransform="rotate(45)"
+            >
+              <rect width="8" height="8" fill={baseColor} />
+              <rect width="4" height="8" fill={isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'} />
+            </pattern>
+          )
+        }
+        return null
+      })}
+    </defs>
+  )
+
+  const getFillForEntry = (entry: ChartData, index: number, prefix: string) => {
+    const baseColor = COLORS[index % COLORS.length]
+    if (entry.exposureCategory === 'bad_type') {
+      return `url(#${prefix}-dots-${index})`
+    }
+    if (entry.exposureCategory === 'reuse') {
+      return `url(#${prefix}-stripes-${index})`
+    }
+    return baseColor
+  }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">UTXO Types Distribution</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Exposed Metrics</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Count Distribution Chart */}
         {countData.length > 0 && (
@@ -212,31 +252,12 @@ export const UTXODistributionCharts = () => {
                     stroke={isDark ? "#1f2937" : "#ffffff"}
                     strokeWidth={1}
                   >
-                    <defs>
-                      {countData.map((entry, index) => {
-                        if (entry.riskLevel === 'High') {
-                          const baseColor = COLORS[index % COLORS.length]
-                          return (
-                            <pattern
-                              key={`pattern-${index}`}
-                              id={`stripes-${index}`}
-                              patternUnits="userSpaceOnUse"
-                              width="8"
-                              height="8"
-                            >
-                              <rect width="8" height="8" fill={baseColor} />
-                              <circle cx="4" cy="4" r="1.5" fill={isDark ? "#ffffff" : "#000000"} opacity={isDark ? "0.3" : "0.4"} />
-                            </pattern>
-                          )
-                        }
-                        return null
-                      })}
-                    </defs>
+                    {renderPatternDefs(countData, 'count')}
                     {countData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={entry.riskLevel === 'High' ? `url(#stripes-${index})` : COLORS[index % COLORS.length]}
-                        stroke={isDark ? "#1f2937" : "#ffffff"}
+                      <Cell
+                        key={`cell-count-${index}`}
+                        fill={getFillForEntry(entry, index, 'count')}
+                        stroke={isDark ? '#1f2937' : '#ffffff'}
                         strokeWidth={1}
                       />
                     ))}
@@ -250,7 +271,7 @@ export const UTXODistributionCharts = () => {
                     }}
                     formatter={(value: string, entry: any) => {
                       const data = entry.payload as ChartData
-                      return `${value} (${data.percentage.toFixed(1)}%)`
+                      return `${value} (${data.percentage.toFixed(1)}%) • ${data.exposureLabel}`
                     }}
                   />
                 </PieChart>
@@ -280,31 +301,12 @@ export const UTXODistributionCharts = () => {
                     stroke={isDark ? "#1f2937" : "#ffffff"}
                     strokeWidth={1}
                   >
-                    <defs>
-                      {balanceData.map((entry, index) => {
-                        if (entry.riskLevel === 'High') {
-                          const baseColor = COLORS[index % COLORS.length]
-                          return (
-                            <pattern
-                              key={`pattern-balance-${index}`}
-                              id={`stripes-balance-${index}`}
-                              patternUnits="userSpaceOnUse"
-                              width="8"
-                              height="8"
-                            >
-                              <rect width="8" height="8" fill={baseColor} />
-                              <circle cx="4" cy="4" r="1.5" fill={isDark ? "#ffffff" : "#000000"} opacity={isDark ? "0.3" : "0.4"} />
-                            </pattern>
-                          )
-                        }
-                        return null
-                      })}
-                    </defs>
+                    {renderPatternDefs(balanceData, 'balance')}
                     {balanceData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={entry.riskLevel === 'High' ? `url(#stripes-balance-${index})` : COLORS[index % COLORS.length]}
-                        stroke={isDark ? "#1f2937" : "#ffffff"}
+                      <Cell
+                        key={`cell-balance-${index}`}
+                        fill={getFillForEntry(entry, index, 'balance')}
+                        stroke={isDark ? '#1f2937' : '#ffffff'}
                         strokeWidth={1}
                       />
                     ))}
@@ -318,7 +320,7 @@ export const UTXODistributionCharts = () => {
                     }}
                     formatter={(value: string, entry: any) => {
                       const data = entry.payload as ChartData
-                      return `${value} (${data.percentage.toFixed(1)}%)`
+                      return `${value} (${data.percentage.toFixed(1)}%) • ${data.exposureLabel}`
                     }}
                   />
                 </PieChart>

@@ -73,6 +73,7 @@ export interface DashboardMetrics {
   reusedAddressCount?: number
   exposedBalanceSat?: number
   safeBalanceSat?: number
+  scriptTypeExposureStats?: ScriptTypeExposureStat[]
 }
 
 export interface UTXO {
@@ -123,6 +124,19 @@ export interface Address {
 
 export interface AddressResponse {
   results: Address[]
+}
+
+export interface ScriptTypeExposureStat {
+  scriptType: string
+  totalCount: number
+  reusedCount: number
+  totalSat: number
+  reusedSat: number
+  exposedCount: number
+  safeCount: number
+  exposedSat: number
+  safeSat: number
+  exposureCategory: 'bad_type' | 'reuse' | 'none'
 }
 
 export interface AddressStatsEntry {
