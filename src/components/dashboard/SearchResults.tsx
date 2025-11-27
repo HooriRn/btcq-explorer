@@ -4,6 +4,7 @@ import { calculateUTXORiskLevel, HIGH_RISK_TYPES } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 import { Tooltip } from '../common/Tooltip'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
+import { useDashboardStore } from '../../stores/dashboardStore'
 
 interface SearchResultsProps {
   results: SearchResult[]
@@ -21,19 +22,23 @@ const isUTXOResult = (result: SearchResult): result is UTXOSearchResult => {
   return result.source === 'utxos'
 }
 
-const formatTimestamp = (timestamp: number) => {
-  try {
-    if (!timestamp || timestamp === 0) {
-      return 'N/A'
-    }
-    return new Date(timestamp / 1_000_000).toLocaleString()
-  } catch {
-    return 'N/A'
-  }
-}
-
 const formatValue = (valueSat: number) => {
   return (valueSat / 100_000_000).toFixed(8)
+}
+
+const formatUSD = (satoshi: number, bitcoinPrice: number) => {
+  if (satoshi === 0 || bitcoinPrice === 0) return '$0'
+  const btc = satoshi / 100_000_000
+  const usd = btc * bitcoinPrice
+  if (usd >= 1_000_000_000) {
+    return `$${(usd / 1_000_000_000).toFixed(2)}B`
+  } else if (usd >= 1_000_000) {
+    return `$${(usd / 1_000_000).toFixed(2)}M`
+  } else if (usd >= 1_000) {
+    return `$${(usd / 1_000).toFixed(2)}K`
+  } else {
+    return `$${usd.toFixed(2)}`
+  }
 }
 
 const formatAddress = (address: string, maxLength: number = 20) => {
@@ -43,6 +48,7 @@ const formatAddress = (address: string, maxLength: number = 20) => {
 }
 
 export const SearchResults = ({ results, isLoading, query }: SearchResultsProps) => {
+  const { bitcoinPrice } = useDashboardStore()
   if (isLoading) {
     return (
       <div className="mt-6">
@@ -104,9 +110,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
             {results.map((result, index) => {
               // Render Address Status Result
               if (isAddressStatus(result)) {
-                const txCount = result.tx_count ?? result.appearances ?? 0
-                const isAddressReused = result.utxo_count > 0 && txCount > 0
-                const riskLevel = calculateUTXORiskLevel(result.script_pub_type, isAddressReused)
+                const riskLevel = calculateUTXORiskLevel(result.script_pub_type, result.reused)
                 const isCompromised = riskLevel === 'High'
                 
                 // Determine compromise reason
@@ -114,8 +118,8 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                   if (HIGH_RISK_TYPES.includes(result.script_pub_type)) {
                     return `Address uses ${result.script_pub_type} script type, which exposes public keys directly. Vulnerable to quantum computers.`
                   }
-                  if (isAddressReused) {
-                    return 'Address has been reused (UTXO count > 0 and TX count > 0). Reused addresses expose public keys through transactions, making them vulnerable to quantum attacks.'
+                  if (result.reused) {
+                    return 'Address has been reused. Reused addresses expose public keys through transactions, making them vulnerable to quantum attacks.'
                   }
                   return 'Address is at high risk due to quantum vulnerability.'
                 }
@@ -133,7 +137,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           >
                             {riskLevel} Risk
                           </Chip>
-                          {isAddressReused && (
+                          {result.reused && (
                             <Chip
                               color="warning"
                               variant="flat"
@@ -194,26 +198,21 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Balance</label>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatValue(result.balance_sat)} BTC</p>
+                        {bitcoinPrice > 0 && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{formatUSD(result.balance_sat, bitcoinPrice)}</p>
+                        )}
                       </div>
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">UTXO Count</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.utxo_count.toLocaleString()}</p>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Transaction Count</label>
-                        <p className="text-sm text-gray-900 dark:text-white">{(result.tx_count ?? result.appearances ?? 0).toLocaleString()}</p>
-                      </div>
-                      <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Script Type</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.script_pub_type}</p>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">First Seen Block</label>
-                        <p className="text-sm text-gray-900 dark:text-white">{result.first_seen_block.toLocaleString()}</p>
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Last Seen Block</label>
-                        <p className="text-sm text-gray-900 dark:text-white">{result.last_seen_block.toLocaleString()}</p>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Created Block</label>
+                        <p className="text-sm text-gray-900 dark:text-white">{result.created_block.toLocaleString()}</p>
                       </div>
                     </div>
                   </div>
@@ -271,6 +270,9 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Value</label>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatValue(result.value_sat)} BTC</p>
+                        {bitcoinPrice > 0 && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{formatUSD(result.value_sat, bitcoinPrice)}</p>
+                        )}
                       </div>
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</label>
@@ -293,10 +295,6 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Created Block</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.created_block.toLocaleString()}</p>
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Created Timestamp</label>
-                        <p className="text-sm text-gray-900 dark:text-white">{formatTimestamp(result.created_block_timestamp)}</p>
                       </div>
                       {result.spent && (
                         <>

@@ -12,15 +12,12 @@ export interface AddressAtRisk {
 // Address status result (when searching for an address)
 export interface AddressStatusResult {
   address: string
-  first_seen_block: number
-  first_seen_block_timestamp: number
-  last_seen_block: number
-  last_seen_block_timestamp: number
+  script_pub_type: string
+  reused: boolean
+  created_block: number
+  created_block_timestamp: number
   balance_sat: number
   utxo_count: number
-  tx_count?: number
-  appearances?: number
-  script_pub_type: string
   source: 'address_status'
 }
 
