@@ -26,10 +26,7 @@ export const MetricsCards = () => {
     }, 0)
   })()
 
-  const fallbackSafeBalance = Math.max(totalSupply - fallbackExposedBalance, 0)
-
   const exposedBalance = metrics.exposedBalanceSat ?? fallbackExposedBalance
-  const safeBalance = metrics.safeBalanceSat ?? fallbackSafeBalance
   
   // Format BTC value for display
   const formatBTC = (satoshi: number) => {
@@ -69,28 +66,22 @@ export const MetricsCards = () => {
   // Calculate address-level rollups
   const totalAddressesIndexed = metrics.addressesIndexed || metrics.addressCount || 0
   const exposedAddresses = metrics.exposedAddressCount ?? 0
-  const computedNotExposed = Math.max(totalAddressesIndexed - exposedAddresses, 0)
-  const notExposedAddresses = metrics.notExposedAddressCount ?? computedNotExposed
   const reusedAddresses = metrics.reusedAddressCount ?? 0
   const exposurePercentage = calculatePercentage(exposedAddresses, totalAddressesIndexed)
-  const safePercentage = calculatePercentage(notExposedAddresses, totalAddressesIndexed)
   const reusePercentage = calculatePercentage(reusedAddresses, totalAddressesIndexed)
 
   // Calculate supply percentages
   const exposedBalancePercentage = calculatePercentage(exposedBalance, totalSupply)
-  const safeBalancePercentage = calculatePercentage(safeBalance, totalSupply)
 
   if (isLoadingMetrics && Object.keys(metrics).length === 0) {
     // Show skeletons only on initial load when there's no data
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <CardSkeleton />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <CardSkeleton />
           <CardSkeleton />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <CardSkeleton />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <CardSkeleton />
           <CardSkeleton />
         </div>
@@ -101,7 +92,7 @@ export const MetricsCards = () => {
   return (
     <div className="space-y-6">
       {/* Address Exposure Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Address Indexed Card */}
         <Card 
           className="border-2 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow"
@@ -133,7 +124,41 @@ export const MetricsCards = () => {
             </div>
           </CardBody>
         </Card>
+        {/* Total Supply Card */}
+        <Card 
+          className="border-2 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow"
+          classNames={{
+            base: "bg-white dark:bg-gray-800",
+            body: "p-6"
+          }}
+        >
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Supply</h3>
+                <div className="flex items-center space-x-2">
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {formatBTC(totalSupply)} BTC
+                  </p>
+                </div>
+                {bitcoinPrice > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {formatUSD(totalSupply)}
+                  </p>
+                )}
+              </div>
+              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
 
+      {/* Balance Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Exposed Addresses Card */}
         <Card 
           className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
@@ -176,82 +201,18 @@ export const MetricsCards = () => {
                 />
                 {totalAddressesIndexed > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {exposurePercentage.toFixed(2)}% of indexed addresses • {reusedAddresses.toLocaleString()} reused ({reusePercentage.toFixed(2)}%)
+                    {exposurePercentage.toFixed(2)}% of indexed addresses
+                  </p>
+                )}
+                {reusedAddresses > 0 && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {reusedAddresses.toLocaleString()} reused ({reusePercentage.toFixed(2)}%)
                   </p>
                 )}
               </div>
               <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
                 <svg className="w-8 h-8 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
-                </svg>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        {/* Not Exposed Card */}
-        <Card 
-          className="border-2 border-emerald-200 dark:border-emerald-700 hover:shadow-lg transition-shadow"
-          classNames={{
-            base: "bg-white dark:bg-gray-800",
-            body: "p-6"
-          }}
-        >
-          <CardBody>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Not Exposed</h3>
-                <MetricCardValue 
-                  value={notExposedAddresses}
-                  colorClasses={{
-                    default: 'text-emerald-600 dark:text-emerald-400',
-                    highlight: 'text-emerald-700 dark:text-emerald-300'
-                  }}
-                />
-                {totalAddressesIndexed > 0 && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {safePercentage.toFixed(2)}% of indexed addresses remain safe.
-                  </p>
-                )}
-              </div>
-              <div className="bg-emerald-100 dark:bg-emerald-900 p-3 rounded-full">
-                <svg className="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-
-      {/* Balance Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Total Supply Card */}
-        <Card 
-          className="border-2 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow"
-          classNames={{
-            base: "bg-white dark:bg-gray-800",
-            body: "p-6"
-          }}
-        >
-          <CardBody>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Supply</h3>
-                <div className="flex items-center space-x-2">
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {formatBTC(totalSupply)} BTC
-                  </p>
-                </div>
-                {bitcoinPrice > 0 && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {formatUSD(totalSupply)}
-                  </p>
-                )}
-              </div>
-              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
-                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
@@ -311,65 +272,6 @@ export const MetricsCards = () => {
               <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full ml-4">
                 <svg className="w-8 h-8 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
-                </svg>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-
-        {/* Safe Balance Card */}
-        <Card 
-          className="border-2 border-emerald-200 dark:border-emerald-700 hover:shadow-lg transition-shadow"
-          classNames={{
-            base: "bg-white dark:bg-gray-800",
-            body: "p-6"
-          }}
-        >
-          <CardBody>
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Not Exposed Balance</h3>
-                  <Tooltip
-                    content={
-                      <div className="space-y-2">
-                        <p className="text-xs">
-                          Value currently only in single-use, safer script types (e.g., SegWit addresses that have not been reused). Calculated as the portion
-                          of `address/stats` totals that remain unexposed.
-                        </p>
-                      </div>
-                    }
-                    position="top"
-                  >
-                    <Button
-                      isIconOnly
-                      variant="light"
-                      size="sm"
-                      className="text-gray-900 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
-                    >
-                      <AiOutlineQuestionCircle className="w-4 h-4" />
-                    </Button>
-                  </Tooltip>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                    {formatBTC(safeBalance)} BTC
-                  </p>
-                </div>
-                {bitcoinPrice > 0 && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {formatUSD(safeBalance)}
-                  </p>
-                )}
-                {totalSupply > 0 && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {safeBalancePercentage.toFixed(2)}% of total supply
-                  </p>
-                )}
-              </div>
-              <div className="bg-emerald-100 dark:bg-emerald-900 p-3 rounded-full ml-4">
-                <svg className="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>

@@ -157,6 +157,30 @@ export const UTXODistributionCharts = () => {
     );
   }
   
+  const renderLabelLine = (props: any) => {
+    const { cx, cy, midAngle, outerRadius, percent } = props
+    if (percent < 0.03) {
+      return <g />
+    }
+
+    const radius = outerRadius * 1.05
+    const x1 = cx + radius * Math.cos(-midAngle * RADIAN)
+    const y1 = cy + radius * Math.sin(-midAngle * RADIAN)
+    const x2 = cx + (outerRadius + 24) * Math.cos(-midAngle * RADIAN)
+    const y2 = cy + (outerRadius + 24) * Math.sin(-midAngle * RADIAN)
+
+    return (
+      <line
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke={isDark ? '#4b5563' : '#9ca3af'}
+        strokeWidth={1}
+      />
+    )
+  }
+
 
   if (countData.length === 0 && balanceData.length === 0) {
     return null
@@ -238,8 +262,8 @@ export const UTXODistributionCharts = () => {
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 Distribution by Count
               </h3>
-              <ResponsiveContainer width="100%" height={400}>
-                <PieChart margin={{ bottom: 0, top: 10, left: 0, right: 0 }}>
+              <ResponsiveContainer width="100%" height={500}>
+                <PieChart margin={{ bottom: 0, top: 0, left: 0, right: 0 }}>
                   <Pie
                     data={countData}
                     cx="50%"
@@ -247,7 +271,7 @@ export const UTXODistributionCharts = () => {
                     outerRadius={140}
                     paddingAngle={0}
                     dataKey="value"
-                    labelLine={false}
+                    labelLine={renderLabelLine}
                     label={renderCustomLabel}
                     stroke={isDark ? "#1f2937" : "#ffffff"}
                     strokeWidth={1}
@@ -287,7 +311,7 @@ export const UTXODistributionCharts = () => {
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 Distribution by Balance
               </h3>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer width="100%" height={500}>
                 <PieChart margin={{ bottom: 0, top: 10, left: 0, right: 0 }}>
                   <Pie
                     data={balanceData}
@@ -296,7 +320,7 @@ export const UTXODistributionCharts = () => {
                     outerRadius={140}
                     paddingAngle={0}
                     dataKey="value"
-                    labelLine={false}
+                    labelLine={renderLabelLine}
                     label={renderCustomLabel}
                     stroke={isDark ? "#1f2937" : "#ffffff"}
                     strokeWidth={1}
