@@ -47,6 +47,24 @@ const formatAddress = (address: string, maxLength: number = 20) => {
   return `${address.slice(0, maxLength - 3)}...`
 }
 
+const getRiskScoreColor = (score: number) => {
+  if (score >= 7) return 'text-red-600 dark:text-red-400'
+  if (score >= 4) return 'text-orange-600 dark:text-orange-400'
+  return 'text-green-600 dark:text-green-400'
+}
+
+const getRiskScoreBgColor = (score: number) => {
+  if (score >= 7) return 'bg-red-500'
+  if (score >= 4) return 'bg-orange-500'
+  return 'bg-green-500'
+}
+
+const getRiskLabel = (score: number) => {
+  if (score >= 7) return 'High Risk'
+  if (score >= 4) return 'Medium Risk'
+  return 'Low Risk'
+}
+
 export const SearchResults = ({ results, isLoading, query }: SearchResultsProps) => {
   const { bitcoinPrice } = useDashboardStore()
   if (isLoading) {
@@ -194,6 +212,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         <CopyButton text={result.address} />
                       </div>
                     </div>
+                    
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Balance</label>
@@ -215,6 +234,80 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         <p className="text-sm text-gray-900 dark:text-white">{result.created_block.toLocaleString()}</p>
                       </div>
                     </div>
+
+                    {/* Risk Scores Section */}
+                    {(result.risk_score !== undefined || result.balance_risk_score !== undefined || result.age_risk_score !== undefined) && (
+                      <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div className="flex items-center justify-between mb-3">
+                          <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Risk Assessment</h5>
+                          {result.risk_score !== undefined && (
+                            <Chip
+                              color={result.risk_score >= 7 ? 'danger' : result.risk_score >= 4 ? 'warning' : 'success'}
+                              variant="flat"
+                              size="sm"
+                            >
+                              {getRiskLabel(result.risk_score)}
+                            </Chip>
+                          )}
+                        </div>
+                        <div className="space-y-3">
+                          {/* Overall Risk Score */}
+                          {result.risk_score !== undefined && (
+                            <div>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Overall Risk Score</label>
+                                <span className={`text-lg font-bold ${getRiskScoreColor(result.risk_score)}`}>
+                                  {result.risk_score.toFixed(2)}/10
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                <div
+                                  className={`h-2.5 rounded-full transition-all ${getRiskScoreBgColor(result.risk_score)}`}
+                                  style={{ width: `${(result.risk_score / 10) * 100}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Breakdown Scores */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-gray-200 dark:border-gray-600">
+                            {result.balance_risk_score !== undefined && (
+                              <div>
+                                <div className="flex items-center justify-between mb-1">
+                                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Balance Risk</label>
+                                  <span className={`text-sm font-semibold ${getRiskScoreColor(result.balance_risk_score)}`}>
+                                    {result.balance_risk_score.toFixed(2)}/10
+                                  </span>
+                                </div>
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                  <div
+                                    className={`h-2 rounded-full transition-all ${getRiskScoreBgColor(result.balance_risk_score)}`}
+                                    style={{ width: `${(result.balance_risk_score / 10) * 100}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            
+                            {result.age_risk_score !== undefined && (
+                              <div>
+                                <div className="flex items-center justify-between mb-1">
+                                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Age Risk</label>
+                                  <span className={`text-sm font-semibold ${getRiskScoreColor(result.age_risk_score)}`}>
+                                    {result.age_risk_score.toFixed(2)}/10
+                                  </span>
+                                </div>
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                  <div
+                                    className={`h-2 rounded-full transition-all ${getRiskScoreBgColor(result.age_risk_score)}`}
+                                    style={{ width: `${(result.age_risk_score / 10) * 100}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )
               }

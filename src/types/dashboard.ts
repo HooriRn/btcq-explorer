@@ -18,6 +18,9 @@ export interface AddressStatusResult {
   created_block_timestamp: number
   balance_sat: number
   utxo_count: number
+  balance_risk_score?: number
+  age_risk_score?: number
+  risk_score?: number
   source: 'address_status'
 }
 
