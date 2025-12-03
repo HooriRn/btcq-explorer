@@ -59,10 +59,10 @@ const getRiskScoreBgColor = (score: number) => {
   return 'bg-green-500'
 }
 
-const getRiskLabel = (score: number) => {
-  if (score >= 7) return 'High Risk'
-  if (score >= 4) return 'Medium Risk'
-  return 'Low Risk'
+const getScoreLabel = (score: number) => {
+  if (score >= 7) return 'High Score'
+  if (score >= 4) return 'Medium Score'
+  return 'Low Score'
 }
 
 export const SearchResults = ({ results, isLoading, query }: SearchResultsProps) => {
@@ -246,7 +246,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                               variant="flat"
                               size="sm"
                             >
-                              {getRiskLabel(result.risk_score)}
+                              {getScoreLabel(result.risk_score)}
                             </Chip>
                           )}
                         </div>
