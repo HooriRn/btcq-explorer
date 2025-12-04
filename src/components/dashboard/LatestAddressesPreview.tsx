@@ -40,7 +40,7 @@ export const LatestAddressesPreview = () => {
   const addressesWithRisk = latestAddresses
     .slice(0, 5)
     .map(address => {
-      const riskLevel = calculateUTXORiskLevel(address.script_pub_type, false)
+      const riskLevel = calculateUTXORiskLevel(address.script_pub_type, address.reused || false)
       return { ...address, riskLevel }
     })
 
@@ -72,8 +72,8 @@ export const LatestAddressesPreview = () => {
           <TableHeader>
             <TableColumn>Address</TableColumn>
             <TableColumn>Balance (BTC)</TableColumn>
-            <TableColumn>UTXO Count</TableColumn>
             <TableColumn>Type</TableColumn>
+            <TableColumn>Reused</TableColumn>
             <TableColumn>Risk</TableColumn>
           </TableHeader>
           <TableBody emptyContent="No addresses found">
@@ -99,13 +99,17 @@ export const LatestAddressesPreview = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    {address.utxo_count.toLocaleString()}
-                  </span>
-                </TableCell>
-                <TableCell>
                   <Chip color="primary" variant="flat" size="sm">
                     {address.script_pub_type}
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color={address.reused ? 'warning' : 'success'}
+                    variant="flat"
+                    size="sm"
+                  >
+                    {address.reused ? 'Reused' : 'Not Reused'}
                   </Chip>
                 </TableCell>
                 <TableCell>

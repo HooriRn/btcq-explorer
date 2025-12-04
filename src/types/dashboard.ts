@@ -109,17 +109,11 @@ export interface BlockResponse {
 
 export interface Address {
   address: string
-  created_block?: number
-  created_block_timestamp?: number
-  first_seen_block: number
-  first_seen_block_timestamp: number
-  last_seen_block: number
-  last_seen_block_timestamp: number
-  balance_sat: number
-  utxo_count: number
-  tx_count?: number
-  appearances?: number
   script_pub_type: string
+  reused: boolean
+  created_block: number
+  created_block_timestamp: string
+  balance_sat: number
 }
 
 export interface AddressResponse {

@@ -28,12 +28,20 @@ export const LatestAddresses = () => {
     return (valueSat / 100_000_000).toFixed(8)
   }
 
-  const formatTimestamp = (timestamp: number) => {
+  const formatTimestamp = (timestamp: string | number | undefined) => {
     try {
-      if (!timestamp || timestamp === 0) {
+      if (!timestamp || timestamp === '0' || timestamp === 0 || timestamp === '') {
         return 'N/A'
       }
-      return new Date(timestamp / 1_000_000).toLocaleString()
+      // Handle string timestamps (nanoseconds)
+      const timestampStr = typeof timestamp === 'string' ? timestamp : String(timestamp)
+      if (!timestampStr || timestampStr.trim() === '') {
+        return 'N/A'
+      }
+      const timestampNum = BigInt(timestampStr)
+      // Convert nanoseconds to milliseconds
+      const milliseconds = Number(timestampNum / BigInt(1_000_000))
+      return new Date(milliseconds).toLocaleString()
     } catch {
       return 'N/A'
     }
@@ -47,7 +55,7 @@ export const LatestAddresses = () => {
 
   // Calculate risk levels for all addresses
   const addressesWithRisk = latestAddresses.map(address => {
-    const riskLevel = calculateUTXORiskLevel(address.script_pub_type || 'unknown', false)
+    const riskLevel = calculateUTXORiskLevel(address.script_pub_type || 'unknown', address.reused || false)
     return { ...address, riskLevel }
   })
 
@@ -94,12 +102,10 @@ export const LatestAddresses = () => {
           <TableHeader>
             <TableColumn>Address</TableColumn>
             <TableColumn>Balance (BTC)</TableColumn>
-            <TableColumn>UTXO Count</TableColumn>
-            <TableColumn>TX Count</TableColumn>
             <TableColumn>Type</TableColumn>
+            <TableColumn>Reused</TableColumn>
             <TableColumn>Risk</TableColumn>
-            <TableColumn>First Seen</TableColumn>
-            <TableColumn>Last Seen</TableColumn>
+            <TableColumn>Created Block</TableColumn>
           </TableHeader>
           <TableBody emptyContent="No addresses found">
             {addressesWithRisk.map((address, index) => (
@@ -124,18 +130,17 @@ export const LatestAddresses = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    {(address.utxo_count ?? 0).toLocaleString()}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm text-gray-900 dark:text-gray-100">
-                    {(address.tx_count ?? address.appearances ?? 0).toLocaleString()}
-                  </span>
-                </TableCell>
-                <TableCell>
                   <Chip color="primary" variant="flat" size="sm">
                     {address.script_pub_type || 'Unknown'}
+                  </Chip>
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color={address.reused ? 'warning' : 'success'}
+                    variant="flat"
+                    size="sm"
+                  >
+                    {address.reused ? 'Reused' : 'Not Reused'}
                   </Chip>
                 </TableCell>
                 <TableCell>
@@ -149,17 +154,9 @@ export const LatestAddresses = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-900 dark:text-gray-100">{(address.first_seen_block ?? 0).toLocaleString()}</span>
+                    <span className="text-sm text-gray-900 dark:text-gray-100">{(address.created_block ?? 0).toLocaleString()}</span>
                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {formatTimestamp(address.first_seen_block_timestamp ?? 0)}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="text-sm text-gray-900 dark:text-gray-100">{(address.last_seen_block ?? 0).toLocaleString()}</span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {formatTimestamp(address.last_seen_block_timestamp ?? 0)}
+                      {formatTimestamp(address.created_block_timestamp)}
                     </span>
                   </div>
                 </TableCell>

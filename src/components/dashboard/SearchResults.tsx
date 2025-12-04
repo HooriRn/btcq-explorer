@@ -155,15 +155,13 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           >
                             {riskLevel} Risk
                           </Chip>
-                          {result.reused && (
-                            <Chip
-                              color="warning"
-                              variant="flat"
-                              size="sm"
-                            >
-                              Reused
-                            </Chip>
-                          )}
+                          <Chip
+                            color={result.reused ? 'warning' : 'success'}
+                            variant="flat"
+                            size="sm"
+                          >
+                            {result.reused ? 'Reused' : 'Not Reused'}
+                          </Chip>
                           <Tooltip
                             content={
                               <div className="space-y-2">
