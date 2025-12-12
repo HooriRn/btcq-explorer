@@ -31,8 +31,11 @@ export const LanguageSwitcher = () => {
       size="sm"
       variant="flat"
       classNames={{
-        trigger: "min-w-[160px] bg-gray-100 dark:bg-gray-700",
-        value: "text-xs font-medium"
+        trigger: "min-w-[160px] bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600",
+        value: "text-xs font-medium text-gray-900 dark:text-gray-100",
+        popoverContent: "bg-white dark:bg-gray-800",
+        listbox: "bg-white dark:bg-gray-800",
+        base: "text-gray-900 dark:text-gray-100"
       }}
       aria-label={t('settings.selectLanguage')}
       renderValue={() => (
@@ -45,7 +48,13 @@ export const LanguageSwitcher = () => {
       )}
     >
       {languages.map((lang) => (
-        <SelectItem key={lang.code} textValue={lang.name}>
+        <SelectItem 
+          key={lang.code} 
+          textValue={lang.name}
+          classNames={{
+            base: "text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 data-[selected=true]:bg-gray-100 dark:data-[selected=true]:bg-gray-700"
+          }}
+        >
           <div className="flex items-center gap-2">
             <Flag code={lang.countryCode} className="w-5 h-4 rounded" />
             <span>{lang.name}</span>
