@@ -155,13 +155,13 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           >
                             {riskLevel} Risk
                           </Chip>
-                          <Chip
+                            <Chip
                             color={result.reused ? 'warning' : 'success'}
-                            variant="flat"
-                            size="sm"
-                          >
+                              variant="flat"
+                              size="sm"
+                            >
                             {result.reused ? 'Reused' : 'Not Reused'}
-                          </Chip>
+                            </Chip>
                           <Tooltip
                             content={
                               <div className="space-y-2">

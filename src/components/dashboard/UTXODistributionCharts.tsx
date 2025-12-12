@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Card, CardBody } from '@heroui/react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 import { useDashboardStore } from '../../stores/dashboardStore'
@@ -37,6 +38,22 @@ export const UTXODistributionCharts = () => {
   const { getEffectiveTheme } = useThemeStore()
   const isDark = getEffectiveTheme() === 'dark'
   const scriptTypeStats = metrics.scriptTypeExposureStats || []
+  
+  // Detect mobile/tablet screen size
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      // Check for touch device or small screen
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const isSmallScreen = window.innerWidth < 1024 // lg breakpoint
+      setIsMobile(isTouchDevice || isSmallScreen)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   if (scriptTypeStats.length === 0) {
     return null
@@ -90,7 +107,7 @@ export const UTXODistributionCharts = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ChartData
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Share of exposed addresses: {data.percentage.toFixed(2)}%</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Exposed addresses: {formatCount(data.value)}</p>
@@ -110,7 +127,7 @@ export const UTXODistributionCharts = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ChartData
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Share of exposed balance: {data.percentage.toFixed(2)}%</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -132,6 +149,12 @@ export const UTXODistributionCharts = () => {
 
   const renderCustomLabel = (props: any) => {
     const { cx, cy, midAngle, outerRadius, name, percent } = props
+    
+    // Hide labels on mobile/tablet to prevent clutter and overlap issues
+    // Users can use the legend and tooltips instead
+    if (isMobile) {
+      return null
+    }
     
     // Only show labels for segments larger than 3% to avoid cluttering
     if (percent < 0.03) {
@@ -159,6 +182,12 @@ export const UTXODistributionCharts = () => {
   
   const renderLabelLine = (props: any) => {
     const { cx, cy, midAngle, outerRadius, percent } = props
+    
+    // Hide label lines on mobile
+    if (isMobile) {
+      return <g />
+    }
+    
     if (percent < 0.03) {
       return <g />
     }
@@ -262,13 +291,13 @@ export const UTXODistributionCharts = () => {
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 Distribution by Count
               </h3>
-              <ResponsiveContainer width="100%" height={500}>
+              <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 0, left: 0, right: 0 }}>
                   <Pie
                     data={countData}
                     cx="50%"
                     cy="50%"
-                    outerRadius={140}
+                    outerRadius={isMobile ? 100 : 140}
                     paddingAngle={0}
                     dataKey="value"
                     labelLine={renderLabelLine}
@@ -286,11 +315,14 @@ export const UTXODistributionCharts = () => {
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip 
+                    content={<CustomTooltip />}
+                    allowEscapeViewBox={{ x: false, y: false }}
+                  />
                   <Legend
                     wrapperStyle={{ 
-                      fontSize: '12px', 
-                      paddingTop: '40px',
+                      fontSize: isMobile ? '11px' : '12px', 
+                      paddingTop: isMobile ? '20px' : '40px',
                       color: isDark ? '#e5e7eb' : '#1f2937'
                     }}
                     formatter={(value: string, entry: any) => {
@@ -311,13 +343,13 @@ export const UTXODistributionCharts = () => {
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 Distribution by Balance
               </h3>
-              <ResponsiveContainer width="100%" height={500}>
+              <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 10, left: 0, right: 0 }}>
                   <Pie
                     data={balanceData}
                     cx="50%"
                     cy="50%"
-                    outerRadius={140}
+                    outerRadius={isMobile ? 100 : 140}
                     paddingAngle={0}
                     dataKey="value"
                     labelLine={renderLabelLine}
@@ -335,11 +367,14 @@ export const UTXODistributionCharts = () => {
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltipBalance />} />
+                  <Tooltip 
+                    content={<CustomTooltipBalance />}
+                    allowEscapeViewBox={{ x: false, y: false }}
+                  />
                   <Legend
                     wrapperStyle={{ 
-                      fontSize: '12px', 
-                      paddingTop: '40px',
+                      fontSize: isMobile ? '11px' : '12px', 
+                      paddingTop: isMobile ? '20px' : '40px',
                       color: isDark ? '#e5e7eb' : '#1f2937'
                     }}
                     formatter={(value: string, entry: any) => {
