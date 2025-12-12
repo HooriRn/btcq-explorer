@@ -44,7 +44,7 @@ export const LanguageSwitcher = () => {
       )}
     >
       {languages.map((lang) => (
-        <SelectItem key={lang.code} value={lang.code}>
+        <SelectItem key={lang.code} textValue={lang.name}>
           <div className="flex items-center gap-2">
             {/* <span>{lang.flag}</span> */}
             <span>{lang.name}</span>
