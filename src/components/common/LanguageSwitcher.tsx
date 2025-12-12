@@ -31,10 +31,10 @@ export const LanguageSwitcher = () => {
       size="sm"
       variant="flat"
       classNames={{
-        trigger: "min-w-[160px] bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600",
+        trigger: "min-w-[160px] bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700",
         value: "text-xs font-medium text-gray-900 dark:text-gray-100",
-        popoverContent: "bg-white dark:bg-gray-800",
-        listbox: "bg-white dark:bg-gray-800",
+        popoverContent: "bg-white dark:bg-zinc-900",
+        listbox: "bg-white dark:bg-zinc-900",
         base: "text-gray-900 dark:text-gray-100"
       }}
       aria-label={t('settings.selectLanguage')}
@@ -52,7 +52,7 @@ export const LanguageSwitcher = () => {
           key={lang.code} 
           textValue={lang.name}
           classNames={{
-            base: "text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 data-[selected=true]:bg-gray-100 dark:data-[selected=true]:bg-gray-700"
+            base: "text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-800 data-[selected=true]:bg-gray-100 dark:data-[selected=true]:bg-zinc-800"
           }}
         >
           <div className="flex items-center gap-2">

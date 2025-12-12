@@ -23,9 +23,9 @@ export const Header = () => {
   }
 
   return (
-    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+    <header className="bg-white dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800">
       {/* Top row: Bitcoin Height and Theme Toggle */}
-      <div className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-2">
+      <div className="bg-gray-50 dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 px-4 sm:px-6 py-2">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3 sm:space-x-6 flex-wrap gap-2">
             <div className="flex items-center space-x-2">
@@ -124,7 +124,7 @@ export const Header = () => {
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+          <nav className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-zinc-800 pt-4">
             <div className="flex flex-col space-y-4">
               <Link 
                 to="/" 

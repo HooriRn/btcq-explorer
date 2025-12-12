@@ -99,7 +99,7 @@ export const MetricsCards = () => {
         <Card 
           className="border-2 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow"
           classNames={{
-            base: "bg-white dark:bg-gray-800",
+            base: "bg-white dark:bg-zinc-900",
             body: "p-6"
           }}
         >
@@ -130,7 +130,7 @@ export const MetricsCards = () => {
         <Card 
           className="border-2 border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow"
           classNames={{
-            base: "bg-white dark:bg-gray-800",
+            base: "bg-white dark:bg-zinc-900",
             body: "p-6"
           }}
         >
@@ -165,7 +165,7 @@ export const MetricsCards = () => {
         <Card 
           className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
           classNames={{
-            base: "bg-white dark:bg-gray-800",
+            base: "bg-white dark:bg-zinc-900",
             body: "p-6"
           }}
         >
@@ -225,7 +225,7 @@ export const MetricsCards = () => {
         <Card 
           className="border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-shadow"
           classNames={{
-            base: "bg-white dark:bg-gray-800",
+            base: "bg-white dark:bg-zinc-900",
             body: "p-6"
           }}
         >

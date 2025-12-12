@@ -20,7 +20,7 @@ export const LoadingSkeleton = ({ className = '', lines = 1 }: LoadingSkeletonPr
 
 export const CardSkeleton = () => {
   return (
-    <div className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-md">
+    <div className="bg-white dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-800 rounded-lg p-6 shadow-md">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <Skeleton className="h-5 rounded w-32 mb-2" />
@@ -34,7 +34,7 @@ export const CardSkeleton = () => {
 
 export const TableSkeleton = () => {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
       <div className="p-8 text-center">
         <LoadingSkeleton lines={2} className="max-w-md mx-auto" />
       </div>

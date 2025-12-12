@@ -5,7 +5,7 @@ export const About = () => {
   
   return (
     <main className="max-w-7xl mx-auto px-6 py-8">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-8">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('about.title')}</h1>
         
         <div className="prose max-w-none">

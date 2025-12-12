@@ -88,16 +88,16 @@ export const UTXOTypesTable = () => {
         )}
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <Table
             aria-label="UTXO types table"
             removeWrapper
             classNames={{
-              wrapper: 'bg-white dark:bg-gray-800 min-w-full',
-              th: 'bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 whitespace-nowrap',
-              tr: 'border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50',
-              td: 'bg-white dark:bg-gray-800 whitespace-nowrap',
+              wrapper: 'bg-white dark:bg-zinc-900 min-w-full',
+              th: 'bg-gray-50 dark:bg-zinc-800 text-gray-500 dark:text-gray-300 whitespace-nowrap',
+              tr: 'border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/50',
+              td: 'bg-white dark:bg-zinc-900 whitespace-nowrap',
               thead: '[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none'
             }}
           >

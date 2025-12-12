@@ -111,7 +111,7 @@ export const UTXODistributionCharts = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ChartData
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.shareOfExposedAddresses', { percentage: data.percentage.toFixed(2) })}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.exposedAddresses', { count: Number(formatCount(data.value)) })}</p>
@@ -131,7 +131,7 @@ export const UTXODistributionCharts = () => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ChartData
       return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.shareOfExposedBalance', { percentage: data.percentage.toFixed(2) })}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -283,7 +283,7 @@ export const UTXODistributionCharts = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Count Distribution Chart */}
         {countData.length > 0 && (
-          <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <Card className="border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
             <CardBody className="p-6">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 {t('charts.distributionByCount')}
@@ -335,7 +335,7 @@ export const UTXODistributionCharts = () => {
 
         {/* Balance Distribution Chart */}
         {balanceData.length > 0 && (
-          <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <Card className="border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
             <CardBody className="p-6">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 {t('charts.distributionByBalance')}

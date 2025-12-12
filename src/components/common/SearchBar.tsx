@@ -54,7 +54,7 @@ export const SearchBar = ({
           size="lg"
           classNames={{
             input: "pr-12 text-gray-700 dark:text-gray-300",
-            inputWrapper: "border-2 border-gray-300 dark:border-gray-600 pr-2 bg-white dark:bg-gray-800",
+            inputWrapper: "border-2 border-gray-300 dark:border-zinc-700 pr-2 bg-white dark:bg-zinc-900",
             base: "w-full"
           }}
           endContent={

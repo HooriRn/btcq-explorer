@@ -29,7 +29,7 @@ export const LatestBlockInfo = () => {
 
   return (
     <div className="mt-8">
-      <div className="bg-white dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-700 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+      <div className="bg-white dark:bg-zinc-900 border-2 border-purple-200 dark:border-purple-700 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Latest Block Information</h3>
           <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">

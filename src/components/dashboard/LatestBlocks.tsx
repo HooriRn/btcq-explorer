@@ -58,15 +58,15 @@ export const LatestBlocks = () => {
         </div>
       </div>
       
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
         <Table 
           aria-label="Latest blocks table" 
           removeWrapper
           classNames={{
-            wrapper: "bg-white dark:bg-gray-800",
-            th: "bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300",
-            tr: "border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50",
-            td: "bg-white dark:bg-gray-800",
+            wrapper: "bg-white dark:bg-zinc-900",
+            th: "bg-gray-50 dark:bg-zinc-800 text-gray-500 dark:text-gray-300",
+            tr: "border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/50",
+            td: "bg-white dark:bg-zinc-900",
             thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
           }}
         >

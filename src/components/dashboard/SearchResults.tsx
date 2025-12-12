@@ -74,7 +74,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
   if (isLoading) {
     return (
       <div className="mt-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-6">
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
             <span className="ml-3 text-gray-600 dark:text-gray-400">{t('common.searching')}</span>
@@ -91,9 +91,9 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
   if (results.length === 0) {
     return (
       <div className="mt-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-6">
           <div className="text-center">
-            <div className="bg-gray-100 dark:bg-gray-700 rounded-full p-3 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <div className="bg-gray-100 dark:bg-zinc-800 rounded-full p-3 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
               <svg className="w-8 h-8 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -110,8 +110,8 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
 
   return (
     <div className="mt-6">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-        <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+        <div className="bg-gray-50 dark:bg-zinc-800 px-6 py-4 border-b border-gray-200 dark:border-zinc-700">
           <div className="flex items-center">
             <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-2 mr-3">
               <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                 }
                 
                 return (
-                  <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                  <div key={index} className="bg-gray-50 dark:bg-zinc-800 rounded-lg p-4 border border-gray-200 dark:border-zinc-700">
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('searchResults.addressStatus')}</h4>
@@ -239,7 +239,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
 
                     {/* Risk Scores Section */}
                     {(result.risk_score !== undefined || result.balance_risk_score !== undefined || result.age_risk_score !== undefined) && (
-                      <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
+                      <div className="mt-4 p-4 bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-700">
                         <div className="flex items-center justify-between mb-3">
                           <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('searchResults.riskAssessment')}</h5>
                           {result.risk_score !== undefined && (
@@ -262,7 +262,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                                   {result.risk_score.toFixed(2)}/10
                                 </span>
                               </div>
-                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                              <div className="w-full bg-gray-200 dark:bg-zinc-800 rounded-full h-2.5">
                                 <div
                                   className={`h-2.5 rounded-full transition-all ${getRiskScoreBgColor(result.risk_score)}`}
                                   style={{ width: `${(result.risk_score / 10) * 100}%` }}
@@ -272,7 +272,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           )}
                           
                           {/* Breakdown Scores */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-gray-200 dark:border-gray-600">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-gray-200 dark:border-zinc-700">
                             {result.balance_risk_score !== undefined && (
                               <div>
                                 <div className="flex items-center justify-between mb-1">
@@ -281,7 +281,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                                     {result.balance_risk_score.toFixed(2)}/10
                                   </span>
                                 </div>
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div className="w-full bg-gray-200 dark:bg-zinc-800 rounded-full h-2">
                                   <div
                                     className={`h-2 rounded-full transition-all ${getRiskScoreBgColor(result.balance_risk_score)}`}
                                     style={{ width: `${(result.balance_risk_score / 10) * 100}%` }}
@@ -298,7 +298,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                                     {result.age_risk_score.toFixed(2)}/10
                                   </span>
                                 </div>
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div className="w-full bg-gray-200 dark:bg-zinc-800 rounded-full h-2">
                                   <div
                                     className={`h-2 rounded-full transition-all ${getRiskScoreBgColor(result.age_risk_score)}`}
                                     style={{ width: `${(result.age_risk_score / 10) * 100}%` }}
@@ -318,7 +318,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
               if (isUTXOResult(result)) {
                 const riskLevel = calculateUTXORiskLevel(result.script_pub_type, false)
                 return (
-                  <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                  <div key={index} className="bg-gray-50 dark:bg-zinc-800 rounded-lg p-4 border border-gray-200 dark:border-zinc-700">
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('searchResults.utxoDetails')}</h4>
