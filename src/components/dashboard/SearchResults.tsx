@@ -48,6 +48,14 @@ const formatAddress = (address: string, maxLength: number = 20) => {
   return `${address.slice(0, maxLength - 3)}...`
 }
 
+const formatTimestamp = (nanoseconds: number) => {
+  if (!nanoseconds || nanoseconds === 0) return 'N/A'
+  // Convert nanoseconds to milliseconds
+  const milliseconds = nanoseconds / 1_000_000
+  const date = new Date(milliseconds)
+  return date.toLocaleString()
+}
+
 const getRiskScoreColor = (score: number) => {
   if (score >= 7) return 'text-red-600 dark:text-red-400'
   if (score >= 4) return 'text-orange-600 dark:text-orange-400'
@@ -235,6 +243,12 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.createdBlock')}</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.created_block.toLocaleString()}</p>
                       </div>
+                      {result.created_block_timestamp && (
+                        <div>
+                          <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.createdBlockTimestamp')}</label>
+                          <p className="text-sm text-gray-900 dark:text-white">{formatTimestamp(result.created_block_timestamp)}</p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Risk Scores Section */}

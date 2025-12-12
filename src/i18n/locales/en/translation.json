@@ -76,6 +76,7 @@
     "utxoCount": "UTXO Count",
     "scriptType": "Script Type",
     "createdBlock": "Created Block",
+    "createdBlockTimestamp": "Created Block Timestamp",
     "reused": "Reused",
     "notReused": "Not Reused",
     "risk": "Risk",
