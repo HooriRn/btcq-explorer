@@ -146,7 +146,7 @@ export const UTXODistributionCharts = () => {
       <text 
         x={x} 
         y={y} 
-        fill={isDark ? "#e5e7eb" : "#333"} 
+        fill={isDark ? "#e5e7eb" : "#000000"} 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
         fontSize={14}
