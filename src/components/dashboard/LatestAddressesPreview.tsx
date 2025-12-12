@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 import { calculateUTXORiskLevel } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 
 export const LatestAddressesPreview = () => {
+  const { t } = useTranslation()
   const { latestAddresses, isLoading } = useDashboardStore()
 
   // Only show skeleton on initial load when there's no data
@@ -13,12 +15,12 @@ export const LatestAddressesPreview = () => {
     return (
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Addresses</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('latest.latestAddresses')}</h2>
           <Link 
             to="/addresses"
             className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline"
           >
-            View All →
+            {t('latest.viewAll')}
           </Link>
         </div>
         <TableSkeleton />
@@ -70,13 +72,13 @@ export const LatestAddressesPreview = () => {
             }}
           >
           <TableHeader>
-            <TableColumn>Address</TableColumn>
-            <TableColumn>Balance (BTC)</TableColumn>
-            <TableColumn>Type</TableColumn>
-            <TableColumn>Reused</TableColumn>
-            <TableColumn>Risk</TableColumn>
+            <TableColumn>{t('tables.address')}</TableColumn>
+            <TableColumn>{t('tables.balanceBtc')}</TableColumn>
+            <TableColumn>{t('tables.type')}</TableColumn>
+            <TableColumn>{t('tables.reused')}</TableColumn>
+            <TableColumn>{t('tables.risk')}</TableColumn>
           </TableHeader>
-          <TableBody emptyContent="No addresses found">
+          <TableBody emptyContent={t('tables.noAddressesFound')}>
             {addressesWithRisk.map((address, index) => (
               <TableRow key={`${address.address}-${index}`}>
                 <TableCell>
@@ -109,7 +111,7 @@ export const LatestAddressesPreview = () => {
                     variant="flat"
                     size="sm"
                   >
-                    {address.reused ? 'Reused' : 'Not Reused'}
+                    {address.reused ? t('searchResults.reused') : t('searchResults.notReused')}
                   </Chip>
                 </TableCell>
                 <TableCell>
@@ -118,7 +120,7 @@ export const LatestAddressesPreview = () => {
                     variant="flat"
                     size="sm"
                   >
-                    {address.riskLevel}
+                    {address.riskLevel === 'High' ? t('searchResults.highRisk') : address.riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}
                   </Chip>
                 </TableCell>
               </TableRow>

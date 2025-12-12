@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Input, Button, Spinner } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { api } from '../../services/api'
 import type { SearchResponse } from '../../types/dashboard'
 
@@ -10,8 +11,10 @@ interface SearchBarProps {
 
 export const SearchBar = ({ 
   onSearch, 
-  placeholder = "Search Addresses or TxID" 
+  placeholder 
 }: SearchBarProps) => {
+  const { t } = useTranslation()
+  const defaultPlaceholder = placeholder || t('dashboard.searchPlaceholder')
   const [query, setQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -45,7 +48,7 @@ export const SearchBar = ({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder={placeholder}
+          placeholder={defaultPlaceholder}
           variant="bordered"
           radius="full"
           size="lg"

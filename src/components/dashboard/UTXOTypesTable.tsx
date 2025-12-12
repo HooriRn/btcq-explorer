@@ -1,13 +1,8 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 
 type ExposureCategory = 'bad_type' | 'reuse' | 'none'
-
-const EXPOSURE_LABELS: Record<ExposureCategory, string> = {
-  bad_type: 'Exposed (Bad Script Type)',
-  reuse: 'Exposed (Reuse)',
-  none: 'Not Exposed'
-}
 
 const EXPOSURE_COLORS: Record<ExposureCategory, 'danger' | 'warning' | 'success'> = {
   bad_type: 'danger',
@@ -16,12 +11,19 @@ const EXPOSURE_COLORS: Record<ExposureCategory, 'danger' | 'warning' | 'success'
 }
 
 export const UTXOTypesTable = () => {
+  const { t } = useTranslation()
   const { metrics, bitcoinPrice } = useDashboardStore()
   const scriptTypeStats = metrics.scriptTypeExposureStats || []
   const excludedTypes = new Set(['unknown', 'op_return', 'nonstandard', 'bech32'])
   const filteredStats = scriptTypeStats.filter(
     stat => !excludedTypes.has((stat.scriptType || '').toLowerCase())
   )
+
+  const EXPOSURE_LABELS: Record<ExposureCategory, string> = {
+    bad_type: t('charts.exposedBadType'),
+    reuse: t('charts.exposedReuse'),
+    none: t('charts.notExposed')
+  }
 
   if (filteredStats.length === 0) {
     return null
@@ -33,7 +35,7 @@ export const UTXOTypesTable = () => {
 
   const formatCount = (count: number) => {
     if (count === 0) {
-      return 'N/A'
+      return t('common.na')
     }
     return count.toLocaleString()
   }
@@ -67,7 +69,7 @@ export const UTXOTypesTable = () => {
 
   const calculatePercentage = (value: number, total: number) => {
     if (value === 0 || total === 0) {
-      return 'N/A'
+      return t('common.na')
     }
     return ((value / total) * 100).toFixed(2)
   }
@@ -100,15 +102,15 @@ export const UTXOTypesTable = () => {
             }}
           >
             <TableHeader>
-              <TableColumn>Script Type</TableColumn>
-              <TableColumn>Total Addresses</TableColumn>
-              <TableColumn>Exposed</TableColumn>
-              <TableColumn>Safe</TableColumn>
-              <TableColumn>Total Balance</TableColumn>
-              <TableColumn>Exposed Balance</TableColumn>
-              <TableColumn>Status</TableColumn>
+              <TableColumn>{t('tables.scriptType')}</TableColumn>
+              <TableColumn>{t('tables.totalAddresses')}</TableColumn>
+              <TableColumn>{t('tables.exposedCount')}</TableColumn>
+              <TableColumn>{t('tables.safeCount')}</TableColumn>
+              <TableColumn>{t('tables.totalBalance')}</TableColumn>
+              <TableColumn>{t('tables.exposedBalance')}</TableColumn>
+              <TableColumn>{t('searchResults.status')}</TableColumn>
             </TableHeader>
-            <TableBody emptyContent="No UTXO types found">
+            <TableBody emptyContent={t('tables.noAddressesFound')}>
               {sortedStats.map(stat => {
                 const exposureLabel = EXPOSURE_LABELS[stat.exposureCategory]
                 const exposureColor = EXPOSURE_COLORS[stat.exposureCategory]

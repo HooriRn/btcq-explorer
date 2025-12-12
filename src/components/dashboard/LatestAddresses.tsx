@@ -1,10 +1,12 @@
 import { Button, Spinner, Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 import { calculateUTXORiskLevel } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 
 export const LatestAddresses = () => {
+  const { t } = useTranslation()
   const { latestAddresses, isLoading, lastUpdated, fetchLatestAddresses } = useDashboardStore()
 
   // Only show skeleton on initial load when there's no data
@@ -12,7 +14,7 @@ export const LatestAddresses = () => {
     return (
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Addresses</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('latest.latestAddresses')}</h2>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-500 dark:text-gray-400">Loading...</span>
             <Spinner size="sm" />
@@ -69,8 +71,8 @@ export const LatestAddresses = () => {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Addresses</h2>
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            Last updated: {lastUpdated || 'Never'}
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+            {t('header.lastUpdated')} {lastUpdated || t('header.never')}
           </span>
           <Button
             isIconOnly
@@ -100,14 +102,14 @@ export const LatestAddresses = () => {
             }}
           >
           <TableHeader>
-            <TableColumn>Address</TableColumn>
-            <TableColumn>Balance (BTC)</TableColumn>
-            <TableColumn>Type</TableColumn>
-            <TableColumn>Reused</TableColumn>
-            <TableColumn>Risk</TableColumn>
-            <TableColumn>Created Block</TableColumn>
+            <TableColumn>{t('tables.address')}</TableColumn>
+            <TableColumn>{t('tables.balanceBtc')}</TableColumn>
+            <TableColumn>{t('tables.type')}</TableColumn>
+            <TableColumn>{t('tables.reused')}</TableColumn>
+            <TableColumn>{t('tables.risk')}</TableColumn>
+            <TableColumn>{t('tables.createdBlock')}</TableColumn>
           </TableHeader>
-          <TableBody emptyContent="No addresses found">
+          <TableBody emptyContent={t('tables.noAddressesFound')}>
             {addressesWithRisk.map((address, index) => (
               <TableRow key={`${address.address}-${index}`}>
                 <TableCell>
@@ -131,7 +133,7 @@ export const LatestAddresses = () => {
                 </TableCell>
                 <TableCell>
                   <Chip color="primary" variant="flat" size="sm">
-                    {address.script_pub_type || 'Unknown'}
+                    {address.script_pub_type || t('common.unknown')}
                   </Chip>
                 </TableCell>
                 <TableCell>
@@ -140,7 +142,7 @@ export const LatestAddresses = () => {
                     variant="flat"
                     size="sm"
                   >
-                    {address.reused ? 'Reused' : 'Not Reused'}
+                    {address.reused ? t('searchResults.reused') : t('searchResults.notReused')}
                   </Chip>
                 </TableCell>
                 <TableCell>
@@ -149,7 +151,7 @@ export const LatestAddresses = () => {
                     variant="flat"
                     size="sm"
                   >
-                    {address.riskLevel}
+                    {address.riskLevel === 'High' ? t('searchResults.highRisk') : address.riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}
                   </Chip>
                 </TableCell>
                 <TableCell>

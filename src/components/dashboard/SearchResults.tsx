@@ -1,5 +1,6 @@
 import type { SearchResult, AddressStatusResult, UTXOSearchResult } from '../../types/dashboard'
 import { Chip, Button } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { calculateUTXORiskLevel, HIGH_RISK_TYPES } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 import { Tooltip } from '../common/Tooltip'
@@ -59,21 +60,24 @@ const getRiskScoreBgColor = (score: number) => {
   return 'bg-green-500'
 }
 
-const getScoreLabel = (score: number) => {
-  if (score >= 7) return 'High Score'
-  if (score >= 4) return 'Medium Score'
-  return 'Low Score'
-}
+// getScoreLabel will be translated in the component
 
 export const SearchResults = ({ results, isLoading, query }: SearchResultsProps) => {
+  const { t } = useTranslation()
   const { bitcoinPrice } = useDashboardStore()
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 7) return t('searchResults.highScore')
+    if (score >= 4) return t('searchResults.mediumScore')
+    return t('searchResults.lowScore')
+  }
   if (isLoading) {
     return (
       <div className="mt-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
-            <span className="ml-3 text-gray-600 dark:text-gray-400">Searching...</span>
+            <span className="ml-3 text-gray-600 dark:text-gray-400">{t('common.searching')}</span>
           </div>
         </div>
       </div>
@@ -94,9 +98,9 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Results Found</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('search.noResults')}</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              No results found for <span className="font-mono">{query}</span>
+              {t('search.noResultsFor')} <span className="font-mono">{query}</span>
             </p>
           </div>
         </div>
@@ -115,9 +119,9 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Search Results</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t('search.results')}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {results.length} result{results.length > 1 ? 's' : ''} found for <span className="font-mono">{query}</span>
+                {results.length} {t('search.result', { count: results.length })} {t('search.foundFor')} <span className="font-mono">{query}</span>
               </p>
             </div>
           </div>
@@ -134,52 +138,52 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                 // Determine compromise reason
                 const getCompromiseReason = () => {
                   if (HIGH_RISK_TYPES.includes(result.script_pub_type)) {
-                    return `Address uses ${result.script_pub_type} script type, which exposes public keys directly. Vulnerable to quantum computers.`
+                    return t('searchResults.compromiseReasonBadType', { type: result.script_pub_type })
                   }
                   if (result.reused) {
-                    return 'Address has been reused. Reused addresses expose public keys through transactions, making them vulnerable to quantum attacks.'
+                    return t('searchResults.compromiseReasonReuse')
                   }
-                  return 'Address is at high risk due to quantum vulnerability.'
+                  return t('searchResults.compromiseReasonGeneric')
                 }
                 
                 return (
                   <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Address Status</h4>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('searchResults.addressStatus')}</h4>
                         <div className="flex items-center gap-2">
                           <Chip
                             color={riskLevel === 'High' ? 'danger' : riskLevel === 'Medium' ? 'warning' : 'success'}
                             variant="flat"
                             size="sm"
                           >
-                            {riskLevel} Risk
+                            {riskLevel === 'High' ? t('searchResults.highRisk') : riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}
                           </Chip>
-                            <Chip
+                          <Chip
                             color={result.reused ? 'warning' : 'success'}
-                              variant="flat"
-                              size="sm"
-                            >
-                            {result.reused ? 'Reused' : 'Not Reused'}
-                            </Chip>
+                            variant="flat"
+                            size="sm"
+                          >
+                            {result.reused ? t('searchResults.reused') : t('searchResults.notReused')}
+                          </Chip>
                           <Tooltip
                             content={
                               <div className="space-y-2">
                                 <div>
                                   <p className="font-semibold mb-1">
-                                    {isCompromised ? 'Compromised' : 'Not Compromised'}
+                                    {isCompromised ? t('searchResults.compromised') : t('searchResults.notCompromised')}
                                   </p>
                                   <p className="text-xs">
                                     {isCompromised 
                                       ? getCompromiseReason()
-                                      : 'Address is not currently compromised. However, it may still be at risk depending on script type and usage patterns.'
+                                      : t('searchResults.notCompromisedDesc')
                                     }
                                   </p>
                                 </div>
                                 {isCompromised && (
                                   <div>
-                                    <p className="font-semibold mb-1">Risk Level:</p>
-                                    <p className="text-xs">{riskLevel} Risk</p>
+                                    <p className="font-semibold mb-1">{t('searchResults.risk')}:</p>
+                                    <p className="text-xs">{riskLevel === 'High' ? t('searchResults.highRisk') : riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}</p>
                                   </div>
                                 )}
                               </div>
@@ -213,22 +217,22 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Balance</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.balance')}</label>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatValue(result.balance_sat)} BTC</p>
                         {bitcoinPrice > 0 && (
                           <p className="text-xs text-gray-500 dark:text-gray-400">{formatUSD(result.balance_sat, bitcoinPrice)}</p>
                         )}
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">UTXO Count</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.utxoCount')}</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.utxo_count.toLocaleString()}</p>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Script Type</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.scriptType')}</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.script_pub_type}</p>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Created Block</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.createdBlock')}</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.created_block.toLocaleString()}</p>
                       </div>
                     </div>
@@ -237,7 +241,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                     {(result.risk_score !== undefined || result.balance_risk_score !== undefined || result.age_risk_score !== undefined) && (
                       <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
                         <div className="flex items-center justify-between mb-3">
-                          <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Risk Assessment</h5>
+                          <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('searchResults.riskAssessment')}</h5>
                           {result.risk_score !== undefined && (
                             <Chip
                               color={result.risk_score >= 7 ? 'danger' : result.risk_score >= 4 ? 'warning' : 'success'}
@@ -253,7 +257,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           {result.risk_score !== undefined && (
                             <div>
                               <div className="flex items-center justify-between mb-1">
-                                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Overall Risk Score</label>
+                                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('searchResults.overallRiskScore')}</label>
                                 <span className={`text-lg font-bold ${getRiskScoreColor(result.risk_score)}`}>
                                   {result.risk_score.toFixed(2)}/10
                                 </span>
@@ -272,7 +276,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             {result.balance_risk_score !== undefined && (
                               <div>
                                 <div className="flex items-center justify-between mb-1">
-                                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Balance Risk</label>
+                                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('searchResults.balanceRisk')}</label>
                                   <span className={`text-sm font-semibold ${getRiskScoreColor(result.balance_risk_score)}`}>
                                     {result.balance_risk_score.toFixed(2)}/10
                                   </span>
@@ -289,7 +293,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             {result.age_risk_score !== undefined && (
                               <div>
                                 <div className="flex items-center justify-between mb-1">
-                                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Age Risk</label>
+                                  <label className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('searchResults.ageRisk')}</label>
                                   <span className={`text-sm font-semibold ${getRiskScoreColor(result.age_risk_score)}`}>
                                     {result.age_risk_score.toFixed(2)}/10
                                   </span>
@@ -317,7 +321,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                   <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">UTXO Details</h4>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('searchResults.utxoDetails')}</h4>
                         <Chip
                           color={riskLevel === 'High' ? 'danger' : riskLevel === 'Medium' ? 'warning' : 'success'}
                           variant="flat"
@@ -335,16 +339,16 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors truncate max-w-[250px]"
                             title={result.txid}
                           >
-                            TXID: {formatAddress(result.txid, 20)}
+                            {t('searchResults.txid')} {formatAddress(result.txid, 20)}
                           </a>
                           <CopyButton text={result.txid} />
                         </div>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">VOUT: {result.vout}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{t('searchResults.vout')} {result.vout}</span>
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Address</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.address')}</label>
                         <div className="flex items-center space-x-2 min-w-0">
                           <a 
                             href={`https://mempool.space/address/${result.address}`}
@@ -359,38 +363,38 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         </div>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Value</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.value')}</label>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatValue(result.value_sat)} BTC</p>
                         {bitcoinPrice > 0 && (
                           <p className="text-xs text-gray-500 dark:text-gray-400">{formatUSD(result.value_sat, bitcoinPrice)}</p>
                         )}
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.status')}</label>
                         <p className="text-sm">
                           {result.spent ? (
                             <Chip color="danger" variant="flat" size="sm">
-                              Spent
+                              {t('searchResults.spent')}
                             </Chip>
                           ) : (
                             <Chip color="success" variant="flat" size="sm">
-                              Unspent
+                              {t('searchResults.unspent')}
                             </Chip>
                           )}
                         </p>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Script Type</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.scriptType')}</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.script_pub_type}</p>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Created Block</label>
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.createdBlock')}</label>
                         <p className="text-sm text-gray-900 dark:text-white">{result.created_block.toLocaleString()}</p>
                       </div>
                       {result.spent && (
                         <>
                           <div>
-                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Spent By TXID</label>
+                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.spentByTxid')}</label>
                             <p className="text-sm font-mono break-all">
                               <a 
                                 href={`https://mempool.space/tx/${result.spent_by_txid}`}
@@ -403,7 +407,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             </p>
                           </div>
                           <div>
-                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Spent Block</label>
+                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.spentBlock')}</label>
                             <p className="text-sm text-gray-900 dark:text-white">{result.spent_block?.toLocaleString() || 'N/A'}</p>
                           </div>
                         </>

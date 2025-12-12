@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '../stores/settingsStore'
+import { LanguageSwitcher } from '../components/common/LanguageSwitcher'
 
 export const Settings = () => {
+  const { t } = useTranslation()
   const { apiBaseUrl, setApiBaseUrl, resetApiBaseUrl } = useSettingsStore()
   const [localApiUrl, setLocalApiUrl] = useState(apiBaseUrl)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
@@ -28,37 +31,45 @@ export const Settings = () => {
   return (
     <main className="max-w-7xl mx-auto px-6 py-8">
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('settings.title')}</h1>
         
         <div className="space-y-8">
           <div>
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Dashboard Preferences</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('settings.dashboardPreferences')}</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Auto-refresh data</label>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Automatically refresh dashboard data every 30 seconds</p>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.autoRefreshData')}</label>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.autoRefreshDataDesc')}</p>
                 </div>
                 <input type="checkbox" className="h-4 w-4 text-blue-600 rounded" defaultChecked />
               </div>
               
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Show risk indicators</label>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Display colored dots next to addresses based on risk level</p>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.showRiskIndicators')}</label>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.showRiskIndicatorsDesc')}</p>
                 </div>
                 <input type="checkbox" className="h-4 w-4 text-blue-600 rounded" defaultChecked />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('settings.language')}</label>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.selectLanguage')}</p>
+                </div>
+                <LanguageSwitcher />
               </div>
             </div>
           </div>
           
           <div>
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">API Configuration</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('settings.apiConfiguration')}</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  API Base URL
-                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">(must end with /)</span>
+                  {t('settings.apiBaseUrl')}
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{t('settings.apiBaseUrlDesc')}</span>
                 </label>
                 <div className="flex gap-2">
                   <input 
@@ -72,11 +83,11 @@ export const Settings = () => {
                     onClick={handleReset}
                     className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
-                    Reset
+                    {t('common.reset')}
                   </button>
                 </div>
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  Current: <span className="font-mono">{apiBaseUrl}</span>
+                  {t('settings.current')} <span className="font-mono">{apiBaseUrl}</span>
                 </p>
               </div>
             </div>
@@ -111,7 +122,7 @@ export const Settings = () => {
                   : 'bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600'
               }`}
             >
-              {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved!' : 'Save Settings'}
+              {saveStatus === 'saving' ? t('common.saving') : saveStatus === 'saved' ? t('common.saved') : t('settings.saveSettings')}
             </button>
           </div>
         </div>

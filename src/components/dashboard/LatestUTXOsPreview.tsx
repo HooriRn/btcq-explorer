@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 import { calculateUTXORiskLevel } from '../../utils/riskLevel'
 import { CopyButton } from '../common/CopyButton'
 
 export const LatestUTXOsPreview = () => {
+  const { t } = useTranslation()
   const { latestUtxos, isLoading } = useDashboardStore()
 
   // Only show skeleton on initial load when there's no data
@@ -13,12 +15,12 @@ export const LatestUTXOsPreview = () => {
     return (
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest UTXOs</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('latest.latestUtxos')}</h2>
           <Link 
             to="/utxos"
             className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline"
           >
-            View All →
+            {t('latest.viewAll')}
           </Link>
         </div>
         <TableSkeleton />

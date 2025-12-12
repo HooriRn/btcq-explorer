@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { ThemeToggle } from '../common/ThemeToggle'
+import { LanguageSwitcher } from '../common/LanguageSwitcher'
 import { BitcoinLogo } from '../common/BitcoinLogo'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 
 export const Header = () => {
   const { metrics, bitcoinPrice } = useDashboardStore()
+  const { t } = useTranslation()
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -28,11 +31,11 @@ export const Header = () => {
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                <span className="text-blue-600 dark:text-blue-400 font-medium">BTC Height:</span>{' '}
+                <span className="text-blue-600 dark:text-blue-400 font-medium">{t('header.btcHeight')}</span>{' '}
                 {metrics.currentBitcoinHeight ? (
                   <AnimatedNumber value={metrics.currentBitcoinHeight} />
                 ) : (
-                  'Loading...'
+                  t('common.loading')
                 )}
               </span>
             </div>
@@ -40,7 +43,7 @@ export const Header = () => {
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                 <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                  <span className="text-orange-600 dark:text-orange-400 font-medium">BTC Price:</span>{' '}
+                  <span className="text-orange-600 dark:text-orange-400 font-medium">{t('header.btcPrice')}</span>{' '}
                   <span className="font-semibold">${bitcoinPrice.toLocaleString()}</span>
                 </span>
               </div>
@@ -48,6 +51,7 @@ export const Header = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </div>
@@ -61,7 +65,7 @@ export const Header = () => {
               <BitcoinLogo className="text-white" size="md" />
             </div>
             <span className="text-orange-600 dark:text-orange-400">₿TCQ</span>
-            <span className="hidden sm:inline">Risk Dashboard</span>
+            <span className="hidden sm:inline">{t('navigation.riskDashboard')}</span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -74,7 +78,7 @@ export const Header = () => {
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              Dashboard
+              {t('navigation.dashboard')}
             </Link>
             <Link 
               to="/about" 
@@ -84,7 +88,7 @@ export const Header = () => {
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              About
+              {t('navigation.about')}
             </Link>
             <Link 
               to="/settings" 
@@ -94,7 +98,7 @@ export const Header = () => {
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              Settings
+              {t('navigation.settings')}
             </Link>
           </nav>
 
@@ -104,7 +108,7 @@ export const Header = () => {
             variant="light"
             className="md:hidden"
             onPress={toggleMobileMenu}
-            aria-label="Toggle menu"
+            aria-label={t('navigation.toggleMenu')}
           >
             {isMobileMenuOpen ? (
               <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +135,7 @@ export const Header = () => {
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                Dashboard
+                {t('navigation.dashboard')}
               </Link>
               <Link 
                 to="/about" 
@@ -142,7 +146,7 @@ export const Header = () => {
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                About
+                {t('navigation.about')}
               </Link>
               <Link 
                 to="/settings" 
@@ -153,7 +157,7 @@ export const Header = () => {
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                Settings
+                {t('navigation.settings')}
               </Link>
             </div>
           </nav>

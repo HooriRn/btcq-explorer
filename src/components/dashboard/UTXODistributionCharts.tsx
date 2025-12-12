@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardBody } from '@heroui/react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { useThemeStore } from '../../stores/themeStore'
 
@@ -15,11 +16,7 @@ interface ChartData {
   [key: string]: string | number
 }
 
-const EXPOSURE_LABELS: Record<ExposureCategory, string> = {
-  bad_type: 'Bad Script Type',
-  reuse: 'Address Reuse',
-  none: 'Not Exposed'
-}
+// EXPOSURE_LABELS will be translated in the component using useTranslation
 
 const getExposureTextColor = (category: ExposureCategory) => {
   switch (category) {
@@ -34,10 +31,17 @@ const getExposureTextColor = (category: ExposureCategory) => {
 }
 
 export const UTXODistributionCharts = () => {
+  const { t } = useTranslation()
   const { metrics } = useDashboardStore()
   const { getEffectiveTheme } = useThemeStore()
   const isDark = getEffectiveTheme() === 'dark'
   const scriptTypeStats = metrics.scriptTypeExposureStats || []
+
+  const EXPOSURE_LABELS: Record<ExposureCategory, string> = {
+    bad_type: t('charts.badScriptType'),
+    reuse: t('charts.addressReuse'),
+    none: t('charts.notExposed')
+  }
   
   // Detect mobile/tablet screen size
   const [isMobile, setIsMobile] = useState(false)
@@ -109,10 +113,10 @@ export const UTXODistributionCharts = () => {
       return (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Share of exposed addresses: {data.percentage.toFixed(2)}%</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Exposed addresses: {formatCount(data.value)}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.shareOfExposedAddresses', { percentage: data.percentage.toFixed(2) })}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.exposedAddresses', { count: formatCount(data.value) })}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Cause:{' '}
+            {t('charts.cause')}{' '}
             <span className={`font-semibold ${getExposureTextColor(data.exposureCategory)}`}>
               {data.exposureLabel}
             </span>
@@ -129,12 +133,12 @@ export const UTXODistributionCharts = () => {
       return (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Share of exposed balance: {data.percentage.toFixed(2)}%</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.shareOfExposedBalance', { percentage: data.percentage.toFixed(2) })}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Exposed balance: {formatBalance(data.value)}
+            {t('charts.exposedBalance', { balance: formatBalance(data.value) })}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Cause:{' '}
+            {t('charts.cause')}{' '}
             <span className={`font-semibold ${getExposureTextColor(data.exposureCategory)}`}>
               {data.exposureLabel}
             </span>
@@ -150,18 +154,14 @@ export const UTXODistributionCharts = () => {
   const renderCustomLabel = (props: any) => {
     const { cx, cy, midAngle, outerRadius, name, percent } = props
     
-    // Hide labels on mobile/tablet to prevent clutter and overlap issues
-    // Users can use the legend and tooltips instead
-    if (isMobile) {
-      return null
-    }
-    
     // Only show labels for segments larger than 3% to avoid cluttering
     if (percent < 0.03) {
       return null
     }
     
-    const radius = outerRadius * 1.2;
+    // Adjust label positioning and size for mobile
+    const radiusMultiplier = isMobile ? 1.15 : 1.2;
+    const radius = outerRadius * radiusMultiplier;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
   
@@ -172,7 +172,7 @@ export const UTXODistributionCharts = () => {
         fill={isDark ? "#e5e7eb" : "#000000"} 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={14}
+        fontSize={isMobile ? 11 : 14}
         fontWeight="500"
       >
         {name}
@@ -183,20 +183,17 @@ export const UTXODistributionCharts = () => {
   const renderLabelLine = (props: any) => {
     const { cx, cy, midAngle, outerRadius, percent } = props
     
-    // Hide label lines on mobile
-    if (isMobile) {
-      return <g />
-    }
-    
     if (percent < 0.03) {
       return <g />
     }
 
+    // Adjust label line length for mobile
+    const lineLength = isMobile ? 18 : 24;
     const radius = outerRadius * 1.05
     const x1 = cx + radius * Math.cos(-midAngle * RADIAN)
     const y1 = cy + radius * Math.sin(-midAngle * RADIAN)
-    const x2 = cx + (outerRadius + 24) * Math.cos(-midAngle * RADIAN)
-    const y2 = cy + (outerRadius + 24) * Math.sin(-midAngle * RADIAN)
+    const x2 = cx + (outerRadius + lineLength) * Math.cos(-midAngle * RADIAN)
+    const y2 = cy + (outerRadius + lineLength) * Math.sin(-midAngle * RADIAN)
 
     return (
       <line
@@ -282,14 +279,14 @@ export const UTXODistributionCharts = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Exposed Metrics</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t('dashboard.title')}</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Count Distribution Chart */}
         {countData.length > 0 && (
           <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <CardBody className="p-6">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
-                Distribution by Count
+                {t('charts.distributionByCount')}
               </h3>
               <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 0, left: 0, right: 0 }}>
@@ -341,7 +338,7 @@ export const UTXODistributionCharts = () => {
           <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <CardBody className="p-6">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
-                Distribution by Balance
+                {t('charts.distributionByBalance')}
               </h3>
               <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 10, left: 0, right: 0 }}>

@@ -1,4 +1,5 @@
 import { Card, CardBody, Button } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { CardSkeleton } from '../common/LoadingSkeleton'
 import { MetricCardValue } from '../common/MetricCardValue'
@@ -7,6 +8,7 @@ import { HIGH_RISK_TYPES } from '../../utils/riskLevel'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 
 export const MetricsCards = () => {
+  const { t } = useTranslation()
   const { metrics, supplyStats, bitcoinPrice, isLoadingMetrics } = useDashboardStore()
   
   const scriptTypeBalances = supplyStats.script_type_balances || {}
@@ -104,7 +106,7 @@ export const MetricsCards = () => {
           <CardBody>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Addresses Indexed</h3>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('metrics.addressesIndexed')}</h3>
                 <MetricCardValue 
                   value={totalAddressesIndexed}
                   colorClasses={{
@@ -113,7 +115,7 @@ export const MetricsCards = () => {
                   }}
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Unique addresses we currently track on-chain.
+                  {t('metrics.addressesIndexedDesc')}
                 </p>
               </div>
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
@@ -135,7 +137,7 @@ export const MetricsCards = () => {
           <CardBody>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Supply</h3>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('metrics.totalSupply')}</h3>
                 <div className="flex items-center space-x-2">
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                     {formatBTC(totalSupply)} BTC
@@ -171,12 +173,12 @@ export const MetricsCards = () => {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Exposed Addresses</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">{t('metrics.exposedAddresses')}</h3>
                   <Tooltip
                     content={
                       <div className="space-y-2">
                         <p className="text-xs">
-                          Sum of addresses using high-risk script types (e.g., {HIGH_RISK_TYPES.join(', ')}) plus reused addresses across other types.
+                          {t('metrics.exposedAddressesDesc', { types: HIGH_RISK_TYPES.join(', ') })}
                         </p>
                       </div>
                     }
@@ -201,12 +203,12 @@ export const MetricsCards = () => {
                 />
                 {totalAddressesIndexed > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {exposurePercentage.toFixed(2)}% of indexed addresses
+                    {exposurePercentage.toFixed(2)}% {t('metrics.ofTotal')}
                   </p>
                 )}
                 {reusedAddresses > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {reusedAddresses.toLocaleString()} reused ({reusePercentage.toFixed(2)}%)
+                    {reusedAddresses.toLocaleString()} {t('metrics.reused')} ({reusePercentage.toFixed(2)}%)
                   </p>
                 )}
               </div>
@@ -231,13 +233,12 @@ export const MetricsCards = () => {
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Exposed Balance</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">{t('metrics.exposedBalance')}</h3>
                   <Tooltip
                     content={
                       <div className="space-y-2">
                         <p className="text-xs">
-                          Combined value sitting in either inherently exposed script types ({HIGH_RISK_TYPES.join(', ')}, unknown, nonstandard) or in addresses
-                          that have been reused. Data sourced from `address/stats`.
+                          {t('metrics.exposedBalanceDesc')}
                         </p>
                       </div>
                     }
@@ -265,7 +266,7 @@ export const MetricsCards = () => {
                 )}
                 {totalSupply > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {exposedBalancePercentage.toFixed(2)}% of total supply
+                    {exposedBalancePercentage.toFixed(2)}% {t('metrics.ofTotal')}
                   </p>
                 )}
               </div>
