@@ -1,11 +1,12 @@
 import { Select, SelectItem } from '@heroui/react'
 import { useI18nStore } from '../../stores/i18nStore'
 import { useTranslation } from 'react-i18next'
+import Flag from 'react-world-flags'
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' }
+  { code: 'en', name: 'English', countryCode: 'US' },
+  { code: 'es', name: 'Español', countryCode: 'ES' },
+  { code: 'fr', name: 'Français', countryCode: 'FR' }
 ]
 
 export const LanguageSwitcher = () => {
@@ -30,15 +31,15 @@ export const LanguageSwitcher = () => {
       size="sm"
       variant="flat"
       classNames={{
-        trigger: "min-w-[110px] bg-gray-100 dark:bg-gray-700",
+        trigger: "min-w-[160px] bg-gray-100 dark:bg-gray-700",
         value: "text-xs font-medium"
       }}
       aria-label={t('settings.selectLanguage')}
       renderValue={() => (
         <div className="flex items-center gap-2">
-          {/* <span className="text-base">{currentLanguage.flag}</span> */}
+          <Flag code={currentLanguage.countryCode} className="w-5 h-4 rounded" />
           <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-            {currentLanguage.code.toUpperCase()}
+            {currentLanguage.name}
           </span>
         </div>
       )}
@@ -46,7 +47,7 @@ export const LanguageSwitcher = () => {
       {languages.map((lang) => (
         <SelectItem key={lang.code} textValue={lang.name}>
           <div className="flex items-center gap-2">
-            {/* <span>{lang.flag}</span> */}
+            <Flag code={lang.countryCode} className="w-5 h-4 rounded" />
             <span>{lang.name}</span>
           </div>
         </SelectItem>

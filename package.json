@@ -22,7 +22,8 @@
     "zustand": "^5.0.8",
     "i18next": "^23.15.1",
     "react-i18next": "^15.1.0",
-    "i18next-browser-languagedetector": "^8.0.2"
+    "i18next-browser-languagedetector": "^8.0.2",
+    "react-world-flags": "^1.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
