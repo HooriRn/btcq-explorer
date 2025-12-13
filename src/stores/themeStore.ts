@@ -10,16 +10,22 @@ interface ThemeState {
   toggleTheme: () => void
 }
 
+// Helper function to get system default theme
+const getSystemDefaultTheme = (): 'light' | 'dark' => {
+  if (typeof window !== 'undefined') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+  return 'light'
+}
+
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
-      theme: 'system',
+      theme: getSystemDefaultTheme(),
       setTheme: (theme) => {
         set({ theme })
-        // Update data-theme attribute on html tag
         const html = document.documentElement
         if (theme === 'system') {
-          // Remove data-theme to use system preference
           html.removeAttribute('data-theme')
         } else {
           html.setAttribute('data-theme', theme)
@@ -28,18 +34,32 @@ export const useThemeStore = create<ThemeState>()(
       getEffectiveTheme: () => {
         const { theme } = get()
         if (theme === 'system') {
-          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          return getSystemDefaultTheme()
         }
         return theme
       },
       toggleTheme: () => {
-        const { theme } = get()
-        const newTheme = theme === 'light' ? 'dark' : 'light'
+        const { theme, getEffectiveTheme } = get()
+        const currentEffectiveTheme = getEffectiveTheme()
+        const newTheme = currentEffectiveTheme === 'light' ? 'dark' : 'light'
         get().setTheme(newTheme)
       }
     }),
     {
       name: 'theme-storage',
+      onRehydrateStorage: () => (state) => {
+        const html = document.documentElement
+        if (state) {
+          if (state.theme === 'system') {
+            html.removeAttribute('data-theme')
+          } else {
+            html.setAttribute('data-theme', state.theme)
+          }
+        } else {
+          const systemTheme = getSystemDefaultTheme()
+          html.setAttribute('data-theme', systemTheme)
+        }
+      }
     }
   )
 )
