@@ -39,7 +39,7 @@ export const useThemeStore = create<ThemeState>()(
         return theme
       },
       toggleTheme: () => {
-        const { theme, getEffectiveTheme } = get()
+        const { getEffectiveTheme } = get()
         const currentEffectiveTheme = getEffectiveTheme()
         const newTheme = currentEffectiveTheme === 'light' ? 'dark' : 'light'
         get().setTheme(newTheme)
