@@ -59,7 +59,7 @@
     "distributionByCount": "Distribution by Count",
     "distributionByBalance": "Distribution by Balance",
     "shareOfExposedAddresses": "Share of exposed addresses: {{percentage}}%",
-    "exposedAddresses": "Exposed addresses: {{count}}",
+    "exposedAddresses": "Exposed addresses: {{replace}}",
     "shareOfExposedBalance": "Share of exposed balance: {{percentage}}%",
     "exposedBalance": "Exposed balance: {{balance}}",
     "cause": "Cause:",

@@ -114,7 +114,7 @@ export const UTXODistributionCharts = () => {
         <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg p-3 max-w-xs pointer-events-auto touch-none">
           <p className="font-semibold text-gray-900 dark:text-white mb-1">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.shareOfExposedAddresses', { percentage: data.percentage.toFixed(2) })}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.exposedAddresses', { count: Number(formatCount(data.value)) })}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t('charts.exposedAddresses', { replace: (formatCount(data.value)) })}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {t('charts.cause')}{' '}
             <span className={`font-semibold ${getExposureTextColor(data.exposureCategory)}`}>
