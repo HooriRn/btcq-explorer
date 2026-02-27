@@ -1,4 +1,4 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat, BtcqBlocksResponse } from '../types/dashboard'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat, BtcqBlocksResponse, BtcqBlock } from '../types/dashboard'
 import { getApiBaseUrl, getBtcqIndexerUrl } from './config'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
@@ -273,6 +273,27 @@ export const api = {
     } catch (error) {
       console.error('Failed to fetch BTCQ blocks:', error)
       return []
+    }
+  },
+
+  fetchBtcqBlock: async (id: string): Promise<BtcqBlock | null> => {
+    try {
+      const base = getBtcqIndexerUrl().replace(/\/$/, '')
+      const response = await fetch(`${base}/v2/blocks?height=${encodeURIComponent(id)}`)
+      if (!response.ok) return null
+      const data = await response.json()
+      if (data && typeof data.height === 'number' && data.hash) return data as BtcqBlock
+      if (Array.isArray(data) && data.length > 0 && data[0].height != null && data[0].hash)
+        return data[0] as BtcqBlock
+      const blocks = await api.fetchBtcqBlocks()
+      const idNum = Number(id)
+      const found = blocks.find(
+        (b) => b.height === idNum || String(b.height) === id || b.hash === id
+      )
+      return found ?? null
+    } catch (error) {
+      console.error('Failed to fetch BTCQ block:', error)
+      return null
     }
   }
 }

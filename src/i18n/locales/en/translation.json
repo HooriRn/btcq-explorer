@@ -170,7 +170,15 @@
     "hash": "Hash",
     "timestamp": "Timestamp",
     "txCount": "Tx Count",
-    "noBlocks": "No blocks"
+    "noBlocks": "No blocks",
+    "backToBlocks": "Back to blocks",
+    "blockDetail": "Block",
+    "transactions": "Transactions",
+    "txTableLabel": "Block transactions",
+    "txHash": "Tx Hash",
+    "finalizedEvents": "Finalized events",
+    "txHex": "Tx hex",
+    "events": "Events"
   }
 }
 

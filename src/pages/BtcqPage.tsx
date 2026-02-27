@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button, Spinner, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
 import { api } from '../services/api'
@@ -119,15 +120,23 @@ export const BtcqPage = () => {
                 blocks.map((block) => (
                   <TableRow key={`${block.height}-${block.hash}`}>
                     <TableCell>
-                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                      <Link
+                        to={`/btcq/blocks/${block.height}`}
+                        state={{ block }}
+                        className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                      >
                         {block.height.toLocaleString()}
-                      </span>
+                      </Link>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm font-mono text-gray-900 dark:text-gray-100">
+                        <Link
+                          to={`/btcq/blocks/${block.height}`}
+                          state={{ block }}
+                          className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
+                        >
                           {formatHash(block.hash)}
-                        </span>
+                        </Link>
                         <CopyButton text={block.hash} />
                       </div>
                     </TableCell>
