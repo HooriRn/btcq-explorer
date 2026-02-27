@@ -30,7 +30,6 @@ export const UTXOTypesTable = () => {
   }
 
   const totalAddresses = filteredStats.reduce((sum, stat) => sum + stat.totalCount, 0)
-  const totalBalance = filteredStats.reduce((sum, stat) => sum + stat.totalSat, 0)
   const sortedStats = [...filteredStats].sort((a, b) => b.totalCount - a.totalCount)
 
   const formatCount = (count: number) => {
