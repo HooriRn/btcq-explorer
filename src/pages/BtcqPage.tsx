@@ -51,24 +51,24 @@ export const BtcqPage = () => {
   if (isLoading && blocks.length === 0) {
     return (
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="mt-12">
-          <div className="flex items-center justify-between mb-6">
+        <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('btcq.title')}</h1>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-500 dark:text-gray-400">{t('common.loading')}</span>
               <Spinner size="sm" />
             </div>
           </div>
-          <TableSkeleton />
-        </div>
+        </section>
+        <TableSkeleton />
       </main>
     )
   }
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-8">
-      <div className="mt-12">
-        <div className="flex items-center justify-between mb-6">
+      <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
+        <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('btcq.title')}</h1>
           <div className="flex items-center space-x-4">
             {error && (
@@ -90,8 +90,9 @@ export const BtcqPage = () => {
             </Button>
           </div>
         </div>
+      </section>
 
-        <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <Table
             aria-label={t('btcq.blocksTableLabel')}
             removeWrapper
@@ -156,7 +157,6 @@ export const BtcqPage = () => {
             </TableBody>
           </Table>
         </div>
-      </div>
     </main>
   )
 }

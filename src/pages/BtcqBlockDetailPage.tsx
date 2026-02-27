@@ -96,7 +96,7 @@ export const BtcqBlockDetailPage = () => {
   if (loading && !block) {
     return (
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="mt-12 flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <Spinner size="md" />
           <span className="text-gray-500 dark:text-gray-400">{t('common.loading')}</span>
         </div>
@@ -107,33 +107,32 @@ export const BtcqBlockDetailPage = () => {
   if (error || !block) {
     return (
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="mt-12">
-          <p className="text-red-600 dark:text-red-400">{error ?? t('common.error')}</p>
-          <Button className="mt-4 text-gray-800 dark:text-gray-200" onPress={() => navigate('/btcq')} startContent={<BackArrowIcon className="w-4 h-4" />}>
-            {t('btcq.backToBlocks')}
-          </Button>
-        </div>
+        <p className="text-red-600 dark:text-red-400">{error ?? t('common.error')}</p>
+        <Button className="mt-4 text-gray-800 dark:text-gray-200" onPress={() => navigate('/btcq')} startContent={<BackArrowIcon className="w-4 h-4" />}>
+          {t('btcq.backToBlocks')}
+        </Button>
       </main>
     )
   }
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-8">
-      <div className="mt-12">
+      <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
         <Button
           variant="light"
           size="sm"
-          className="mb-6 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800"
+          className="mb-4 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800"
           onPress={() => navigate('/btcq')}
           startContent={<BackArrowIcon className="w-4 h-4 shrink-0" />}
         >
           {t('btcq.backToBlocks')}
         </Button>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {t('btcq.blockDetail')} #{block.height}
         </h1>
+      </section>
 
-        {/* Block summary */}
+      {/* Block summary */}
         <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-6 mb-8 space-y-4">
           <div className="flex flex-wrap items-center gap-6">
             <div className="flex items-center gap-2">
@@ -215,7 +214,6 @@ export const BtcqBlockDetailPage = () => {
             </div>
           ))}
         </div>
-      </div>
     </main>
   )
 }

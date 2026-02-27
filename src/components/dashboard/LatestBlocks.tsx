@@ -9,17 +9,18 @@ export const LatestBlocks = () => {
   // Only show skeleton on initial load when there's no data
   if (isLoading && latestBlocks.length === 0) {
     return (
-      <div className="mt-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Blocks</h2>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500 dark:text-gray-400">Loading...</span>
-            <Spinner size="sm" />
+      <>
+        <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Blocks</h2>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Loading...</span>
+              <Spinner size="sm" />
+            </div>
           </div>
-        </div>
-        
+        </section>
         <TableSkeleton />
-      </div>
+      </>
     )
   }
 
@@ -37,27 +38,29 @@ export const LatestBlocks = () => {
   }
 
   return (
-    <div className="mt-12">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Blocks</h2>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            Last updated: {lastUpdated || 'Never'}
-          </span>
-          <Button
-            isIconOnly
-            variant="light"
-            size="sm"
-            onPress={fetchLatestBlocks}
-            title="Refresh list"
-          >
-            <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </Button>
+    <>
+      <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Latest Blocks</h2>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Last updated: {lastUpdated || 'Never'}
+            </span>
+            <Button
+              isIconOnly
+              variant="light"
+              size="sm"
+              onPress={fetchLatestBlocks}
+              title="Refresh list"
+            >
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </Button>
+          </div>
         </div>
-      </div>
-      
+      </section>
+
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
         <Table 
           aria-label="Latest blocks table" 
@@ -117,7 +120,7 @@ export const LatestBlocks = () => {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   )
 }
 

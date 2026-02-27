@@ -40,9 +40,10 @@ export const Settings = () => {
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-8">
+      <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('settings.title')}</h1>
+      </section>
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('settings.title')}</h1>
-        
         <div className="space-y-8">
           <div>
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('settings.dashboardPreferences')}</h2>

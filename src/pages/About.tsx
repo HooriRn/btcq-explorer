@@ -5,9 +5,10 @@ export const About = () => {
   
   return (
     <main className="max-w-7xl mx-auto px-6 py-8">
+      <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('about.title')}</h1>
+      </section>
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('about.title')}</h1>
-        
         <div className="prose max-w-none">
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
             {t('about.description')}
