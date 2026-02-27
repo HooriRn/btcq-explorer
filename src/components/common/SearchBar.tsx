@@ -34,48 +34,42 @@ export const SearchBar = ({
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
-  }
-
   return (
     <div className="mt-8 w-full">
       <form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder={defaultPlaceholder}
-          variant="bordered"
-          radius="full"
-          size="lg"
-          classNames={{
-            input: "pr-12 text-gray-700 dark:text-gray-300",
-            inputWrapper: "border-2 border-gray-300 dark:border-zinc-700 pr-2 bg-white dark:bg-zinc-900",
-            base: "w-full"
-          }}
-          endContent={
-            <Button
-              isIconOnly
-              type="submit"
-              isDisabled={isLoading || !query.trim()}
-              variant="light"
-              radius="full"
-              size="sm"
-            >
-              {isLoading ? (
-                <Spinner size="sm" color="primary" />
-              ) : (
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              )}
-            </Button>
-          }
-        />
+        <div className="flex items-center gap-2 px-1.5 pt-1.5 pb-1 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg">
+          <Input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={defaultPlaceholder}
+            variant="flat"
+            radius="lg"
+            size="lg"
+            classNames={{
+              input: "text-gray-700 dark:text-gray-300",
+              inputWrapper: "border-0 shadow-none bg-transparent h-12 min-h-12 py-0 hover:!bg-transparent dark:hover:!bg-transparent data-[hover=true]:!bg-transparent focus-within:!bg-transparent dark:focus-within:!bg-transparent",
+              base: "flex-1 min-w-0 mb-0"
+            }}
+          />
+          <Button
+            isIconOnly
+            type="submit"
+            isDisabled={isLoading || !query.trim()}
+            variant="solid"
+            color="primary"
+            radius="lg"
+            className="w-12 h-12 min-h-12 shrink-0 !p-0"
+          >
+            {isLoading ? (
+              <Spinner size="sm" color="white" />
+            ) : (
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   )

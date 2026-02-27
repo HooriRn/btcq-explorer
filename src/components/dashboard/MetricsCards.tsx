@@ -48,17 +48,19 @@ const MetricRow = ({
   subValue?: React.ReactNode
   valueRed?: boolean
 }) => (
-  <div className="flex items-center gap-3 py-4 border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
+  <div className="flex items-center gap-3 h-[90px] min-h-[90px] py-4 border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
     <Icon className="w-6 h-6 shrink-0 text-gray-400 dark:text-gray-500 flex-shrink-0" />
     <div className="min-w-0 flex-1">
       <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</p>
       <p className={`text-lg font-bold mt-0.5 break-all ${valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
         {value}
       </p>
-      {subValue && (
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 break-words">{subValue}</p>
-      )}
     </div>
+    {subValue && (
+      <div className="text-end shrink-0">
+        <p className="text-xs text-gray-500 dark:text-gray-400 break-words">{subValue}</p>
+      </div>
+    )}
   </div>
 )
 
@@ -122,7 +124,7 @@ export const MetricsCards = () => {
   return (
     <div
       id="ContentPlaceHolder1_mainboxes"
-      className="card rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden py-5 px-4 md:px-6"
+      className="card rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden px-4"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
         {/* Left column */}
