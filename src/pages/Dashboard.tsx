@@ -7,6 +7,7 @@ import { UTXOTypesTable } from '../components/dashboard/UTXOTypesTable'
 import { UTXODistributionCharts } from '../components/dashboard/UTXODistributionCharts'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
+import backgroundBitcoin from '../assets/background-bitcoin.svg?url'
 
 export const Dashboard = () => {
   useDashboard() // Initialize dashboard data
@@ -19,14 +20,28 @@ export const Dashboard = () => {
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-8">
-      <MetricsCards />
-      
-      {/* <LatestBlockInfo /> */}
-      
-      <SearchBar onSearch={handleSearch} />
-      
-      {searchResults && (
+    <>
+      <section
+        className="relative overflow-hidden pt-14 pb-20 bg-no-repeat bg-center bg-cover"
+        style={{
+          backgroundColor: 'rgba(184, 92, 0, 0.3)',
+          backgroundImage: `url(${backgroundBitcoin})`,
+        }}
+      >
+        {/* Soft shadow at the bottom of the hero background */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 md:h-14 bg-gradient-to-b from-transparent to-black/25 dark:to-black/50" />
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="w-full md:w-[55%]">
+            <SearchBar onSearch={handleSearch} inHero />
+          </div>
+        </div>
+      </section>
+
+      <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 -mt-20">
+        <MetricsCards />
+
+        {searchResults && (
         <SearchResults 
           results={searchResults.results} 
           isLoading={false} 
@@ -46,7 +61,7 @@ export const Dashboard = () => {
         <LatestUTXOsPreview />
         <LatestBlocksPreview />
       </div>
-
-    </main>
+      </main>
+    </>
   )
 }

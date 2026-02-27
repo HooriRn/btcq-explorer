@@ -7,11 +7,14 @@ import type { SearchResponse } from '../../types/dashboard'
 interface SearchBarProps {
   onSearch?: (query: string, results: SearchResponse) => void
   placeholder?: string
+  /** When true, reduces top margin for use in hero section */
+  inHero?: boolean
 }
 
 export const SearchBar = ({ 
   onSearch, 
-  placeholder 
+  placeholder,
+  inHero = false 
 }: SearchBarProps) => {
   const { t } = useTranslation()
   const defaultPlaceholder = placeholder || t('dashboard.searchPlaceholder')
@@ -35,9 +38,9 @@ export const SearchBar = ({
   }
 
   return (
-    <div className="mt-8 w-full">
+    <div className={`w-full ${inHero ? 'mt-0' : 'mt-8'}`}>
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center gap-2 px-1.5 pt-1.5 pb-1 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg">
+        <div className="flex items-center gap-2 px-1.5 pt-1 pb-1 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg">
           <Input
             type="text"
             value={query}
@@ -45,10 +48,10 @@ export const SearchBar = ({
             placeholder={defaultPlaceholder}
             variant="flat"
             radius="lg"
-            size="lg"
+            size="md"
             classNames={{
-              input: "text-gray-700 dark:text-gray-300",
-              inputWrapper: "border-0 shadow-none bg-transparent h-12 min-h-12 py-0 hover:!bg-transparent dark:hover:!bg-transparent data-[hover=true]:!bg-transparent focus-within:!bg-transparent dark:focus-within:!bg-transparent",
+              input: "text-gray-700 dark:text-gray-300 text-sm md:text-base",
+              inputWrapper: "border-0 shadow-none bg-transparent h-10 min-h-10 md:h-9 min-h-9 py-0 hover:!bg-transparent dark:hover:!bg-transparent data-[hover=true]:!bg-transparent focus-within:!bg-transparent dark:focus-within:!bg-transparent",
               base: "flex-1 min-w-0 mb-0"
             }}
           />
@@ -59,12 +62,12 @@ export const SearchBar = ({
             variant="solid"
             color="primary"
             radius="lg"
-            className="w-12 h-12 min-h-12 shrink-0 !p-0"
+            className="w-10 h-10 min-h-10 md:w-9 md:h-9 md:min-h-9 shrink-0 !p-0"
           >
             {isLoading ? (
               <Spinner size="sm" color="white" />
             ) : (
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <svg className="w-4 h-4 md:w-4 md:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             )}
