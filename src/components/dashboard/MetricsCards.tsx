@@ -48,8 +48,8 @@ const MetricRow = ({
   subValue?: React.ReactNode
   valueRed?: boolean
 }) => (
-  <div className="flex items-center gap-3 h-[90px] min-h-[90px] py-4 border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
-    <Icon className="w-6 h-6 shrink-0 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+  <div className="flex items-center gap-4 h-[90px] min-h-[90px] py-4 border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
+    <Icon className="w-8 h-8 shrink-0 text-gray-400 dark:text-gray-500 flex-shrink-0" />
     <div className="min-w-0 flex-1">
       <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</p>
       <p className={`text-lg font-semibold mt-0.5 break-all ${valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
