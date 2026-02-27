@@ -58,7 +58,7 @@ export const Header = () => {
       </div>
       
       {/* Bottom row: Logo and Navigation Menu */}
-      <div className="px-4 sm:px-6 py-4">
+      <div className="bg-gray-50 dark:bg-zinc-900 px-4 sm:px-6 py-4 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.07),0_2px_4px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2),0_2px_4px_-2px_rgba(0,0,0,0.15)]">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center">
