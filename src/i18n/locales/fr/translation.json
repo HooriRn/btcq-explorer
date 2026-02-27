@@ -16,11 +16,11 @@
     "yes": "Oui"
   },
   "navigation": {
-    "dashboard": "Tableau de bord",
+    "dashboardRisk": "Tableau de bord des risques",
     "about": "À propos",
     "btcq": "BTCQ",
     "settings": "Paramètres",
-    "riskDashboard": "Tableau de bord des risques",
+    "btcqExplorer": "BTCQ Explorer",
     "toggleMenu": "Basculer le menu"
   },
   "header": {

@@ -65,7 +65,7 @@ export const Header = () => {
               <BitcoinLogo className="text-white" size="md" />
             </div>
             <span className="text-orange-600 dark:text-orange-400">₿TCQ</span>
-            <span className="hidden sm:inline">{t('navigation.riskDashboard')}</span>
+            <span className="hidden sm:inline">{t('navigation.btcqExplorer')}</span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -78,7 +78,7 @@ export const Header = () => {
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              {t('navigation.dashboard')}
+              {t('navigation.dashboardRisk')}
             </Link>
             <Link 
               to="/btcq" 
@@ -145,7 +145,7 @@ export const Header = () => {
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                {t('navigation.dashboard')}
+                {t('navigation.dashboardRisk')}
               </Link>
               <Link 
                 to="/btcq" 
