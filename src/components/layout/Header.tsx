@@ -81,6 +81,16 @@ export const Header = () => {
               {t('navigation.dashboard')}
             </Link>
             <Link 
+              to="/btcq" 
+              className={`text-sm font-medium transition-colors ${
+                isActive('/btcq') 
+                  ? 'text-blue-600 dark:text-blue-400' 
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              {t('navigation.btcq')}
+            </Link>
+            <Link 
               to="/about" 
               className={`text-sm font-medium transition-colors ${
                 isActive('/about') 
@@ -136,6 +146,17 @@ export const Header = () => {
                 }`}
               >
                 {t('navigation.dashboard')}
+              </Link>
+              <Link 
+                to="/btcq" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`text-base font-medium transition-colors py-2 ${
+                  isActive('/btcq') 
+                    ? 'text-blue-600 dark:text-blue-400' 
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                {t('navigation.btcq')}
               </Link>
               <Link 
                 to="/about" 

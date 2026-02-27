@@ -154,3 +154,30 @@ export interface SupplyStatsResponse {
   total_supply_sat: number
   script_type_balances: Record<string, number>
 }
+
+// BTCQ indexer block (v2/blocks endpoint)
+export interface BtcqEventAttribute {
+  key: string
+  value: string
+}
+
+export interface BtcqEvent {
+  type: string
+  attributes: BtcqEventAttribute[]
+}
+
+export interface BtcqTx {
+  tx_hash: string
+  tx_hex: string
+  events: BtcqEvent[]
+}
+
+export interface BtcqBlock {
+  hash: string
+  height: number
+  timestamp: number
+  finalized_events: BtcqEvent[]
+  txs: BtcqTx[]
+}
+
+export type BtcqBlocksResponse = BtcqBlock[]

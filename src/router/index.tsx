@@ -6,6 +6,7 @@ import { Settings } from '../pages/Settings'
 import { LatestAddressesPage } from '../pages/LatestAddressesPage'
 import { LatestUTXOsPage } from '../pages/LatestUTXOsPage'
 import { LatestBlocksPage } from '../pages/LatestBlocksPage'
+import { BtcqPage } from '../pages/BtcqPage'
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: 'blocks',
         element: <LatestBlocksPage />
+      },
+      {
+        path: 'btcq',
+        element: <BtcqPage />
       }
     ]
   }

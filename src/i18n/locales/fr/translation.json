@@ -18,6 +18,7 @@
   "navigation": {
     "dashboard": "Tableau de bord",
     "about": "À propos",
+    "btcq": "BTCQ",
     "settings": "Paramètres",
     "riskDashboard": "Tableau de bord des risques",
     "toggleMenu": "Basculer le menu"
@@ -139,6 +140,8 @@
     "apiConfiguration": "Configuration de l'API",
     "apiBaseUrl": "URL de base de l'API",
     "apiBaseUrlDesc": "(doit se terminer par /)",
+    "btcqIndexerUrl": "URL de l'indexeur BTCQ",
+    "btcqIndexerUrlDesc": "(endpoint v2/blocks, doit se terminer par /)",
     "current": "Actuel :",
     "saveSettings": "Enregistrer les paramètres",
     "language": "Langue",
@@ -159,6 +162,15 @@
     "technologyStack": "Pile technologique",
     "frontend": "Frontend",
     "stateManagement": "Gestion d'état"
+  },
+  "btcq": {
+    "title": "Blocs BTCQ",
+    "blocksTableLabel": "Blocs BTCQ récents",
+    "height": "Hauteur",
+    "hash": "Hash",
+    "timestamp": "Date et heure",
+    "txCount": "Nbre de tx",
+    "noBlocks": "Aucun bloc"
   }
 }
 

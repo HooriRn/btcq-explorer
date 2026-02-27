@@ -1,5 +1,5 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat } from '../types/dashboard'
-import { getApiBaseUrl } from './config'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat, BtcqBlocksResponse } from '../types/dashboard'
+import { getApiBaseUrl, getBtcqIndexerUrl } from './config'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
 const mockMetrics: DashboardMetrics = {
@@ -255,6 +255,24 @@ export const api = {
     } catch (error) {
       console.error('Failed to fetch Bitcoin price:', error)
       return 0
+    }
+  },
+
+  fetchBtcqBlocks: async (): Promise<BtcqBlocksResponse> => {
+    try {
+      const base = getBtcqIndexerUrl().replace(/\/$/, '')
+      const response = await fetch(`${base}/v2/blocks`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      if (Array.isArray(data)) return data
+      if (data && Array.isArray(data.blocks)) return data.blocks
+      if (data && typeof data.height === 'number' && data.hash) return [data]
+      return []
+    } catch (error) {
+      console.error('Failed to fetch BTCQ blocks:', error)
+      return []
     }
   }
 }
