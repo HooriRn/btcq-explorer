@@ -76,18 +76,6 @@ export const UTXOTypesTable = () => {
 
   return (
     <div className="mt-6">
-      <div className="flex items-center justify-between mb-6">
-        {totalBalance > 0 && (
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            <span className="font-semibold">Tracked Balance: </span>
-            <span className="font-mono">{formatBalance(totalBalance)}</span>
-            {bitcoinPrice > 0 && (
-              <span className="ml-2">• {formatUSD(totalBalance)}</span>
-            )}
-          </div>
-        )}
-      </div>
-
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <Table

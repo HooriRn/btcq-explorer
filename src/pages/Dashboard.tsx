@@ -22,9 +22,8 @@ export const Dashboard = () => {
   return (
     <>
       <section
-        className="relative overflow-hidden pt-14 pb-20 bg-no-repeat bg-center bg-cover"
+        className="relative overflow-hidden pt-14 pb-20 bg-no-repeat bg-center bg-cover bg-[rgba(252,126,0,0.6)] dark:bg-orange-900"
         style={{
-          backgroundColor: 'rgba(184, 92, 0, 0.3)',
           backgroundImage: `url(${backgroundBitcoin})`,
         }}
       >

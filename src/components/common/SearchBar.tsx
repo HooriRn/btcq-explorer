@@ -61,7 +61,7 @@ export const SearchBar = ({
             isDisabled={isLoading || !query.trim()}
             variant="solid"
             color="primary"
-            radius="lg"
+            radius="sm"
             className="w-10 h-10 min-h-10 md:w-9 md:h-9 md:min-h-9 shrink-0 !p-0"
           >
             {isLoading ? (

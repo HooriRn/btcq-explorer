@@ -52,7 +52,7 @@ const MetricRow = ({
     <Icon className="w-6 h-6 shrink-0 text-gray-400 dark:text-gray-500 flex-shrink-0" />
     <div className="min-w-0 flex-1">
       <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</p>
-      <p className={`text-lg font-bold mt-0.5 break-all ${valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
+      <p className={`text-lg font-semibold mt-0.5 break-all ${valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
         {value}
       </p>
     </div>

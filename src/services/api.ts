@@ -245,15 +245,29 @@ export const api = {
 
   fetchBitcoinPrice: async (): Promise<number> => {
     try {
-      // Using CoinGecko free API (no API key required)
-      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      // Primary source: Coinbase spot price (typically very responsive)
+      const coinbaseRes = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/spot')
+      if (coinbaseRes.ok) {
+        const coinbaseData = await coinbaseRes.json()
+        const amount = Number(coinbaseData?.data?.amount)
+        if (!Number.isNaN(amount) && amount > 0) {
+          return amount
+        }
+      } else {
+        console.warn('Coinbase price API responded with non-OK status:', coinbaseRes.status)
       }
-      const data = await response.json()
-      return data.bitcoin?.usd || 0
+
+      // Fallback: CoinGecko free API (no API key required)
+      const coingeckoRes = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
+      )
+      if (!coingeckoRes.ok) {
+        throw new Error(`HTTP error from CoinGecko! status: ${coingeckoRes.status}`)
+      }
+      const cgData = await coingeckoRes.json()
+      return cgData.bitcoin?.usd || 0
     } catch (error) {
-      console.error('Failed to fetch Bitcoin price:', error)
+      console.error('Failed to fetch Bitcoin price from all sources:', error)
       return 0
     }
   },
