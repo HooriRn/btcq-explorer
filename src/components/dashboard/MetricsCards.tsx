@@ -249,6 +249,7 @@ export const MetricsCards = () => {
             }
             value={`${formatBTC(exposedBalance)} BTC`}
             subValue={totalSupply > 0 ? `${exposedBalancePercentage.toFixed(2)}% ${t('metrics.ofTotal')} · ${formatUSD(exposedBalance)}` : formatUSD(exposedBalance)}
+            hideDividerOnLarge
           />
           <MetricRow
             icon={IconCube}
@@ -256,6 +257,7 @@ export const MetricsCards = () => {
             value={lastBlockHeight > 0 ? lastBlockHeight.toLocaleString() : '—'}
             hideBorderOnLarge
             hideBorderOnMobile
+            hideDividerOnLarge
           />
         </div>
       </div>
