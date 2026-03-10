@@ -75,15 +75,20 @@ export const UTXOTypesTable = () => {
 
   return (
     <div className="mt-6">
-      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border-[0.37px] border-[#E9ECF0] dark:border-zinc-800 shadow-[0px_1.47px_5.21px_0px_#3C465424] overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            UTXO Types Distribution
+          </h2>
+        </div>
+        <div className="overflow-x-auto px-4">
           <Table
             aria-label="UTXO types table"
             removeWrapper
             classNames={{
               wrapper: 'bg-white dark:bg-zinc-900 min-w-full',
-              th: 'bg-gray-50 dark:bg-zinc-800 text-gray-500 dark:text-gray-300 whitespace-nowrap',
-              tr: 'border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/50',
+              th: 'bg-white dark:bg-zinc-800 text-xs font-medium text-gray-500 dark:text-gray-300 whitespace-nowrap',
+              tr: 'border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/50 last:border-b-0',
               td: 'bg-white dark:bg-zinc-900 whitespace-nowrap',
               thead: '[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none'
             }}
@@ -97,7 +102,7 @@ export const UTXOTypesTable = () => {
               <TableColumn>{t('tables.exposedBalance')}</TableColumn>
               <TableColumn>{t('searchResults.status')}</TableColumn>
             </TableHeader>
-            <TableBody emptyContent={t('tables.noAddressesFound')}>
+          <TableBody emptyContent={t('tables.noAddressesFound')}>
               {sortedStats.map(stat => {
                 const exposureLabel = EXPOSURE_LABELS[stat.exposureCategory]
                 const exposureColor = EXPOSURE_COLORS[stat.exposureCategory]
@@ -110,16 +115,16 @@ export const UTXOTypesTable = () => {
                 return (
                   <TableRow key={stat.scriptType}>
                     <TableCell>
-                      <span className="text-sm font-mono text-gray-900 dark:text-gray-100">
+                      <span className="text-sm font-mono text-gray-700 dark:text-gray-100">
                         {stat.scriptType}
                       </span>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-sm text-gray-900 dark:text-gray-100">
+                        <span className="text-sm text-gray-700 dark:text-gray-100">
                           {formatCount(stat.totalCount)}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-400 dark:text-gray-400">
                           {scriptTypeShare === 'N/A' ? '0.00' : scriptTypeShare}% of all addresses
                         </span>
                       </div>
@@ -129,7 +134,7 @@ export const UTXOTypesTable = () => {
                         <span className="text-sm font-semibold text-red-600 dark:text-red-400">
                           {formatCount(stat.exposedCount)}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-400 dark:text-gray-400">
                           {exposedShareOfType === 'N/A' ? '0.00' : exposedShareOfType}% of this type
                         </span>
                       </div>
@@ -139,18 +144,18 @@ export const UTXOTypesTable = () => {
                         <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                           {formatCount(stat.safeCount)}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-400 dark:text-gray-400">
                           {safeShareOfType === 'N/A' ? '0.00' : safeShareOfType}% of this type
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-100">
                           {formatBalance(stat.totalSat)}
                         </span>
                         {bitcoinPrice > 0 && (
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                          <span className="text-xs text-gray-400 dark:text-gray-400">
                             {formatUSD(stat.totalSat)}
                           </span>
                         )}
@@ -161,18 +166,31 @@ export const UTXOTypesTable = () => {
                         <span className="text-sm font-semibold text-red-600 dark:text-red-400">
                           {formatBalance(stat.exposedSat)}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-400 dark:text-gray-400">
                           {exposedBalanceShare === 'N/A' ? '0.00' : exposedBalanceShare}% of this type&apos;s balance
                         </span>
                         {stat.safeSat > 0 && (
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                          <span className="text-xs text-gray-400 dark:text-gray-400">
                             Safe: {formatBalance(stat.safeSat)} ({safeBalanceShare === 'N/A' ? '0.00' : safeBalanceShare}%)
                           </span>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Chip color={exposureColor} variant="flat" size="sm">
+                      <Chip
+                        color={exposureColor}
+                        variant="flat"
+                        size="sm"
+                        classNames={{
+                          base: `bubble-chip ${
+                            exposureColor === 'danger'
+                              ? 'bubble-chip-danger'
+                              : exposureColor === 'warning'
+                              ? 'bubble-chip-warning'
+                              : 'bubble-chip-success'
+                          }`
+                        }}
+                      >
                         {exposureLabel}
                       </Chip>
                     </TableCell>

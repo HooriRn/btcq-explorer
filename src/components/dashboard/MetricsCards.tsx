@@ -171,7 +171,7 @@ export const MetricsCards = () => {
   return (
     <div
       id="ContentPlaceHolder1_mainboxes"
-      className="card rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden px-4"
+      className="card rounded-xl border border-[#E9ECF0] dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_4px_14.2px_0_#3C465424] overflow-hidden px-4"
     >
       <div className="flex flex-col md:flex-row">
         <div className="flex-1">

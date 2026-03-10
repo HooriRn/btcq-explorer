@@ -13,7 +13,7 @@ export const LatestAddressesPreview = () => {
   // Only show skeleton on initial load when there's no data
   if (isLoading && latestAddresses.length === 0) {
     return (
-      <div className="mt-12">
+      <div className="mt-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('latest.latestAddresses')}</h2>
           <Link 
@@ -47,24 +47,18 @@ export const LatestAddressesPreview = () => {
     })
 
   return (
-    <div className="mt-12">
-      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
+    <div className="mt-6">
+      <div className="bg-white dark:bg-zinc-900 rounded-lg border border-[#E9ECF0] dark:border-zinc-800 shadow-[0_4px_14.2px_0_#3C465424] overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Latest Addresses</h2>
-          <Link 
-            to="/addresses"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline"
-          >
-            View All →
-          </Link>
         </div>
-        <div className="overflow-x-auto">
-          <Table 
+        <div className="overflow-x-auto px-4">
+        <Table 
             aria-label="Latest addresses preview table" 
             removeWrapper
             classNames={{
               wrapper: "bg-white dark:bg-zinc-900 min-w-full",
-              th: "bg-gray-50 dark:bg-zinc-800 text-gray-500 dark:text-gray-300 whitespace-nowrap",
+              th: "bg-white dark:bg-zinc-800 text-gray-500 dark:text-gray-300 whitespace-nowrap",
               tr: "border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/50",
               td: "bg-white dark:bg-zinc-900 whitespace-nowrap",
               thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
@@ -100,7 +94,7 @@ export const LatestAddressesPreview = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Chip color="primary" variant="flat" size="sm">
+                  <Chip color="primary" variant="flat" size="sm" classNames={{ base: 'bubble-chip' }}>
                     {address.script_pub_type}
                   </Chip>
                 </TableCell>
@@ -109,6 +103,7 @@ export const LatestAddressesPreview = () => {
                     color={address.reused ? 'warning' : 'success'}
                     variant="flat"
                     size="sm"
+                    classNames={{ base: `bubble-chip ${address.reused ? 'bubble-chip-warning' : 'bubble-chip-success'}` }}
                   >
                     {address.reused ? t('searchResults.reused') : t('searchResults.notReused')}
                   </Chip>
@@ -118,6 +113,15 @@ export const LatestAddressesPreview = () => {
                     color={address.riskLevel === 'High' ? 'danger' : address.riskLevel === 'Medium' ? 'warning' : 'success'}
                     variant="flat"
                     size="sm"
+                    classNames={{
+                      base: `bubble-chip ${
+                        address.riskLevel === 'High'
+                          ? 'bubble-chip-danger'
+                          : address.riskLevel === 'Medium'
+                          ? 'bubble-chip-warning'
+                          : 'bubble-chip-success'
+                      }`
+                    }}
                   >
                     {address.riskLevel === 'High' ? t('searchResults.highRisk') : address.riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}
                   </Chip>
@@ -127,6 +131,13 @@ export const LatestAddressesPreview = () => {
           </TableBody>
         </Table>
         </div>
+        <Link
+          to="/addresses"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F8AC28] hover:bg-[#E89C1F] text-sm font-semibold text-white transition-colors"
+        >
+          <span>View All</span>
+          <span aria-hidden>→</span>
+        </Link>
       </div>
     </div>
   )

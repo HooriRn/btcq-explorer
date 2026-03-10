@@ -44,22 +44,16 @@ export const LatestBlocksPreview = () => {
   return (
     <div>
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Latest Blocks</h2>
-          <Link 
-            to="/blocks"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline"
-          >
-            View All →
-          </Link>
         </div>
-        <div className="overflow-x-auto">
-          <Table 
+        <div className="overflow-x-auto px-4">
+        <Table 
             aria-label="Latest blocks preview table" 
             removeWrapper
             classNames={{
               wrapper: "bg-white dark:bg-zinc-900 min-w-full",
-              th: "bg-gray-50 dark:bg-zinc-800 text-gray-500 dark:text-gray-300 whitespace-nowrap",
+              th: "bg-white dark:bg-zinc-800 text-gray-500 dark:text-gray-300 whitespace-nowrap",
               tr: "border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/50",
               td: "bg-white dark:bg-zinc-900 whitespace-nowrap",
               thead: "[&>tr]:first:rounded-b-none [&>tr>th]:first:rounded-bl-none [&>tr>th]:last:rounded-br-none"
@@ -107,6 +101,13 @@ export const LatestBlocksPreview = () => {
           </TableBody>
         </Table>
         </div>
+        <Link
+          to="/blocks"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F8AC28] hover:bg-[#E89C1F] text-sm font-semibold text-white transition-colors"
+        >
+          <span>View All</span>
+          <span aria-hidden>→</span>
+        </Link>
       </div>
     </div>
   )
