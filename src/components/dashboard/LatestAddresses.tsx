@@ -135,7 +135,7 @@ export const LatestAddresses = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Chip color="primary" variant="flat" size="sm">
+                  <Chip color="primary" variant="flat" size="sm" classNames={{ base: 'bubble-chip' }}>
                     {address.script_pub_type || t('common.unknown')}
                   </Chip>
                 </TableCell>
@@ -144,6 +144,7 @@ export const LatestAddresses = () => {
                     color={address.reused ? 'warning' : 'success'}
                     variant="flat"
                     size="sm"
+                    classNames={{ base: `bubble-chip ${address.reused ? 'bubble-chip-warning' : 'bubble-chip-success'}` }}
                   >
                     {address.reused ? t('searchResults.reused') : t('searchResults.notReused')}
                   </Chip>
@@ -153,6 +154,15 @@ export const LatestAddresses = () => {
                     color={address.riskLevel === 'High' ? 'danger' : address.riskLevel === 'Medium' ? 'warning' : 'success'}
                     variant="flat"
                     size="sm"
+                    classNames={{
+                      base: `bubble-chip ${
+                        address.riskLevel === 'High'
+                          ? 'bubble-chip-danger'
+                          : address.riskLevel === 'Medium'
+                          ? 'bubble-chip-warning'
+                          : 'bubble-chip-success'
+                      }`
+                    }}
                   >
                     {address.riskLevel === 'High' ? t('searchResults.highRisk') : address.riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}
                   </Chip>

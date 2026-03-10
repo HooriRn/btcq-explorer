@@ -129,7 +129,7 @@ export const LatestUTXOs = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Chip color="primary" variant="flat" size="sm">
+                  <Chip color="primary" variant="flat" size="sm" classNames={{ base: 'bubble-chip' }}>
                     {utxo.script_pub_type}
                   </Chip>
                 </TableCell>
@@ -138,6 +138,15 @@ export const LatestUTXOs = () => {
                     color={utxo.riskLevel === 'High' ? 'danger' : utxo.riskLevel === 'Medium' ? 'warning' : 'success'}
                     variant="flat"
                     size="sm"
+                    classNames={{
+                      base: `bubble-chip ${
+                        utxo.riskLevel === 'High'
+                          ? 'bubble-chip-danger'
+                          : utxo.riskLevel === 'Medium'
+                          ? 'bubble-chip-warning'
+                          : 'bubble-chip-success'
+                      }`
+                    }}
                   >
                     {utxo.riskLevel}
                   </Chip>

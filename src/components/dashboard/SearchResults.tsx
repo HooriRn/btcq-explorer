@@ -164,6 +164,15 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             color={riskLevel === 'High' ? 'danger' : riskLevel === 'Medium' ? 'warning' : 'success'}
                             variant="flat"
                             size="sm"
+                            classNames={{
+                              base: `bubble-chip ${
+                                riskLevel === 'High'
+                                  ? 'bubble-chip-danger'
+                                  : riskLevel === 'Medium'
+                                  ? 'bubble-chip-warning'
+                                  : 'bubble-chip-success'
+                              }`
+                            }}
                           >
                             {riskLevel === 'High' ? t('searchResults.highRisk') : riskLevel === 'Medium' ? t('searchResults.mediumRisk') : t('searchResults.lowRisk')}
                           </Chip>
@@ -171,6 +180,11 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                             color={result.reused ? 'warning' : 'success'}
                             variant="flat"
                             size="sm"
+                            classNames={{
+                              base: `bubble-chip ${
+                                result.reused ? 'bubble-chip-warning' : 'bubble-chip-success'
+                              }`
+                            }}
                           >
                             {result.reused ? t('searchResults.reused') : t('searchResults.notReused')}
                           </Chip>
@@ -257,11 +271,20 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         <div className="flex items-center justify-between mb-3">
                           <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('searchResults.riskAssessment')}</h5>
                           {result.risk_score !== undefined && (
-                            <Chip
-                              color={result.risk_score >= 7 ? 'danger' : result.risk_score >= 4 ? 'warning' : 'success'}
-                              variant="flat"
-                              size="sm"
-                            >
+                              <Chip
+                                color={result.risk_score >= 7 ? 'danger' : result.risk_score >= 4 ? 'warning' : 'success'}
+                                variant="flat"
+                                size="sm"
+                                classNames={{
+                                  base: `bubble-chip ${
+                                    result.risk_score >= 7
+                                      ? 'bubble-chip-danger'
+                                      : result.risk_score >= 4
+                                      ? 'bubble-chip-warning'
+                                      : 'bubble-chip-success'
+                                  }`
+                                }}
+                              >
                               {getScoreLabel(result.risk_score)}
                             </Chip>
                           )}
@@ -340,6 +363,15 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                           color={riskLevel === 'High' ? 'danger' : riskLevel === 'Medium' ? 'warning' : 'success'}
                           variant="flat"
                           size="sm"
+                          classNames={{
+                            base: `bubble-chip ${
+                              riskLevel === 'High'
+                                ? 'bubble-chip-danger'
+                                : riskLevel === 'Medium'
+                                ? 'bubble-chip-warning'
+                                : 'bubble-chip-success'
+                            }`
+                          }}
                         >
                           {riskLevel} Risk
                         </Chip>
@@ -387,11 +419,21 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                         <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('searchResults.status')}</label>
                         <p className="text-sm">
                           {result.spent ? (
-                            <Chip color="danger" variant="flat" size="sm">
+                            <Chip
+                              color="danger"
+                              variant="flat"
+                              size="sm"
+                              classNames={{ base: 'bubble-chip bubble-chip-danger' }}
+                            >
                               {t('searchResults.spent')}
                             </Chip>
                           ) : (
-                            <Chip color="success" variant="flat" size="sm">
+                            <Chip
+                              color="success"
+                              variant="flat"
+                              size="sm"
+                              classNames={{ base: 'bubble-chip bubble-chip-success' }}
+                            >
                               {t('searchResults.unspent')}
                             </Chip>
                           )}
