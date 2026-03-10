@@ -22,22 +22,22 @@ export const Dashboard = () => {
   return (
     <>
       <section
-        className="relative overflow-hidden pt-14 pb-20 bg-no-repeat bg-center bg-cover bg-[rgba(252,126,0,0.6)] dark:bg-orange-900"
+        className="relative overflow-hidden min-h-[200px] md:min-h-[300px] flex flex-col justify-center pt-14 pb-24 bg-no-repeat bg-center bg-cover bg-[rgba(252,126,0,0.6)] dark:bg-orange-900"
         style={{
           backgroundImage: `url(${backgroundBitcoin})`,
         }}
       >
         {/* Soft shadow at the bottom of the hero background */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 md:h-14 bg-gradient-to-b from-transparent to-black/25 dark:to-black/50" />
+      </section>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="w-full md:w-[55%]">
+      <main className="relative z-10 max-w-7xl mx-auto px-6 pt-4 pb-8 -mt-65">
+        <div className="pb-10 max-w-7xl relative z-10 flex justify-start">
+          <div className="w-full max-w-xl">
             <SearchBar onSearch={handleSearch} inHero />
           </div>
         </div>
-      </section>
 
-      <main className="relative z-10 max-w-7xl mx-auto py-8 -mt-20">
         <MetricsCards />
 
         {searchResults && (
