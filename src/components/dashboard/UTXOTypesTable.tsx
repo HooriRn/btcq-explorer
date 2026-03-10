@@ -115,7 +115,7 @@ export const UTXOTypesTable = () => {
                 return (
                   <TableRow key={stat.scriptType}>
                     <TableCell>
-                      <span className="text-sm font-mono text-gray-700 dark:text-gray-100">
+                      <span className="text-sm font-mono font-bold text-gray-700 dark:text-gray-100">
                         {stat.scriptType}
                       </span>
                     </TableCell>
