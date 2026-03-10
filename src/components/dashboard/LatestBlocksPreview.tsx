@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
+import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { TableSkeleton } from '../common/LoadingSkeleton'
 import { CopyButton } from '../common/CopyButton'
 
 export const LatestBlocksPreview = () => {
+  const { t } = useTranslation()
   const { latestBlocks, isLoading } = useDashboardStore()
 
   // Only show skeleton on initial load when there's no data
@@ -50,8 +52,7 @@ export const LatestBlocksPreview = () => {
             to="/blocks"
             className="sm:hidden inline-flex items-center gap-1 py-1 text-xs font-semibold text-[#F8AC28]"
           >
-            <span>View All</span>
-            <span aria-hidden>→</span>
+            <span>{t('latest.viewAll')}</span>
           </Link>
         </div>
         <div className="overflow-x-auto px-4">
