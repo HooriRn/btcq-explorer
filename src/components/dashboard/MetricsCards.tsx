@@ -48,19 +48,29 @@ const MetricRow = ({
   subValue?: React.ReactNode
   valueRed?: boolean
 }) => (
-  <div className="flex items-center gap-4 h-[90px] min-h-[90px] py-4 border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
-    <Icon className="w-8 h-8 shrink-0 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-    <div className="min-w-0 flex-1">
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</p>
-      <p className={`text-lg font-semibold mt-0.5 break-all ${valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
-        {value}
-      </p>
-    </div>
-    {subValue && (
-      <div className="text-end shrink-0">
-        <p className="text-xs text-gray-500 dark:text-gray-400 break-words">{subValue}</p>
+  <div className="py-5 min-h-[96px] border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
+    <div className="flex flex-col">
+      <div className="flex items-center gap-2">
+        <Icon className="w-5 h-5 mt-0.5 shrink-0 text-gray-400 dark:text-gray-400" />
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+          {label}
+        </p>
       </div>
-    )}
+      <div className="flex flex-col justify-end h-[53px]">
+        {subValue && (
+          <p className="mt-0.5 text-xs font-medium text-gray-400 dark:text-gray-400 break-words">
+            {subValue}
+          </p>
+        )}
+        <p
+          className={`mt-1 text-[22px] font-medium leading-tight break-all ${
+            valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
+          }`}
+        >
+          {value}
+        </p>
+      </div>
+    </div>
   </div>
 )
 
@@ -126,9 +136,8 @@ export const MetricsCards = () => {
       id="ContentPlaceHolder1_mainboxes"
       className="card rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden px-4"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
-        {/* Left column */}
-        <div className="flex flex-col md:pr-8 md:border-r md:border-gray-200 dark:md:border-zinc-700">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex-1">
           <MetricRow
             icon={IconBTC}
             label="BTC PRICE"
@@ -140,20 +149,21 @@ export const MetricsCards = () => {
             value={`${formatBTC(totalSupply)} BTC`}
             subValue={bitcoinPrice > 0 ? formatUSD(totalSupply) : undefined}
           />
+        </div>
+        <div className="flex-1">
           <MetricRow
             icon={IconUsers}
             label={t('metrics.addressesIndexed')}
             value={totalAddressesIndexed.toLocaleString()}
           />
-        </div>
-        {/* Right column: top border on mobile for separator between columns when stacked */}
-        <div className="flex flex-col border-t border-gray-200 dark:border-zinc-700 md:border-t-0">
           <MetricRow
             icon={IconExposedAddresses}
             label={t('metrics.exposedAddresses')}
             value={exposedAddresses.toLocaleString()}
             subValue={totalAddressesIndexed > 0 ? `${exposurePercentage.toFixed(2)}% ${t('metrics.ofTotal')}` : undefined}
           />
+        </div>
+        <div className="flex-1">
           <MetricRow
             icon={IconExposedBalance}
             label={t('metrics.exposedBalance')}

@@ -48,3 +48,8 @@ html[data-theme="light"] .text-gray-500,
 html[data-theme="light"] .text-gray-600 {
   color: #3C4654;
 }
+
+/* Tertiary text */
+html[data-theme="light"] .text-gray-400 {
+  color: #7B8593;
+}
