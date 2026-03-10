@@ -67,8 +67,8 @@ export const LatestAddressesPreview = () => {
           <TableHeader>
             <TableColumn>{t('tables.address')}</TableColumn>
             <TableColumn>{t('tables.balanceBtc')}</TableColumn>
-            <TableColumn>{t('tables.type')}</TableColumn>
             <TableColumn>{t('tables.reused')}</TableColumn>
+            <TableColumn>{t('tables.type')}</TableColumn>
             <TableColumn>{t('tables.risk')}</TableColumn>
           </TableHeader>
           <TableBody emptyContent={t('tables.noAddressesFound')}>
@@ -94,19 +94,20 @@ export const LatestAddressesPreview = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Chip color="primary" variant="flat" size="sm" classNames={{ base: 'bubble-chip' }}>
-                    {address.script_pub_type}
-                  </Chip>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    color={address.reused ? 'warning' : 'success'}
-                    variant="flat"
-                    size="sm"
-                    classNames={{ base: `bubble-chip ${address.reused ? 'bubble-chip-warning' : 'bubble-chip-success'}` }}
+                  <span
+                    className={`inline-flex items-center text-xs font-medium ${
+                      address.reused
+                        ? 'text-amber-700 dark:text-amber-300'
+                        : 'text-emerald-700 dark:text-emerald-300'
+                    }`}
                   >
                     {address.reused ? t('searchResults.reused') : t('searchResults.notReused')}
-                  </Chip>
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className="inline-flex items-center text-xs font-medium text-blue-700 dark:text-blue-300">
+                    {address.script_pub_type}
+                  </span>
                 </TableCell>
                 <TableCell>
                   <Chip

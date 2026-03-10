@@ -56,9 +56,13 @@ export const Dashboard = () => {
 
       <LatestAddressesPreview />
 
-      <div className="grid grid-cols-2 lg:grid-cols-[3fr,2fr] gap-6 mt-6">
-        <LatestUTXOsPreview />
-        <LatestBlocksPreview />
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mt-6">
+        <div className="lg:col-span-3">
+          <LatestUTXOsPreview />
+        </div>
+        <div className="lg:col-span-2">
+          <LatestBlocksPreview />
+        </div>
       </div>
       </main>
     </>

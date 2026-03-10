@@ -69,13 +69,13 @@ export const Header = () => {
               {/* Light theme: use dark logo */}
               <img
                 src={qbctLogoDark}
-                alt="BTCQ"
+                alt="QBTC"
                 className="h-7 sm:h-8 w-auto block dark:hidden"
               />
               {/* Dark theme: use light logo */}
               <img
                 src={qbctLogoLight}
-                alt="BTCQ"
+                alt="QBTC"
                 className="h-7 sm:h-8 w-auto hidden dark:block"
               />
             </span>

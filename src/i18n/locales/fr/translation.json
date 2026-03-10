@@ -18,7 +18,7 @@
   "navigation": {
     "dashboardRisk": "Tableau de bord des risques",
     "about": "À propos",
-    "btcq": "BTCQ",
+      "btcq": "QBTC",
     "settings": "Paramètres",
     "btcqExplorer": "Explorer",
     "toggleMenu": "Basculer le menu"

@@ -35,7 +35,7 @@ export const LatestBlocksPreview = () => {
 
   const formatHash = (hash: string) => {
     if (!hash) return 'N/A'
-    return `${hash.slice(0, 16)}...${hash.slice(-8)}`
+    return `${hash.slice(0, 5)}...${hash.slice(-5)}`
   }
 
   // Limit to 5 rows
