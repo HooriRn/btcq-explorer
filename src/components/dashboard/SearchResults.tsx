@@ -129,7 +129,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
           </p>
           <div className="mt-2 mb-4 h-px bg-[#E9ECF0] dark:bg-zinc-800" />
         </div>
-        <div className="p-6">
+        <div className="p-6 pt-0">
           <div className="space-y-4">
             {results.map((result, index) => {
               // Render Address Status Result
@@ -149,7 +149,7 @@ export const SearchResults = ({ results, isLoading, query }: SearchResultsProps)
                 }
                 
                 return (
-                  <div key={index} className="bg-white dark:bg-zinc-900 rounded-lg p-4 border border-[#E9ECF0] dark:border-zinc-800">
+                  <div key={index} className="bg-white dark:bg-zinc-900 p-4 pt-0">
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{t('searchResults.addressStatus')}</h4>

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import { CardSkeleton } from '../common/LoadingSkeleton'
 import { HIGH_RISK_TYPES } from '../../utils/riskLevel'
+import { Tooltip } from '../common/Tooltip'
 
 // Etherscan-style outline icons (light gray/white)
 const IconBTC = ({ className }: { className?: string }) => (
@@ -69,7 +70,14 @@ const IconCube = ({ className }: { className?: string }) => (
     <path d="M2.2002 4.66669L8.0002 8.00002L13.8002 4.66669" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M8 14.6667V8" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
+)
 
+const IconInfo = ({ className }: { className?: string }) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M8 14.6667C11.6819 14.6667 14.6667 11.6819 14.6667 8C14.6667 4.3181 11.6819 1.33333 8 1.33333C4.3181 1.33333 1.33333 4.3181 1.33333 8C1.33333 11.6819 4.3181 14.6667 8 14.6667Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M8 7.33333V11.3333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M8 5H8.00667" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
 )
 
 const MetricRow = ({
@@ -83,7 +91,7 @@ const MetricRow = ({
   hideBorderOnMobile,
 }: {
   icon: React.ComponentType<{ className?: string }>
-  label: string
+  label: React.ReactNode
   value: React.ReactNode
   subValue?: React.ReactNode
   valueRed?: boolean
@@ -92,15 +100,15 @@ const MetricRow = ({
   hideBorderOnMobile?: boolean
 }) => (
   <div className="flex flex-1">
-    <div className={`flex-1 py-4 px-4 h-[100px] border-b border-gray-200 dark:border-zinc-700 ${hideBorderOnLarge ? 'md:border-b-0' : ''} ${hideBorderOnMobile ? 'max-md:border-b-0' : ''}`}>
+    <div className={`flex-1 py-4 px-4 min-h-[100px] border-b border-gray-200 dark:border-zinc-700 ${hideBorderOnLarge ? 'md:border-b-0' : ''} ${hideBorderOnMobile ? 'max-md:border-b-0' : ''}`}>
       <div className="flex flex-col">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <Icon className="w-5 h-5 mt-0.5 shrink-0 text-gray-400 dark:text-gray-400" />
           <p className="text-[11px] font-['Inter'] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
             {label}
           </p>
         </div>
-        <div className="flex flex-col justify-end h-[53px]">
+        <div className="flex flex-col justify-end min-h-[53px]">
           {subValue && (
             <p className="mt-0.5 text-xs font-medium text-gray-400 dark:text-gray-400 break-words">
               {subValue}
@@ -109,7 +117,7 @@ const MetricRow = ({
           <p
             className={`mt-1 text-[22px] font-medium leading-tight break-all ${
               valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
-              }`}
+            }`}
           >
             {value}
           </p>
@@ -205,7 +213,19 @@ export const MetricsCards = () => {
           />
           <MetricRow
             icon={IconExposedAddresses}
-            label={t('metrics.exposedAddresses')}
+            label={
+              <span className="inline-flex items-center gap-1">
+                {t('metrics.exposedAddresses')}
+                <Tooltip content="Addresses that are considered exposed due to risky script types or address reuse.">
+                  <button
+                    type="button"
+                    className="inline-flex h-4 w-4 items-center justify-center text-gray-400 dark:border-zinc-600 dark:text-gray-500"
+                  >
+                    <IconInfo className="h-3 w-3" />
+                  </button>
+                </Tooltip>
+              </span>
+            }
             value={exposedAddresses.toLocaleString()}
             subValue={totalAddressesIndexed > 0 ? `${exposurePercentage.toFixed(2)}% ${t('metrics.ofTotal')}` : undefined}
             hideBorderOnLarge
@@ -214,7 +234,19 @@ export const MetricsCards = () => {
         <div className="flex-1">
           <MetricRow
             icon={IconExposedBalance}
-            label={t('metrics.exposedBalance')}
+            label={
+              <span className="inline-flex items-center gap-1">
+                {t('metrics.exposedBalance')}
+                <Tooltip content="Portion of total BTC supply held in exposed addresses, shown as a percentage and USD value.">
+                  <button
+                    type="button"
+                    className="inline-flex h-4 w-4 items-center justify-center text-gray-400 dark:border-zinc-600 dark:text-gray-500"
+                  >
+                    <IconInfo className="h-3 w-3" />
+                  </button>
+                </Tooltip>
+              </span>
+            }
             value={`${formatBTC(exposedBalance)} BTC`}
             subValue={totalSupply > 0 ? `${exposedBalancePercentage.toFixed(2)}% ${t('metrics.ofTotal')} · ${formatUSD(exposedBalance)}` : formatUSD(exposedBalance)}
           />
