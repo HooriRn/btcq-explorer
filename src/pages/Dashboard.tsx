@@ -30,14 +30,14 @@ export const Dashboard = () => {
         {/* Soft shadow at the bottom of the hero background */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 md:h-14 bg-gradient-to-b from-transparent to-black/25 dark:to-black/50" />
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="w-full md:w-[55%]">
             <SearchBar onSearch={handleSearch} inHero />
           </div>
         </div>
       </section>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 -mt-20">
+      <main className="relative z-10 max-w-7xl mx-auto py-8 -mt-20">
         <MetricsCards />
 
         {searchResults && (
