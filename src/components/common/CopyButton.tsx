@@ -11,12 +11,52 @@ export const CopyButton = ({ text, className = '', size = 'sm' }: CopyButtonProp
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
+    const value = text ?? ''
+    if (!value) return
+
+    const didCopy = async () => {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(value)
+        return true
+      }
+      return false
+    }
+
+    const fallbackCopy = () => {
+      if (!document.queryCommandSupported?.('copy')) return false
+      const textarea = document.createElement('textarea')
+      textarea.value = value
+      textarea.style.position = 'fixed'
+      textarea.style.left = '-9999px'
+      textarea.style.top = '0'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      try {
+        const ok = document.execCommand('copy')
+        document.body.removeChild(textarea)
+        return ok
+      } catch {
+        document.body.removeChild(textarea)
+        return false
+      }
+    }
+
     try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      let ok = await didCopy()
+      if (!ok) ok = fallbackCopy()
+      if (ok) {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      }
     } catch (err) {
-      console.error('Failed to copy text:', err)
+      const ok = fallbackCopy()
+      if (ok) {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } else {
+        console.error('Failed to copy text:', err)
+      }
     }
   }
 
@@ -28,8 +68,10 @@ export const CopyButton = ({ text, className = '', size = 'sm' }: CopyButtonProp
       variant="light"
       size={size}
       onPress={handleCopy}
+      onClick={(e) => e.stopPropagation()}
       className={className}
       title={copied ? 'Copied!' : 'Copy to clipboard'}
+      type="button"
     >
       {copied ? (
         <svg className={`${iconSize} text-green-600 dark:text-green-400`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
