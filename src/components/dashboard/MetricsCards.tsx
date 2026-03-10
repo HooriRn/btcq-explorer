@@ -78,36 +78,45 @@ const MetricRow = ({
   value,
   subValue,
   valueRed,
+  hideBorderOnLarge,
+  hideDividerOnLarge,
+  hideBorderOnMobile,
 }: {
   icon: React.ComponentType<{ className?: string }>
   label: string
   value: React.ReactNode
   subValue?: React.ReactNode
   valueRed?: boolean
+  hideBorderOnLarge?: boolean
+  hideDividerOnLarge?: boolean
+  hideBorderOnMobile?: boolean
 }) => (
-  <div className="py-4 h-[100px] border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
-    <div className="flex flex-col">
-      <div className="flex items-center gap-2">
-        <Icon className="w-5 h-5 mt-0.5 shrink-0 text-gray-400 dark:text-gray-400" />
-        <p className="text-[11px] font-['Inter'] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
-          {label}
-        </p>
-      </div>
-      <div className="flex flex-col justify-end h-[53px]">
-        {subValue && (
-          <p className="mt-0.5 text-xs font-medium text-gray-400 dark:text-gray-400 break-words">
-            {subValue}
+  <div className="flex flex-1">
+    <div className={`flex-1 py-4 px-4 h-[100px] border-b border-gray-200 dark:border-zinc-700 ${hideBorderOnLarge ? 'md:border-b-0' : ''} ${hideBorderOnMobile ? 'max-md:border-b-0' : ''}`}>
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <Icon className="w-5 h-5 mt-0.5 shrink-0 text-gray-400 dark:text-gray-400" />
+          <p className="text-[11px] font-['Inter'] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+            {label}
           </p>
-        )}
-        <p
-          className={`mt-1 text-[22px] font-medium leading-tight break-all ${
-            valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
-            }`}
-        >
-          {value}
-        </p>
+        </div>
+        <div className="flex flex-col justify-end h-[53px]">
+          {subValue && (
+            <p className="mt-0.5 text-xs font-medium text-gray-400 dark:text-gray-400 break-words">
+              {subValue}
+            </p>
+          )}
+          <p
+            className={`mt-1 text-[22px] font-medium leading-tight break-all ${
+              valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
+              }`}
+          >
+            {value}
+          </p>
+        </div>
       </div>
     </div>
+    <div className={`border-l border-gray-200 dark:border-zinc-700 my-2 hidden md:block ${hideDividerOnLarge ? 'md:hidden' : ''}`}></div>
   </div>
 )
 
@@ -185,6 +194,7 @@ export const MetricsCards = () => {
             label={t('metrics.totalSupply')}
             value={`${formatBTC(totalSupply)} BTC`}
             subValue={bitcoinPrice > 0 ? formatUSD(totalSupply) : undefined}
+            hideBorderOnLarge
           />
         </div>
         <div className="flex-1">
@@ -198,6 +208,7 @@ export const MetricsCards = () => {
             label={t('metrics.exposedAddresses')}
             value={exposedAddresses.toLocaleString()}
             subValue={totalAddressesIndexed > 0 ? `${exposurePercentage.toFixed(2)}% ${t('metrics.ofTotal')}` : undefined}
+            hideBorderOnLarge
           />
         </div>
         <div className="flex-1">
@@ -211,6 +222,8 @@ export const MetricsCards = () => {
             icon={IconCube}
             label="LAST BLOCK"
             value={lastBlockHeight > 0 ? lastBlockHeight.toLocaleString() : '—'}
+            hideBorderOnLarge
+            hideBorderOnMobile
           />
         </div>
       </div>

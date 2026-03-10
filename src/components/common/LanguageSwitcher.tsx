@@ -21,19 +21,20 @@ export const LanguageSwitcher = () => {
 
   return (
     <Select
-      selectedKeys={[language]}
+      selectedKeys={new Set([language])}
       onSelectionChange={(keys) => {
-        const selected = Array.from(keys)[0] as string
-        if (selected) {
-          handleLanguageChange(selected)
+        const key = keys instanceof Set ? keys.values().next().value : Array.from(keys)[0]
+        if (key) {
+          handleLanguageChange(key as string)
         }
       }}
+      disallowEmptySelection
       size="sm"
       variant="flat"
       classNames={{
         trigger: "min-w-[160px] bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700",
         value: "text-xs font-medium text-gray-900 dark:text-gray-100",
-        popoverContent: "bg-white dark:bg-zinc-900",
+        popoverContent: "bg-white dark:bg-zinc-900 z-[2000]",
         listbox: "bg-white dark:bg-zinc-900",
         base: "text-gray-900 dark:text-gray-100"
       }}

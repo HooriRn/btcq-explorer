@@ -28,7 +28,7 @@ export const Header = () => {
       {/* Top row: Bitcoin Height and Theme Toggle */}
       <div className="bg-gray-50 dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 px-4 sm:px-6 py-2">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3 sm:space-x-6 flex-wrap gap-2">
+          <div className="hidden sm:flex items-center space-x-3 sm:space-x-6 flex-wrap gap-2">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">

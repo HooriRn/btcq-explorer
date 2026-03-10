@@ -31,7 +31,7 @@ export const Dashboard = () => {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 md:h-14 bg-gradient-to-b from-transparent to-black/25 dark:to-black/50" />
       </section>
 
-      <main className="relative z-10 max-w-7xl mx-auto pt-4 pb-8 -mt-65">
+      <main className="relative z-10 max-w-7xl mx-auto pt-4 pb-8 px-2 md:px-0 -mt-40 md:-mt-65">
         <div className="pb-10 max-w-7xl relative z-10 flex justify-start">
           <div className="w-full max-w-xl">
             <SearchBar onSearch={handleSearch} inHero />
