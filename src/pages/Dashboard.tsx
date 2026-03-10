@@ -7,7 +7,7 @@ import { UTXOTypesTable } from '../components/dashboard/UTXOTypesTable'
 import { UTXODistributionCharts } from '../components/dashboard/UTXODistributionCharts'
 import { useDashboard } from '../hooks/useDashboard'
 import type { SearchResponse } from '../types/dashboard'
-import backgroundBitcoin from '../assets/background-bitcoin.svg?url'
+import backgroundBitcoin from '../assets/background.png?url'
 
 export const Dashboard = () => {
   useDashboard() // Initialize dashboard data
@@ -49,14 +49,14 @@ export const Dashboard = () => {
       )}
 
 
-      <div className="mt-12">
+      <div className="mt-6">
         <UTXODistributionCharts />
         <UTXOTypesTable />
       </div>
 
       <LatestAddressesPreview />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 mt-6">
         <LatestUTXOsPreview />
         <LatestBlocksPreview />
       </div>
