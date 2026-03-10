@@ -62,7 +62,7 @@ export const Header = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link
             to="/"
-            className="flex items-center space-x-2 sm:space-x-3 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="flex items-center space-x-2 sm:space-x-3 text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
             <img
               src={btcqLogo}
