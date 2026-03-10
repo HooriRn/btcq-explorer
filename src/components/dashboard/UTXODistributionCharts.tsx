@@ -281,12 +281,12 @@ export const UTXODistributionCharts = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Count Distribution Chart */}
         {countData.length > 0 && (
-          <Card className="border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <Card className="border border-[#E9ECF0] dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_4px_14.2px_0_#3C465424]">
             <CardBody className="p-6 pt-4">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 {t('charts.distributionByCount')}
               </h3>
-              <div className="mt-2 mb-4 h-px bg-gray-200 dark:bg-zinc-800" />
+              <div className="mt-2 mb-4 h-px bg-[#E9ECF0] dark:bg-zinc-800" />
               <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 0, left: 0, right: 0 }}>
                   <Pie
@@ -335,12 +335,12 @@ export const UTXODistributionCharts = () => {
 
         {/* Balance Distribution Chart */}
         {balanceData.length > 0 && (
-          <Card className="border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <Card className="border border-[#E9ECF0] dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_4px_14.2px_0_#3C465424]">
             <CardBody className="p-6 pt-4">
               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 {t('charts.distributionByBalance')}
               </h3>
-              <div className="mt-2 mb-4 h-px bg-gray-200 dark:bg-zinc-800" />
+              <div className="mt-2 mb-4 h-px bg-[#E9ECF0] dark:bg-zinc-800" />
               <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 10, left: 0, right: 0 }}>
                   <Pie
