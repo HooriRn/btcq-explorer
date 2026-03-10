@@ -53,3 +53,33 @@ html[data-theme="light"] .text-gray-600 {
 html[data-theme="light"] .text-gray-400 {
   color: #7B8593;
 }
+
+/* Bubble chips for risk/exposure labels */
+.bubble-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 27px;
+  min-height: 27px;
+  width: 114px;
+  border-radius: 6px;
+  padding: 6px 8px;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.bubble-chip-danger {
+  background: #D740401A;
+  color: #D74040;
+}
+
+.bubble-chip-warning {
+  background: #F7931A1A;
+  color: #F7931A;
+}
+
+.bubble-chip-success {
+  background: #2792521A;
+  color: #279252;
+}
