@@ -207,6 +207,73 @@ export const UTXODistributionCharts = () => {
     )
   }
 
+  const getLegendSwatchStyle = (entry: ChartData, data: ChartData[]) => {
+    const index = data.findIndex(
+      d => d.name === entry.name && d.exposureCategory === entry.exposureCategory
+    )
+    const colorIndex = index >= 0 ? index % COLORS.length : 0
+    const baseColor = COLORS[colorIndex]
+
+    if (entry.exposureCategory === 'bad_type') {
+      const dotColor = isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)'
+      return {
+        backgroundColor: baseColor,
+        backgroundImage: `radial-gradient(circle at 4px 4px, ${dotColor} 1.5px, transparent 0)`,
+        backgroundSize: '8px 8px'
+      }
+    }
+
+    if (entry.exposureCategory === 'reuse') {
+      const stripeColor = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)'
+      return {
+        backgroundColor: baseColor,
+        backgroundImage: `linear-gradient(135deg, ${stripeColor} 25%, transparent 25%, transparent 50%, ${stripeColor} 50%, ${stripeColor} 75%, transparent 75%, transparent)`,
+        backgroundSize: '8px 8px'
+      }
+    }
+
+    return {
+      backgroundColor: baseColor
+    }
+  }
+
+  const renderLegendFor = (data: ChartData[]) => (props: any) => {
+    const { payload } = props
+
+    if (!payload || !payload.length) {
+      return null
+    }
+
+    return (
+      <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs sm:text-sm">
+        {payload.map((entry: any) => {
+          const item = entry.payload as ChartData
+          const swatchStyle = getLegendSwatchStyle(item, data)
+
+          return (
+            <li
+              key={item.name}
+              className="flex items-center gap-2 min-w-0 text-gray-600 dark:text-gray-300"
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-full shrink-0"
+                style={swatchStyle}
+              />
+              <span className="truncate">
+                <span className="font-medium text-gray-900 dark:text-gray-100">
+                  {item.name}
+                </span>
+                <span className="ml-1 text-gray-500 dark:text-gray-400">
+                  ({item.percentage.toFixed(1)}%) • {item.exposureLabel}
+                </span>
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
+
 
   if (countData.length === 0 && balanceData.length === 0) {
     return null
@@ -316,17 +383,7 @@ export const UTXODistributionCharts = () => {
                     content={<CustomTooltip />}
                     allowEscapeViewBox={{ x: false, y: false }}
                   />
-                  <Legend
-                    wrapperStyle={{ 
-                      fontSize: isMobile ? '11px' : '12px', 
-                      paddingTop: isMobile ? '20px' : '40px',
-                      color: isDark ? '#e5e7eb' : '#1f2937'
-                    }}
-                    formatter={(value: string, entry: any) => {
-                      const data = entry.payload as ChartData
-                      return `${value} (${data.percentage.toFixed(1)}%) • ${data.exposureLabel}`
-                    }}
-                  />
+                  <Legend content={renderLegendFor(countData)} />
                 </PieChart>
               </ResponsiveContainer>
             </CardBody>
@@ -370,17 +427,7 @@ export const UTXODistributionCharts = () => {
                     content={<CustomTooltipBalance />}
                     allowEscapeViewBox={{ x: false, y: false }}
                   />
-                  <Legend
-                    wrapperStyle={{ 
-                      fontSize: isMobile ? '11px' : '12px', 
-                      paddingTop: isMobile ? '20px' : '40px',
-                      color: isDark ? '#e5e7eb' : '#1f2937'
-                    }}
-                    formatter={(value: string, entry: any) => {
-                      const data = entry.payload as ChartData
-                      return `${value} (${data.percentage.toFixed(1)}%) • ${data.exposureLabel}`
-                    }}
-                  />
+                  <Legend content={renderLegendFor(balanceData)} />
                 </PieChart>
               </ResponsiveContainer>
             </CardBody>
