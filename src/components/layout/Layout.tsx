@@ -14,7 +14,7 @@ export const Layout = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="bg- dark:bg-zinc-950 min-h-screen flex flex-col">
+      <div className="bg-[#F4F6F9] dark:bg-zinc-950 min-h-screen flex flex-col">
         <Header />
         <main className="flex-1">
           <Outlet />

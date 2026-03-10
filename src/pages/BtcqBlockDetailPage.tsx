@@ -33,7 +33,7 @@ const EventAttributes = ({ event }: { event: BtcqEvent }) => (
     removeWrapper
     classNames={{
       wrapper: 'bg-transparent',
-      th: 'bg-gray-100 dark:bg-zinc-800/50 text-gray-600 dark:text-gray-400 text-left font-medium',
+      th: 'bg-gray-100 dark:bg-zinc-800/50 text-gray-400 dark:text-gray-400 text-left font-medium',
       td: 'font-mono text-sm text-gray-900 dark:text-gray-100',
     }}
   >

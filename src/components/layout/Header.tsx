@@ -32,7 +32,7 @@ export const Header = () => {
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                <span className="text-blue-600 dark:text-blue-400 font-medium">{t('header.btcHeight')}</span>{' '}
+                <span className="text-gray-500 dark:text-gray-500 font-medium">{t('header.btcHeight')}</span>{' '}
                 {metrics.currentBitcoinHeight ? (
                   <AnimatedNumber value={metrics.currentBitcoinHeight} />
                 ) : (
@@ -44,7 +44,7 @@ export const Header = () => {
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                 <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                  <span className="text-orange-600 dark:text-orange-400 font-medium">{t('header.btcPrice')}</span>{' '}
+                  <span className="text-gray-500 dark:text-gray-500 font-medium">{t('header.btcPrice')}</span>{' '}
                   <span className="font-semibold">${bitcoinPrice.toLocaleString()}</span>
                 </span>
               </div>
