@@ -6,7 +6,8 @@ import { useDashboardStore } from '../../stores/dashboardStore'
 import { ThemeToggle } from '../common/ThemeToggle'
 import { LanguageSwitcher } from '../common/LanguageSwitcher'
 import { AnimatedNumber } from '../common/AnimatedNumber'
-import btcqLogo from '../../assets/btcq.svg'
+import qbctLogoLight from '../../assets/QBTC Logo Light.svg'
+import qbctLogoDark from '../../assets/QBTC Logo Dark.svg'
 
 export const Header = () => {
   const { metrics, bitcoinPrice } = useDashboardStore()
@@ -64,11 +65,20 @@ export const Header = () => {
             to="/"
             className="flex items-center space-x-2 sm:space-x-3 text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
-            <img
-              src={btcqLogo}
-              alt="BTCQ"
-              className="h-7 sm:h-8 w-auto"
-            />
+            <span className="inline-flex items-center">
+              {/* Light theme: use dark logo */}
+              <img
+                src={qbctLogoDark}
+                alt="BTCQ"
+                className="h-7 sm:h-8 w-auto block dark:hidden"
+              />
+              {/* Dark theme: use light logo */}
+              <img
+                src={qbctLogoLight}
+                alt="BTCQ"
+                className="h-7 sm:h-8 w-auto hidden dark:block"
+              />
+            </span>
             <span className="hidden sm:inline">{t('navigation.btcqExplorer')}</span>
           </Link>
           
