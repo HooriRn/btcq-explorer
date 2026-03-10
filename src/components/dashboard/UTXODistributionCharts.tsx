@@ -213,16 +213,15 @@ export const UTXODistributionCharts = () => {
   }
 
   const COLORS = [
-    '#3b82f6',
-    '#8b5cf6',
-    '#ec4899',
-    '#14b8a6',
-    '#f59e0b',
-    '#10b981',
-    '#ef4444',
-    '#06b6d4',
-    '#f97316',
-    '#6366f1'
+    '#F7931A',
+    '#9A6015',
+    '#E75213',
+    '#F7C31A',
+    '#7B8593',
+    '#D9D9D9',
+    '#3C4653',
+    '#DDE72E',
+    '#FFEFBD'
   ]
 
   const renderPatternDefs = (
@@ -283,16 +282,18 @@ export const UTXODistributionCharts = () => {
         {/* Count Distribution Chart */}
         {countData.length > 0 && (
           <Card className="border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-            <CardBody className="p-6">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+            <CardBody className="p-6 pt-4">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 {t('charts.distributionByCount')}
               </h3>
+              <div className="mt-2 mb-4 h-px bg-gray-200 dark:bg-zinc-800" />
               <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 0, left: 0, right: 0 }}>
                   <Pie
                     data={countData}
                     cx="50%"
                     cy="50%"
+                    innerRadius={isMobile ? 60 : 90}
                     outerRadius={isMobile ? 100 : 140}
                     paddingAngle={0}
                     dataKey="value"
@@ -335,16 +336,18 @@ export const UTXODistributionCharts = () => {
         {/* Balance Distribution Chart */}
         {balanceData.length > 0 && (
           <Card className="border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-            <CardBody className="p-6">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+            <CardBody className="p-6 pt-4">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 {t('charts.distributionByBalance')}
               </h3>
+              <div className="mt-2 mb-4 h-px bg-gray-200 dark:bg-zinc-800" />
               <ResponsiveContainer width="100%" height={isMobile ? 400 : 500}>
                 <PieChart margin={{ bottom: 0, top: 10, left: 0, right: 0 }}>
                   <Pie
                     data={balanceData}
                     cx="50%"
                     cy="50%"
+                    innerRadius={isMobile ? 60 : 90}
                     outerRadius={isMobile ? 100 : 140}
                     paddingAngle={0}
                     dataKey="value"
