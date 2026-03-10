@@ -5,34 +5,71 @@ import { HIGH_RISK_TYPES } from '../../utils/riskLevel'
 
 // Etherscan-style outline icons (light gray/white)
 const IconBTC = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.688 11.7181C7.97067 12.2968 8.78133 7.70146 5.49867 7.12212M4.688 11.7181L0.75 11.0235M4.688 11.7181L4.45733 13.0315M2.87267 6.65946L5.49933 7.12212C8.782 7.70146 9.59267 3.10546 6.30933 2.52679L2.37 1.83212M6.30867 2.52679L6.54067 1.21346M1.83 12.5681L3.914 0.750122" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
+
 )
 const IconGlobe = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_78_9390)">
+      <path d="M14.4866 12L9.15329 2.66665C9.037 2.46146 8.86836 2.29078 8.66457 2.17203C8.46078 2.05329 8.22915 1.99072 7.99329 1.99072C7.75743 1.99072 7.52579 2.05329 7.322 2.17203C7.11822 2.29078 6.94958 2.46146 6.83329 2.66665L1.49995 12C1.38241 12.2036 1.32077 12.4346 1.32129 12.6697C1.32181 12.9047 1.38447 13.1355 1.50292 13.3385C1.62136 13.5416 1.79138 13.7097 1.99575 13.8259C2.20011 13.942 2.43156 14.0021 2.66662 14H13.3333C13.5672 13.9997 13.797 13.938 13.9995 13.8208C14.202 13.7037 14.3701 13.5354 14.487 13.3327C14.6038 13.1301 14.6653 12.9002 14.6653 12.6663C14.6652 12.4324 14.6036 12.2026 14.4866 12Z" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 6V8.66667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 11.3333H8.00667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    <defs>
+      <clipPath id="clip0_78_9390">
+        <rect width="16" height="16" fill="white" />
+      </clipPath>
+    </defs>
   </svg>
+
 )
 const IconUsers = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_78_9973)">
+      <path d="M1.33301 14C1.33295 12.9736 1.6291 11.9689 2.1859 11.1066C2.74271 10.2443 3.53652 9.56099 4.47207 9.13869C5.40762 8.71638 6.44517 8.57301 7.46018 8.7258C8.4752 8.87858 9.42456 9.32101 10.1943 10" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M6.66634 8.66667C8.50729 8.66667 9.99967 7.17428 9.99967 5.33333C9.99967 3.49238 8.50729 2 6.66634 2C4.82539 2 3.33301 3.49238 3.33301 5.33333C3.33301 7.17428 4.82539 8.66667 6.66634 8.66667Z" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M12.667 10.6667V14.6667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M14.667 12.6667H10.667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
   </svg>
 )
 const IconExposedAddresses = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-    <path d="M12,21c-6.193,0-9.721-4.082-11.271-6.515-.978-1.533-.978-3.438,0-4.971C2.28,7.081,5.81,3,12,3s9.72,4.081,11.271,6.514c.978,1.535,.978,3.439,0,4.972-1.551,2.433-5.078,6.515-11.271,6.515Zm0-16c-5.236,0-8.254,3.502-9.586,5.59-.554,.87-.554,1.95,0,2.819,1.332,2.088,4.347,5.591,9.586,5.591s8.254-3.503,9.586-5.591c.554-.869,.554-1.95,0-2.82-1.331-2.087-4.349-5.589-9.585-5.589Zm0,2c-2.757,0-5,2.243-5,5s2.243,5,5,5,5-2.243,5-5-2.243-5-5-5Zm0,9h0c-.552,0-1-.448-1-1h0c0-.552,.448-1,1-1h0c.552,0,1,.448,1,1h0c0,.552-.448,1-1,1Zm0-3h0c-.552,0-1-.448-1-1v-3c0-.552,.448-1,1-1h0c.552,0,1,.448,1,1v3c0,.552-.448,1-1,1Z" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_78_9390)">
+      <path d="M14.4866 12L9.15329 2.66665C9.037 2.46146 8.86836 2.29078 8.66457 2.17203C8.46078 2.05329 8.22915 1.99072 7.99329 1.99072C7.75743 1.99072 7.52579 2.05329 7.322 2.17203C7.11822 2.29078 6.94958 2.46146 6.83329 2.66665L1.49995 12C1.38241 12.2036 1.32077 12.4346 1.32129 12.6697C1.32181 12.9047 1.38447 13.1355 1.50292 13.3385C1.62136 13.5416 1.79138 13.7097 1.99575 13.8259C2.20011 13.942 2.43156 14.0021 2.66662 14H13.3333C13.5672 13.9997 13.797 13.938 13.9995 13.8208C14.202 13.7037 14.3701 13.5354 14.487 13.3327C14.6038 13.1301 14.6653 12.9002 14.6653 12.6663C14.6652 12.4324 14.6036 12.2026 14.4866 12Z" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 6V8.66667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 11.3333H8.00667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    <defs>
+      <clipPath id="clip0_78_9390">
+        <rect width="16" height="16" fill="white" />
+      </clipPath>
+    </defs>
   </svg>
 )
 const IconExposedBalance = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-    <path d="M23.938,10.654l-3.071-8.335c-.423-1.151-1.634-1.781-2.824-1.465l-5.043,1.345V1c0-.552-.448-1-1-1s-1,.448-1,1v1.732l-5.254,1.401c-1.255,.335-2.273,1.263-2.723,2.482L.062,14.654c-.041,.111-.062,.647-.062,.647,0,2.506,2,4.698,4.503,4.698,1.158,0,2.249-.434,3.094-1.236,.891-.846,1.402-2.036,1.402-3.264,0,0-.021-.732-.06-.842L5.87,6.216c.124-.063,.255-.114,.392-.15l4.738-1.264V22H5c-.552,0-1,.448-1,1s.448,1,1,1h14c.552,0,1-.448,1-1s-.448-1-1-1h-6V4.268l4.896-1.306-2.834,7.691c-.041,.111-.062,.647-.062,.647,0,2.506,1.871,4.567,4.26,4.692,1.249,.066,2.434-.371,3.338-1.229,.891-.846,1.402-2.036,1.402-3.264,0,0-.021-.735-.062-.846ZM4.364,17.997c-1.081-.057-1.986-.902-2.266-1.997H6.95c-.1,.499-.35,.954-.729,1.313-.502,.478-1.165,.725-1.856,.683Zm2.208-3.997H2.434l2.083-5.653,2.056,5.653ZM19.5,4.393l2.066,5.607h-4.132l2.066-5.607Zm-.136,9.604c-1.081-.057-1.986-.902-2.266-1.997h4.851c-.1,.499-.35,.954-.729,1.313-.502,.478-1.165,.719-1.856,.683Z" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_78_9390)">
+      <path d="M14.4866 12L9.15329 2.66665C9.037 2.46146 8.86836 2.29078 8.66457 2.17203C8.46078 2.05329 8.22915 1.99072 7.99329 1.99072C7.75743 1.99072 7.52579 2.05329 7.322 2.17203C7.11822 2.29078 6.94958 2.46146 6.83329 2.66665L1.49995 12C1.38241 12.2036 1.32077 12.4346 1.32129 12.6697C1.32181 12.9047 1.38447 13.1355 1.50292 13.3385C1.62136 13.5416 1.79138 13.7097 1.99575 13.8259C2.20011 13.942 2.43156 14.0021 2.66662 14H13.3333C13.5672 13.9997 13.797 13.938 13.9995 13.8208C14.202 13.7037 14.3701 13.5354 14.487 13.3327C14.6038 13.1301 14.6653 12.9002 14.6653 12.6663C14.6652 12.4324 14.6036 12.2026 14.4866 12Z" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 6V8.66667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 11.3333H8.00667" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    <defs>
+      <clipPath id="clip0_78_9390">
+        <rect width="16" height="16" fill="white" />
+      </clipPath>
+    </defs>
   </svg>
 )
 const IconCube = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 5.33335C13.9998 5.09953 13.938 4.86989 13.821 4.66746C13.704 4.46503 13.5358 4.29692 13.3333 4.18002L8.66667 1.51335C8.46397 1.39633 8.23405 1.33472 8 1.33472C7.76595 1.33472 7.53603 1.39633 7.33333 1.51335L2.66667 4.18002C2.46418 4.29692 2.29599 4.46503 2.17897 4.66746C2.06196 4.86989 2.00024 5.09953 2 5.33335V10.6667C2.00024 10.9005 2.06196 11.1301 2.17897 11.3326C2.29599 11.535 2.46418 11.7031 2.66667 11.82L7.33333 14.4867C7.53603 14.6037 7.76595 14.6653 8 14.6653C8.23405 14.6653 8.46397 14.6037 8.66667 14.4867L13.3333 11.82C13.5358 11.7031 13.704 11.535 13.821 11.3326C13.938 11.1301 13.9998 10.9005 14 10.6667V5.33335Z" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M2.2002 4.66669L8.0002 8.00002L13.8002 4.66669" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M8 14.6667V8" stroke="#3C4654" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
+
 )
 
 const MetricRow = ({
@@ -48,11 +85,11 @@ const MetricRow = ({
   subValue?: React.ReactNode
   valueRed?: boolean
 }) => (
-  <div className="py-5 min-h-[96px] border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
+  <div className="py-4 h-[100px] border-b border-gray-200 dark:border-zinc-700 last:border-b-0">
     <div className="flex flex-col">
       <div className="flex items-center gap-2">
         <Icon className="w-5 h-5 mt-0.5 shrink-0 text-gray-400 dark:text-gray-400" />
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+        <p className="text-[11px] font-['Inter'] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
           {label}
         </p>
       </div>
@@ -65,7 +102,7 @@ const MetricRow = ({
         <p
           className={`mt-1 text-[22px] font-medium leading-tight break-all ${
             valueRed ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
-          }`}
+            }`}
         >
           {value}
         </p>

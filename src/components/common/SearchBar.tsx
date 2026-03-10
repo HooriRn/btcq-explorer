@@ -50,7 +50,7 @@ export const SearchBar = ({
             radius="lg"
             size="md"
             classNames={{
-              input: "text-gray-700 dark:text-gray-300 text-sm md:text-base",
+              input: "text-triany-400 font-normal font-['Inter'] text-sm md:text-base",
               inputWrapper: "border-0 shadow-none bg-transparent h-10 min-h-10 md:h-9 min-h-9 py-0 hover:!bg-transparent dark:hover:!bg-transparent data-[hover=true]:!bg-transparent focus-within:!bg-transparent dark:focus-within:!bg-transparent",
               base: "flex-1 min-w-0 mb-0"
             }}
@@ -59,15 +59,13 @@ export const SearchBar = ({
             isIconOnly
             type="submit"
             isDisabled={isLoading || !query.trim()}
-            variant="solid"
-            color="primary"
             radius="sm"
-            className="w-10 h-10 min-h-10 md:w-9 md:h-9 md:min-h-9 shrink-0 !p-0"
+            className="w-10 h-10 min-h-10 md:w-9 md:h-9 md:min-h-9 shrink-0 !p-0 bg-transparent hover:bg-transparent data-[hover=true]:bg-transparent"
           >
             {isLoading ? (
               <Spinner size="sm" color="white" />
             ) : (
-              <svg className="w-4 h-4 md:w-4 md:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <svg className="w-4 h-4 md:w-4 md:h-4 text-triany-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             )}
