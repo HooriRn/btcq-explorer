@@ -40,7 +40,7 @@ export const SearchBar = ({
   return (
     <div className={`w-full ${inHero ? 'mt-0' : 'mt-8'}`}>
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center gap-2 px-1.5 pt-1 pb-1 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg">
+        <div className="flex items-center gap-2 px-1.5 pt-1 pb-1 bg-gray-50 dark:bg-zinc-900 border border-[#E9ECF0] dark:border-zinc-700 rounded-lg shadow-[0_4px_14.2px_0_#3C465424]">
           <Input
             type="text"
             value={query}
@@ -65,8 +65,28 @@ export const SearchBar = ({
             {isLoading ? (
               <Spinner size="sm" color="white" />
             ) : (
-              <svg className="w-4 h-4 md:w-4 md:h-4 text-triany-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M17.5005 17.5L13.8838 13.8833"
+                  stroke="#7B8593"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z"
+                  stroke="#7B8593"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             )}
           </Button>
