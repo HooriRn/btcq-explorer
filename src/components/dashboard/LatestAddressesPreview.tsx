@@ -49,8 +49,14 @@ export const LatestAddressesPreview = () => {
   return (
     <div className="mt-6">
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-[#E9ECF0] dark:border-zinc-800 shadow-[0_4px_14.2px_0_#3C465424] overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-zinc-800">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-zinc-800 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Latest Addresses</h2>
+          <Link
+            to="/addresses"
+            className="sm:hidden inline-flex items-center gap-1 py-1 text-xs font-semibold text-[#F8AC28]"
+          >
+            <span>{t('latest.viewAll')}</span>
+          </Link>
         </div>
         <div className="overflow-x-auto px-4">
         <Table 
@@ -134,7 +140,7 @@ export const LatestAddressesPreview = () => {
         </div>
         <Link
           to="/addresses"
-          className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F8AC28] hover:bg-[#E89C1F] text-sm font-semibold text-white transition-colors"
+          className="hidden sm:flex items-center justify-center gap-2 px-6 py-3 bg-[#F8AC28] hover:bg-[#E89C1F] text-sm font-semibold text-white transition-colors"
         >
           <span>View All</span>
           <span aria-hidden>→</span>
