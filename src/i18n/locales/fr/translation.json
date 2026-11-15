@@ -18,9 +18,9 @@
   "navigation": {
     "dashboardRisk": "Tableau de bord des risques",
     "about": "À propos",
-      "btcq": "QBTC",
+      "qbtc": "QBTC",
     "settings": "Paramètres",
-    "btcqExplorer": "Explorer",
+    "qbtcExplorer": "Explorer",
     "toggleMenu": "Basculer le menu"
   },
   "header": {
@@ -140,8 +140,8 @@
     "apiConfiguration": "Configuration de l'API",
     "apiBaseUrl": "URL de base de l'API",
     "apiBaseUrlDesc": "(doit se terminer par /)",
-    "btcqIndexerUrl": "URL de l'indexeur BTCQ",
-    "btcqIndexerUrlDesc": "(endpoint v2/blocks, doit se terminer par /)",
+    "qbtcIndexerUrl": "URL de l'indexeur QBTC",
+    "qbtcIndexerUrlDesc": "(endpoint v2/blocks, doit se terminer par /)",
     "current": "Actuel :",
     "saveSettings": "Enregistrer les paramètres",
     "language": "Langue",
@@ -151,8 +151,8 @@
     "french": "Français"
   },
   "about": {
-    "title": "À propos du tableau de bord des risques BTCQ",
-    "description": "Le tableau de bord des risques BTCQ est un outil complet pour surveiller les adresses Bitcoin et identifier les risques de sécurité potentiels dans la blockchain.",
+    "title": "À propos du tableau de bord des risques QBTC",
+    "description": "Le tableau de bord des risques QBTC est un outil complet pour surveiller les adresses Bitcoin et identifier les risques de sécurité potentiels dans la blockchain.",
     "features": "Fonctionnalités",
     "feature1": "Surveillance en temps réel des adresses Bitcoin",
     "feature2": "Évaluation et classification des risques",
@@ -163,9 +163,9 @@
     "frontend": "Frontend",
     "stateManagement": "Gestion d'état"
   },
-  "btcq": {
-    "title": "Blocs BTCQ",
-    "blocksTableLabel": "Blocs BTCQ récents",
+  "qbtc": {
+    "title": "Blocs QBTC",
+    "blocksTableLabel": "Blocs QBTC récents",
     "height": "Hauteur",
     "hash": "Hash",
     "timestamp": "Date et heure",

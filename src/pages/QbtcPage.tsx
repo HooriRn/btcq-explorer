@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button, Spinner, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
 import { api } from '../services/api'
-import type { BtcqBlock } from '../types/dashboard'
+import type { QbtcBlock } from '../types/dashboard'
 import { TableSkeleton } from '../components/common/LoadingSkeleton'
 import { CopyButton } from '../components/common/CopyButton'
 
-export const BtcqPage = () => {
+export const QbtcPage = () => {
   const { t } = useTranslation()
-  const [blocks, setBlocks] = useState<BtcqBlock[]>([])
+  const [blocks, setBlocks] = useState<QbtcBlock[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -18,7 +18,7 @@ export const BtcqPage = () => {
     setIsLoading(true)
     setError(null)
     try {
-      const data = await api.fetchBtcqBlocks()
+      const data = await api.fetchQbtcBlocks()
       setBlocks(data)
       setLastUpdated(new Date().toLocaleTimeString())
     } catch (e) {
@@ -53,7 +53,7 @@ export const BtcqPage = () => {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('btcq.title')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('qbtc.title')}</h1>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-500 dark:text-gray-400">{t('common.loading')}</span>
               <Spinner size="sm" />
@@ -69,7 +69,7 @@ export const BtcqPage = () => {
     <main className="max-w-7xl mx-auto px-6 py-8">
       <section className="pb-4 mb-4 border-b border-gray-200 dark:border-zinc-800">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('btcq.title')}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('qbtc.title')}</h1>
           <div className="flex items-center space-x-4">
             {error && (
               <span className="text-sm text-red-600 dark:text-red-400">{error}</span>
@@ -94,7 +94,7 @@ export const BtcqPage = () => {
 
       <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <Table
-            aria-label={t('btcq.blocksTableLabel')}
+            aria-label={t('qbtc.blocksTableLabel')}
             removeWrapper
             classNames={{
               wrapper: 'bg-white dark:bg-zinc-900',
@@ -105,16 +105,16 @@ export const BtcqPage = () => {
             }}
           >
             <TableHeader>
-              <TableColumn>{t('btcq.height')}</TableColumn>
-              <TableColumn>{t('btcq.hash')}</TableColumn>
-              <TableColumn>{t('btcq.timestamp')}</TableColumn>
-              <TableColumn>{t('btcq.txCount')}</TableColumn>
+              <TableColumn>{t('qbtc.height')}</TableColumn>
+              <TableColumn>{t('qbtc.hash')}</TableColumn>
+              <TableColumn>{t('qbtc.timestamp')}</TableColumn>
+              <TableColumn>{t('qbtc.txCount')}</TableColumn>
             </TableHeader>
             <TableBody>
               {blocks.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={4} className="text-center text-gray-500 dark:text-gray-400 py-8">
-                    {error ? t('common.error') : t('btcq.noBlocks')}
+                    {error ? t('common.error') : t('qbtc.noBlocks')}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -122,7 +122,7 @@ export const BtcqPage = () => {
                   <TableRow key={`${block.height}-${block.hash}`}>
                     <TableCell>
                       <Link
-                        to={`/btcq/blocks/${block.height}`}
+                        to={`/qbtc/blocks/${block.height}`}
                         state={{ block }}
                         className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
                       >
@@ -132,7 +132,7 @@ export const BtcqPage = () => {
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Link
-                          to={`/btcq/blocks/${block.height}`}
+                          to={`/qbtc/blocks/${block.height}`}
                           state={{ block }}
                           className="text-sm font-mono text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
                         >

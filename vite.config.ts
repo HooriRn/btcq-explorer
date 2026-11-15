@@ -10,6 +10,7 @@ export default defineConfig({
     port: 4173,
     allowedHosts: [
       'dashboard.thegreatlich.xyz',
+      'indexer.qbtc.net',
       'localhost',
       '.localhost', // Allow all localhost subdomains
     ],

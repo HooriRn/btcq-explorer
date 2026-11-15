@@ -155,29 +155,29 @@ export interface SupplyStatsResponse {
   script_type_balances: Record<string, number>
 }
 
-// BTCQ indexer block (v2/blocks endpoint)
-export interface BtcqEventAttribute {
+// QBTC indexer block (v2/blocks endpoint)
+export interface QbtcEventAttribute {
   key: string
   value: string
 }
 
-export interface BtcqEvent {
+export interface QbtcEvent {
   type: string
-  attributes: BtcqEventAttribute[]
+  attributes: QbtcEventAttribute[]
 }
 
-export interface BtcqTx {
+export interface QbtcTx {
   tx_hash: string
   tx_hex: string
-  events: BtcqEvent[]
+  events: QbtcEvent[]
 }
 
-export interface BtcqBlock {
+export interface QbtcBlock {
   hash: string
   height: number
   timestamp: number
-  finalized_events: BtcqEvent[]
-  txs: BtcqTx[]
+  finalized_events: QbtcEvent[]
+  txs: QbtcTx[]
 }
 
-export type BtcqBlocksResponse = BtcqBlock[]
+export type QbtcBlocksResponse = QbtcBlock[]

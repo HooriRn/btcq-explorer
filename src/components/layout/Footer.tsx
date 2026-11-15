@@ -137,7 +137,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-4">
               <p className="text-sm text-gray-400 dark:text-gray-400">
-                © 2026 BTCQ Explorer. All rights reserved.
+                © 2026 QBTC Explorer. All rights reserved.
               </p>
               <div className="flex items-center space-x-4">
                 <a href="#" className="text-sm text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Terms of Service</a>
@@ -150,7 +150,7 @@ const Footer: React.FC = () => {
                 <span className="text-sm text-gray-400 dark:text-gray-400">Powered by</span>
                 <span className="text-sm font-medium text-[#F7931A] dark:text-[#F7931A]">Bitcoin</span>
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">/</span>
-                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">BTCQ</span>
+                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">QBTC</span>
               </div>
             </div>
           </div>

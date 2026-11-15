@@ -18,9 +18,9 @@
   "navigation": {
     "dashboardRisk": "Panel de Riesgo",
     "about": "Acerca de",
-      "btcq": "QBTC",
+      "qbtc": "QBTC",
     "settings": "Configuración",
-    "btcqExplorer": "Explorer",
+    "qbtcExplorer": "Explorer",
     "toggleMenu": "Alternar menú"
   },
   "header": {
@@ -140,8 +140,8 @@
     "apiConfiguration": "Configuración de API",
     "apiBaseUrl": "URL Base de API",
     "apiBaseUrlDesc": "(debe terminar con /)",
-    "btcqIndexerUrl": "URL del indexador BTCQ",
-    "btcqIndexerUrlDesc": "(endpoint v2/blocks, debe terminar con /)",
+    "qbtcIndexerUrl": "URL del indexador QBTC",
+    "qbtcIndexerUrlDesc": "(endpoint v2/blocks, debe terminar con /)",
     "current": "Actual:",
     "saveSettings": "Guardar Configuración",
     "language": "Idioma",
@@ -151,8 +151,8 @@
     "french": "Francés"
   },
   "about": {
-    "title": "Acerca del Panel de Riesgo BTCQ",
-    "description": "El Panel de Riesgo BTCQ es una herramienta integral para monitorear direcciones de Bitcoin e identificar posibles riesgos de seguridad en la cadena de bloques.",
+    "title": "Acerca del Panel de Riesgo QBTC",
+    "description": "El Panel de Riesgo QBTC es una herramienta integral para monitorear direcciones de Bitcoin e identificar posibles riesgos de seguridad en la cadena de bloques.",
     "features": "Características",
     "feature1": "Monitoreo en tiempo real de direcciones de Bitcoin",
     "feature2": "Evaluación y clasificación de riesgos",
@@ -163,9 +163,9 @@
     "frontend": "Frontend",
     "stateManagement": "Gestión de Estado"
   },
-  "btcq": {
-    "title": "Bloques BTCQ",
-    "blocksTableLabel": "Bloques BTCQ recientes",
+  "qbtc": {
+    "title": "Bloques QBTC",
+    "blocksTableLabel": "Bloques QBTC recientes",
     "height": "Altura",
     "hash": "Hash",
     "timestamp": "Fecha y hora",

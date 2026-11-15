@@ -18,9 +18,9 @@
   "navigation": {
     "dashboardRisk": "Dashboard Risk",
     "about": "About",
-    "btcq": "QBTC",
+    "qbtc": "QBTC",
     "settings": "Settings",
-    "btcqExplorer": "Explorer",
+    "qbtcExplorer": "Explorer",
     "toggleMenu": "Toggle menu"
   },
   "header": {
@@ -140,8 +140,8 @@
     "apiConfiguration": "API Configuration",
     "apiBaseUrl": "API Base URL",
     "apiBaseUrlDesc": "(must end with /)",
-    "btcqIndexerUrl": "BTCQ Indexer URL",
-    "btcqIndexerUrlDesc": "(v2/blocks endpoint, must end with /)",
+    "qbtcIndexerUrl": "QBTC Indexer URL",
+    "qbtcIndexerUrlDesc": "(v2/blocks endpoint, must end with /)",
     "current": "Current:",
     "saveSettings": "Save Settings",
     "language": "Language",
@@ -151,8 +151,8 @@
     "french": "French"
   },
   "about": {
-    "title": "About BTCQ Risk Dashboard",
-    "description": "The BTCQ Risk Dashboard is a comprehensive tool for monitoring Bitcoin addresses and identifying potential security risks in the blockchain.",
+    "title": "About QBTC Risk Dashboard",
+    "description": "The QBTC Risk Dashboard is a comprehensive tool for monitoring Bitcoin addresses and identifying potential security risks in the blockchain.",
     "features": "Features",
     "feature1": "Real-time monitoring of Bitcoin addresses",
     "feature2": "Risk assessment and classification",
@@ -163,9 +163,9 @@
     "frontend": "Frontend",
     "stateManagement": "State Management"
   },
-  "btcq": {
-    "title": "BTCQ Blocks",
-    "blocksTableLabel": "Recent BTCQ blocks",
+  "qbtc": {
+    "title": "QBTC Blocks",
+    "blocksTableLabel": "Recent QBTC blocks",
     "height": "Height",
     "hash": "Hash",
     "timestamp": "Timestamp",

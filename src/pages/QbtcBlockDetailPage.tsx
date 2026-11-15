@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button, Spinner, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@heroui/react'
 import { api } from '../services/api'
-import type { BtcqBlock, BtcqEvent } from '../types/dashboard'
+import type { QbtcBlock, QbtcEvent } from '../types/dashboard'
 import { CopyButton } from '../components/common/CopyButton'
 
 const BackArrowIcon = ({ className }: { className?: string }) => (
@@ -27,7 +27,7 @@ const formatHash = (hash: string, maxLen = 24) => {
   return `${hash.slice(0, 12)}...${hash.slice(-8)}`
 }
 
-const EventAttributes = ({ event }: { event: BtcqEvent }) => (
+const EventAttributes = ({ event }: { event: QbtcEvent }) => (
   <Table
     aria-label="Event attributes"
     removeWrapper
@@ -52,12 +52,12 @@ const EventAttributes = ({ event }: { event: BtcqEvent }) => (
   </Table>
 )
 
-export const BtcqBlockDetailPage = () => {
+export const QbtcBlockDetailPage = () => {
   const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const [block, setBlock] = useState<BtcqBlock | null>(null)
+  const [block, setBlock] = useState<QbtcBlock | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -69,7 +69,7 @@ export const BtcqBlockDetailPage = () => {
       setLoading(false)
       return
     }
-    const stateBlock = location.state?.block as BtcqBlock | undefined
+    const stateBlock = location.state?.block as QbtcBlock | undefined
     const stateMatches =
       stateBlock &&
       (stateBlock.height === Number(id) || String(stateBlock.height) === id || stateBlock.hash === id)
@@ -82,7 +82,7 @@ export const BtcqBlockDetailPage = () => {
     }
     setError(null)
     let cancelled = false
-    api.fetchBtcqBlock(id).then((data) => {
+    api.fetchQbtcBlock(id).then((data) => {
       if (cancelled) return
       setLoading(false)
       if (data) setBlock(data)
@@ -108,8 +108,8 @@ export const BtcqBlockDetailPage = () => {
     return (
       <main className="max-w-7xl mx-auto px-6 py-8">
         <p className="text-red-600 dark:text-red-400">{error ?? t('common.error')}</p>
-        <Button className="mt-4 text-gray-800 dark:text-gray-200" onPress={() => navigate('/btcq')} startContent={<BackArrowIcon className="w-4 h-4" />}>
-          {t('btcq.backToBlocks')}
+        <Button className="mt-4 text-gray-800 dark:text-gray-200" onPress={() => navigate('/qbtc')} startContent={<BackArrowIcon className="w-4 h-4" />}>
+          {t('qbtc.backToBlocks')}
         </Button>
       </main>
     )
@@ -122,13 +122,13 @@ export const BtcqBlockDetailPage = () => {
           variant="light"
           size="sm"
           className="mb-4 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800"
-          onPress={() => navigate('/btcq')}
+          onPress={() => navigate('/qbtc')}
           startContent={<BackArrowIcon className="w-4 h-4 shrink-0" />}
         >
-          {t('btcq.backToBlocks')}
+          {t('qbtc.backToBlocks')}
         </Button>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {t('btcq.blockDetail')} #{block.height}
+          {t('qbtc.blockDetail')} #{block.height}
         </h1>
       </section>
 
@@ -136,16 +136,16 @@ export const BtcqBlockDetailPage = () => {
         <div className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm p-6 mb-8 space-y-4">
           <div className="flex flex-wrap items-center gap-6">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 dark:text-gray-400">{t('btcq.height')}:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{t('qbtc.height')}:</span>
               <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">{block.height}</span>
             </div>
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm text-gray-500 dark:text-gray-400 shrink-0">{t('btcq.hash')}:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 shrink-0">{t('qbtc.hash')}:</span>
               <span className="font-mono text-sm break-all text-gray-900 dark:text-gray-100">{block.hash}</span>
               <CopyButton text={block.hash} />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 dark:text-gray-400">{t('btcq.timestamp')}:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{t('qbtc.timestamp')}:</span>
               <span className="text-sm text-gray-900 dark:text-gray-100">{formatTimestamp(block.timestamp)}</span>
             </div>
           </div>
@@ -153,7 +153,7 @@ export const BtcqBlockDetailPage = () => {
 
         {/* Finalized events */}
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {t('btcq.finalizedEvents')} ({(block.finalized_events ?? []).length})
+          {t('qbtc.finalizedEvents')} ({(block.finalized_events ?? []).length})
         </h2>
         <div className="space-y-4 mb-8">
           {(block.finalized_events ?? []).map((event, idx) => (
@@ -173,7 +173,7 @@ export const BtcqBlockDetailPage = () => {
 
         {/* Transactions */}
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {t('btcq.transactions')} ({(block.txs ?? []).length})
+          {t('qbtc.transactions')} ({(block.txs ?? []).length})
         </h2>
         <div className="space-y-6">
           {(block.txs ?? []).map((tx, txIdx) => (
@@ -182,13 +182,13 @@ export const BtcqBlockDetailPage = () => {
               className="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden"
             >
               <div className="px-4 py-3 bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700 flex flex-wrap items-center gap-2">
-                <span className="text-sm text-gray-500 dark:text-gray-400">{t('btcq.txHash')}:</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{t('qbtc.txHash')}:</span>
                 <span className="font-mono text-sm text-blue-600 dark:text-blue-400">{formatHash(tx.tx_hash, 64)}</span>
                 <CopyButton text={tx.tx_hash} />
               </div>
               {tx.tx_hex != null && tx.tx_hex !== '' && (
                 <div className="px-4 py-2 border-b border-gray-100 dark:border-zinc-700/50 flex flex-wrap items-center gap-2">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{t('btcq.txHex')}:</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{t('qbtc.txHex')}:</span>
                   <span className="font-mono text-xs break-all text-gray-700 dark:text-gray-300">
                     {formatHash(tx.tx_hex, 80)}
                   </span>
@@ -197,7 +197,7 @@ export const BtcqBlockDetailPage = () => {
               )}
               <div className="p-4">
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('btcq.events')} ({tx.events?.length ?? 0})
+                  {t('qbtc.events')} ({tx.events?.length ?? 0})
                 </h3>
                 <div className="space-y-3">
                   {(tx.events ?? []).map((event, evIdx) => (

@@ -79,7 +79,7 @@ export const Header = () => {
                 className="h-7 sm:h-8 w-auto hidden dark:block"
               />
             </span>
-            <span className="hidden sm:inline">{t('navigation.btcqExplorer')}</span>
+            <span className="hidden sm:inline">{t('navigation.qbtcExplorer')}</span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -95,14 +95,14 @@ export const Header = () => {
               {t('navigation.dashboardRisk')}
             </Link>
             <Link 
-              to="/btcq" 
+              to="/qbtc" 
               className={`text-sm font-medium transition-colors ${
-                isActive('/btcq') 
+                isActive('/qbtc') 
                   ? 'text-blue-600 dark:text-blue-400' 
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              {t('navigation.btcq')}
+              {t('navigation.qbtc')}
             </Link>
             <Link 
               to="/about" 
@@ -162,15 +162,15 @@ export const Header = () => {
                 {t('navigation.dashboardRisk')}
               </Link>
               <Link 
-                to="/btcq" 
+                to="/qbtc" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`text-base font-medium transition-colors py-2 ${
-                  isActive('/btcq') 
+                  isActive('/qbtc') 
                     ? 'text-blue-600 dark:text-blue-400' 
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
-                {t('navigation.btcq')}
+                {t('navigation.qbtc')}
               </Link>
               <Link 
                 to="/about" 
