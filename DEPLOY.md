@@ -1,16 +1,18 @@
 # Deploying the QBTC Risk Dashboard (frontend)
 
-The explorer is a static single-page app: Vite builds it into `dist/`, and on the
-production server `vite preview` serves that folder on port 3000.
+The explorer is a static single-page app. Vite builds it into `dist/`, the build is copied
+to `/var/www/qbtc-dashboard`, and the `dev-nginx-1` container serves that folder directly.
 
 ```
-browser ──► Cloudflare ──► dev-nginx-1 (:80) ──► vite preview (172.17.0.1:3000) ──► dist/
+browser ──► Cloudflare ──► dev-nginx-1 (:80) ──► /var/www/qbtc-dashboard   (static files)
                                          └─────► uvicorn API (172.17.0.1:5000)
 ```
 
-- nginx config: `/root/dev/nginx/nginx.conf` (in the `btc-risk-dashboard` repo).
-  It sends `dashboard.thegreatlich.xyz` and `indexer.qbtc.net` to port 3000, and any
-  unknown host gets 444.
+- nginx config: `/root/dev/nginx/nginx.conf`, mounted through `/root/dev/docker-compose.yaml`
+  (both in the `btc-risk-dashboard` repo). `/var/www/qbtc-dashboard` is mounted read-only
+  into the container at `/usr/share/nginx/qbtc-dashboard`.
+- nginx answers `dashboard.thegreatlich.xyz` and `indexer.qbtc.net`. Any unknown host gets 444.
+- The container has `restart: unless-stopped`, so the site comes back after a reboot.
 - The data comes from the Python API (`/root/dev/indexer/api.py`).
 
 ## Prerequisites
@@ -52,56 +54,81 @@ defaults. If one browser shows different data from another, check this first.
 
    ```bash
    pnpm install --frozen-lockfile
-   cp -r dist dist.prev   # optional: keep the current build for rollback
-   pnpm run build         # tsc -b && vite build, then copies .htaccess into dist/
+   pnpm run build      # tsc -b && vite build, then copies .htaccess into dist/
    ```
 
-   `tsc -b` runs first, so a type error stops the build before `dist/` is touched.
-   Once `vite build` starts, it empties `dist/`, so the site is briefly unavailable
-   until the build finishes.
+   This only writes to `dist/`. The live site isn't affected until step 3, so a failed
+   build never takes the site down.
 
-3. Restart the preview server. It runs in tmux session `0`, window `3`:
+3. Publish the build. Keep a copy of the current one first so you can roll back:
 
    ```bash
-   tmux a -t 0          # then press Ctrl-b 3 to go to window 3
-   # Ctrl-C to stop the running server, then:
-   pnpm run preview --port 3000 --host 0.0.0.0
-   # Ctrl-b d to detach
+   rsync -a --delete /var/www/qbtc-dashboard/ /var/www/qbtc-dashboard.prev/
+   rsync -a --delete dist/ /var/www/qbtc-dashboard/
    ```
 
-   Always restart after changing `vite.config.ts`, because the preview server reads
-   `allowedHosts` only when it starts.
+   That's it. nginx serves the new files right away, with no restart needed.
 
 4. Check that it works:
 
    ```bash
-   curl -sI http://127.0.0.1:3000/ | head -1                                       # direct
-   curl -sI -H 'Host: dashboard.thegreatlich.xyz' http://127.0.0.1/ | head -1     # through nginx
+   curl -sI -H 'Host: dashboard.thegreatlich.xyz' http://127.0.0.1/ | head -1
+   curl -sI -H 'Host: dashboard.thegreatlich.xyz' http://127.0.0.1/blocks | head -1   # SPA fallback
    ```
 
    Both should return `200`. Then open https://dashboard.thegreatlich.xyz and make sure
    the metric cards show real numbers. If the API is unreachable, the app falls back to
    mock metrics.
 
+### Caching
+
+`index.html` is sent with `Cache-Control: no-cache`, so browsers pick up a new deploy on
+the next load. Files under `/assets/` have content hashes in their names and are cached for
+a year. If you put Cloudflare caching rules in front, keep `index.html` uncached.
+
 ### Rollback
 
 ```bash
-rm -rf dist && mv dist.prev dist
+rsync -a --delete /var/www/qbtc-dashboard.prev/ /var/www/qbtc-dashboard/
 ```
 
-Then restart the preview server as in step 3. To go back to an older commit, check it
-out and rebuild.
+To go back to an older commit instead, check it out, rebuild, and publish again (step 3).
+
+**Don't** delete or move the `/var/www/qbtc-dashboard` folder itself. The container's bind
+mount points at that folder, and replacing it breaks the mount until nginx is recreated.
+Always change its *contents* with `rsync`.
+
+## Changing the nginx setup
+
+After editing `/root/dev/nginx/nginx.conf`:
+
+```bash
+docker exec dev-nginx-1 nginx -t && docker exec dev-nginx-1 nginx -s reload
+```
+
+If an editor replaces the file instead of writing it in place, the container keeps seeing
+the old version. In that case, or after changing the nginx service in `docker-compose.yaml`,
+recreate just the nginx container. The dashboard and API drop for a second or two:
+
+```bash
+cd /root/dev && docker compose up -d --no-deps nginx
+```
 
 ## Adding a domain
 
-A new hostname has to be added in three places:
-
 1. **Cloudflare DNS**: point it at the server, proxied.
-2. **nginx**: add it to the frontend `server_name` in `/root/dev/nginx/nginx.conf`, then run
-   `docker exec dev-nginx-1 nginx -t && docker exec dev-nginx-1 nginx -s reload`.
-3. **`vite.config.ts`**: add it to `preview.allowedHosts`. Then rebuild and restart the
-   preview server. If you skip this, Vite answers with *"Blocked request. This host is not
-   allowed."*
+2. **nginx**: add it to the frontend `server_name` in `/root/dev/nginx/nginx.conf`, then reload
+   as above.
+
+## Local development
+
+```bash
+pnpm install
+pnpm run dev        # Vite dev server with hot reload
+```
+
+`pnpm run preview` serves `dist/` locally to test a production build. It isn't used in
+production any more, and `vite.config.ts` `preview.allowedHosts` only matters for it.
 
 ## Hosting elsewhere
 
@@ -113,20 +140,12 @@ in the repo:
 - Netlify / Cloudflare Pages: `public/_redirects`
 - Apache: `.htaccess` (copied into `dist/` by the build)
 
-## Known limitations of the current setup
-
-- `vite preview` isn't meant to be a production server. A sturdier setup would have
-  `dev-nginx-1` serve `dist/` directly, with `try_files $uri /index.html`.
-- It binds to `0.0.0.0:3000`, so port 3000 can be reached directly from the internet,
-  bypassing nginx and Cloudflare, unless a firewall blocks it.
-- It lives in a tmux window, so it **doesn't come back after a reboot**. After a reboot,
-  start it again as in step 3. A systemd unit would fix this.
-
 ## Troubleshooting
 
 | Symptom | Likely cause |
 |---|---|
-| "Blocked request. This host is not allowed" | Hostname missing from `preview.allowedHosts`. Add it, rebuild, restart. |
+| Old version still showing after a deploy | The rsync went to the wrong folder, or Cloudflare cached `index.html`. Check `ls -l /var/www/qbtc-dashboard/assets` and purge the Cloudflare cache. |
+| Every page is a 404 | The folder was replaced instead of synced, so the bind mount broke. Run `docker compose up -d --no-deps nginx` from `/root/dev`. |
 | Dashboard shows round or fake-looking numbers | API unreachable, so the mock fallback is showing. Check `curl https://api.thegreatlich.xyz/stats/overview`, the trailing slash in `VITE_API_BASE_URL`, and the browser's `/settings` override. |
 | 444 or empty response through the domain | nginx doesn't know the hostname (see *Adding a domain*). |
-| 502 from nginx | The preview server isn't running on port 3000. Check with `ss -ltnp \| grep 3000`. |
+| Site down after a reboot | Check `docker ps`. `dev-nginx-1` should restart by itself. If it didn't, run `docker compose up -d --no-deps nginx` from `/root/dev`. |
