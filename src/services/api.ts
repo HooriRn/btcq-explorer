@@ -1,5 +1,5 @@
-import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat, QbtcBlocksResponse, QbtcBlock } from '../types/dashboard'
-import { getApiBaseUrl, getQbtcIndexerUrl } from './config'
+import type { DashboardMetrics, SearchResponse, UTXOResponse, BlockResponse, AddressResponse, SupplyStatsResponse, AddressStatsResponse, ScriptTypeExposureStat } from '../types/dashboard'
+import { getApiBaseUrl } from './config'
 import { HIGH_RISK_TYPES, MEDIUM_RISK_TYPES } from '../utils/riskLevel'
 
 const mockMetrics: DashboardMetrics = {
@@ -269,45 +269,6 @@ export const api = {
     } catch (error) {
       console.error('Failed to fetch Bitcoin price from all sources:', error)
       return 0
-    }
-  },
-
-  fetchQbtcBlocks: async (): Promise<QbtcBlocksResponse> => {
-    try {
-      const base = getQbtcIndexerUrl().replace(/\/$/, '')
-      const response = await fetch(`${base}/v2/blocks`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const data = await response.json()
-      if (Array.isArray(data)) return data
-      if (data && Array.isArray(data.blocks)) return data.blocks
-      if (data && typeof data.height === 'number' && data.hash) return [data]
-      return []
-    } catch (error) {
-      console.error('Failed to fetch QBTC blocks:', error)
-      return []
-    }
-  },
-
-  fetchQbtcBlock: async (id: string): Promise<QbtcBlock | null> => {
-    try {
-      const base = getQbtcIndexerUrl().replace(/\/$/, '')
-      const response = await fetch(`${base}/v2/blocks?height=${encodeURIComponent(id)}`)
-      if (!response.ok) return null
-      const data = await response.json()
-      if (data && typeof data.height === 'number' && data.hash) return data as QbtcBlock
-      if (Array.isArray(data) && data.length > 0 && data[0].height != null && data[0].hash)
-        return data[0] as QbtcBlock
-      const blocks = await api.fetchQbtcBlocks()
-      const idNum = Number(id)
-      const found = blocks.find(
-        (b) => b.height === idNum || String(b.height) === id || b.hash === id
-      )
-      return found ?? null
-    } catch (error) {
-      console.error('Failed to fetch QBTC block:', error)
-      return null
     }
   }
 }

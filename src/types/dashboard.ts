@@ -154,30 +154,3 @@ export interface SupplyStatsResponse {
   total_supply_sat: number
   script_type_balances: Record<string, number>
 }
-
-// QBTC indexer block (v2/blocks endpoint)
-export interface QbtcEventAttribute {
-  key: string
-  value: string
-}
-
-export interface QbtcEvent {
-  type: string
-  attributes: QbtcEventAttribute[]
-}
-
-export interface QbtcTx {
-  tx_hash: string
-  tx_hex: string
-  events: QbtcEvent[]
-}
-
-export interface QbtcBlock {
-  hash: string
-  height: number
-  timestamp: number
-  finalized_events: QbtcEvent[]
-  txs: QbtcTx[]
-}
-
-export type QbtcBlocksResponse = QbtcBlock[]

@@ -6,8 +6,6 @@ import { Settings } from '../pages/Settings'
 import { LatestAddressesPage } from '../pages/LatestAddressesPage'
 import { LatestUTXOsPage } from '../pages/LatestUTXOsPage'
 import { LatestBlocksPage } from '../pages/LatestBlocksPage'
-import { QbtcPage } from '../pages/QbtcPage'
-import { QbtcBlockDetailPage } from '../pages/QbtcBlockDetailPage'
 
 export const router = createBrowserRouter([
   {
@@ -41,14 +39,6 @@ export const router = createBrowserRouter([
       {
         path: 'blocks',
         element: <LatestBlocksPage />
-      },
-      {
-        path: 'qbtc',
-        element: <QbtcPage />
-      },
-      {
-        path: 'qbtc/blocks/:id',
-        element: <QbtcBlockDetailPage />
       }
     ]
   }

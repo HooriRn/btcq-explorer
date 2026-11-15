@@ -5,25 +5,20 @@ import { LanguageSwitcher } from '../components/common/LanguageSwitcher'
 
 export const Settings = () => {
   const { t } = useTranslation()
-  const { apiBaseUrl, setApiBaseUrl, resetApiBaseUrl, qbtcIndexerUrl, setQbtcIndexerUrl, resetQbtcIndexerUrl } = useSettingsStore()
+  const { apiBaseUrl, setApiBaseUrl, resetApiBaseUrl } = useSettingsStore()
   const [localApiUrl, setLocalApiUrl] = useState(apiBaseUrl)
-  const [localQbtcIndexerUrl, setLocalQbtcIndexerUrl] = useState(qbtcIndexerUrl)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
 
-  // Sync local state with store when URLs change
+  // Sync local state with store when the URL changes
   useEffect(() => {
     setLocalApiUrl(apiBaseUrl)
   }, [apiBaseUrl])
-  useEffect(() => {
-    setLocalQbtcIndexerUrl(qbtcIndexerUrl)
-  }, [qbtcIndexerUrl])
 
-  const hasChanges = localApiUrl !== apiBaseUrl || localQbtcIndexerUrl !== qbtcIndexerUrl
+  const hasChanges = localApiUrl !== apiBaseUrl
 
   const handleSave = () => {
     setSaveStatus('saving')
     setApiBaseUrl(localApiUrl)
-    setQbtcIndexerUrl(localQbtcIndexerUrl)
     setTimeout(() => {
       setSaveStatus('saved')
       setTimeout(() => setSaveStatus('idle'), 2000)
@@ -32,10 +27,6 @@ export const Settings = () => {
 
   const handleResetApi = () => {
     resetApiBaseUrl()
-  }
-
-  const handleResetQbtc = () => {
-    resetQbtcIndexerUrl()
   }
 
   return (
@@ -99,30 +90,6 @@ export const Settings = () => {
                 </div>
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                   {t('settings.current')} <span className="font-mono">{apiBaseUrl}</span>
-                </p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('settings.qbtcIndexerUrl')}
-                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{t('settings.qbtcIndexerUrlDesc')}</span>
-                </label>
-                <div className="flex gap-2">
-                  <input 
-                    type="text" 
-                    value={localQbtcIndexerUrl}
-                    onChange={(e) => setLocalQbtcIndexerUrl(e.target.value)}
-                    placeholder="https://indexer.example.com/"
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    onClick={handleResetQbtc}
-                    className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
-                  >
-                    {t('common.reset')}
-                  </button>
-                </div>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  {t('settings.current')} <span className="font-mono">{qbtcIndexerUrl}</span>
                 </p>
               </div>
             </div>

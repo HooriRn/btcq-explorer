@@ -95,16 +95,6 @@ export const Header = () => {
               {t('navigation.dashboardRisk')}
             </Link>
             <Link 
-              to="/qbtc" 
-              className={`text-sm font-medium transition-colors ${
-                isActive('/qbtc') 
-                  ? 'text-blue-600 dark:text-blue-400' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-              }`}
-            >
-              {t('navigation.qbtc')}
-            </Link>
-            <Link 
               to="/about" 
               className={`text-sm font-medium transition-colors ${
                 isActive('/about') 
@@ -160,17 +150,6 @@ export const Header = () => {
                 }`}
               >
                 {t('navigation.dashboardRisk')}
-              </Link>
-              <Link 
-                to="/qbtc" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`text-base font-medium transition-colors py-2 ${
-                  isActive('/qbtc') 
-                    ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-                }`}
-              >
-                {t('navigation.qbtc')}
               </Link>
               <Link 
                 to="/about" 

@@ -18,7 +18,6 @@
   "navigation": {
     "dashboardRisk": "Panel de Riesgo",
     "about": "Acerca de",
-      "qbtc": "QBTC",
     "settings": "Configuración",
     "qbtcExplorer": "Explorer",
     "toggleMenu": "Alternar menú"
@@ -140,8 +139,6 @@
     "apiConfiguration": "Configuración de API",
     "apiBaseUrl": "URL Base de API",
     "apiBaseUrlDesc": "(debe terminar con /)",
-    "qbtcIndexerUrl": "URL del indexador QBTC",
-    "qbtcIndexerUrlDesc": "(endpoint v2/blocks, debe terminar con /)",
     "current": "Actual:",
     "saveSettings": "Guardar Configuración",
     "language": "Idioma",
@@ -162,23 +159,6 @@
     "technologyStack": "Stack Tecnológico",
     "frontend": "Frontend",
     "stateManagement": "Gestión de Estado"
-  },
-  "qbtc": {
-    "title": "Bloques QBTC",
-    "blocksTableLabel": "Bloques QBTC recientes",
-    "height": "Altura",
-    "hash": "Hash",
-    "timestamp": "Fecha y hora",
-    "txCount": "N.º de tx",
-    "noBlocks": "Sin bloques",
-    "backToBlocks": "Volver a bloques",
-    "blockDetail": "Bloque",
-    "transactions": "Transacciones",
-    "txTableLabel": "Transacciones del bloque",
-    "txHash": "Hash de tx",
-    "finalizedEvents": "Eventos finalizados",
-    "txHex": "Tx hex",
-    "events": "Eventos"
   }
 }
 

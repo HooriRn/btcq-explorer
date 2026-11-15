@@ -7,7 +7,3 @@ export const getApiBaseUrl = (): string => {
   return useSettingsStore.getState().apiBaseUrl
 }
 
-export const getQbtcIndexerUrl = (): string => {
-  return useSettingsStore.getState().qbtcIndexerUrl
-}
-
